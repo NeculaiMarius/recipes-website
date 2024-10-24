@@ -10,7 +10,7 @@ import { usePathname } from 'next/navigation';
 import { mainFeatures } from '@/constants';
 import Link from 'next/link';
 
-const featureSelector = () => {
+const FeatureSelector = () => {
   const pathname=usePathname();
   const curFeature=mainFeatures.find(feature=>feature.route===pathname);
   return (
@@ -38,4 +38,4 @@ const featureSelector = () => {
   )
 }
 
-export default featureSelector
+export default FeatureSelector

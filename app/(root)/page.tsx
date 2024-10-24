@@ -54,7 +54,7 @@ export default  async function Home() {
       <div className="flex justify-around mt-4 max-md:flex-col max-md:px-4">
         {recipes.map((item)=>{
             return(
-              <RecipeCard name={item.name} rating={item.rating} author={item.author} route={item.route} />
+              <RecipeCard name={item.name} rating={item.rating} author={item.author} route={item.route} key={item.name} />
             )
         })}
       </div>
