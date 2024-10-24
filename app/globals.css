@@ -75,4 +75,22 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+
+  .button-style{
+    @apply inline-flex items-center justify-start whitespace-nowrap font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 px-4 py-2
+    text-xl rounded-2xl relative overflow-visible h-12
+    bg-gray-100
+  }
+  
+
+  .gradient-background {
+    width: 200px; /* Poți ajusta lățimea și înălțimea după necesitate */
+    height: 200px;
+    background: radial-gradient(circle, rgb(0, 49, 123) 0%, rgba(255, 255, 255, 0) 70%);
+    display: flex; /* Pentru a centra conținutul */
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%; /* Opțional, pentru un aspect circular */
+  }
+  
 }

@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { z } from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -24,6 +24,7 @@ const formSchema = z.object({
 
 
 const SignInForm = () => {
+  const [isLoading, setIsLoading] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -34,14 +35,22 @@ const SignInForm = () => {
   })
   
   async function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-    const res= await signIn("credentials",{
-      email: values.email,
-      password:values.password,
-      redirect:true,
-      callbackUrl: "/",
-    });
-    console.log(res)
+    setIsLoading(true);
+    try{
+      const res= await signIn("credentials",{
+        email: values.email,
+        password:values.password,
+        redirect:true,
+        callbackUrl: "/",
+      });
+      console.log(res)
+    }
+    catch(error){
+      console.log("Error on sign in: "+error);
+    }
+    finally{
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -73,7 +82,7 @@ const SignInForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" disabled={isLoading}>
           Login
         </Button>
       </form>

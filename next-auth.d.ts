@@ -4,9 +4,11 @@ declare module "next-auth" {
   // Extindem tipul User
   interface User {
     id: string;
-    role: string;   // Câmpul role
-    accessToken?: string;
+    role: string; 
     image?: string;
+
+    firstName:string;
+    lastName:string;
   }
 
   // Extindem tipul Session
@@ -16,8 +18,10 @@ declare module "next-auth" {
       email: string;
       name: string;
       role: string;  
-      accessToken?: string;
       image?: string;
+
+      firstName:string;
+      lastName:string;
     };
   }
 }
@@ -26,7 +30,9 @@ declare module "next-auth/jwt" {
   interface JWT {
     id: string;
     role: string;    
-    accessToken?: string;
     image?: string;
+
+    firstName:string;
+    lastName:string;
   }
 }

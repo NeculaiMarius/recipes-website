@@ -1,5 +1,5 @@
 "use client"
-import React from 'react'
+import React, { useState } from 'react'
 import { z } from 'zod'
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
@@ -13,19 +13,23 @@ import {
 import { Button } from './ui/button'
 import Link from 'next/link'
 import { Input } from "@/components/ui/input"
+import { signUp } from '@/lib/actions/database-actions'
+import { useRouter } from 'next/navigation'
 
 
 const formSchema = z.object({
-  lastName: z.string().min(3).max(50),
-  firstName:z.string().min(3).max(50),
-  email: z.string().email(),
-  password:z.string().min(3).max(50),
-  rePassword:z.string().min(3).max(50),
+  lastName: z.string().min(3).max(20),
+  firstName:z.string().min(3).max(20),
+  email: z.string().email().max(50),
+  password:z.string().min(3).max(20),
+  rePassword:z.string().min(3).max(20),
 })
 
 
 
 const SignInForm = () => {
+  const router=useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -36,8 +40,21 @@ const SignInForm = () => {
     },
   })
   
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+  async function onSubmit(values: z.infer<typeof formSchema>) {
+    setIsLoading(true);
+
+    try {
+      const response=await signUp(values.lastName,values.firstName,values.email,values.password,values.rePassword);
+      if(response)
+      {
+        router.push('/');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    finally{
+      setIsLoading(false);
+    }
   }
 
   return (
@@ -110,8 +127,8 @@ const SignInForm = () => {
           )}
         />
 
-        <Button type="submit" className="w-full">
-          Login
+        <Button type="submit" className="w-full" disabled={isLoading}>
+          Sign up
         </Button>
       </form>
       <div className="mt-4 text-center text-sm">
