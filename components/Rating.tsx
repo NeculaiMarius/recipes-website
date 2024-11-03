@@ -9,6 +9,7 @@ const Rating = ({ rating }:{rating:string}) => {
     return (
       <FaStar
         key={index}
+    
         className={
           starRating <= n_rating
             ? "text-yellow-500" // stea complet colorată
@@ -20,7 +21,7 @@ const Rating = ({ rating }:{rating:string}) => {
     );
   });
 
-  return <div className="flex">{stars}</div>;
+  return <div className="flex p-0">{stars}</div>;
 };
 
 export default Rating;

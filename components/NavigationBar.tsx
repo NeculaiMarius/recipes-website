@@ -30,10 +30,9 @@ const NavigationBar = ({ username }: { username?: string }) => {
             <span className="material-symbols-outlined bold-symbol text-4xl">menu</span></SheetTrigger>
           <SheetContent side={'left'}>
             <SheetHeader>
-              <SheetTitle>Are you absolutely sure?</SheetTitle>
+              <SheetTitle>Filtre</SheetTitle>
               <SheetDescription>
-                This action cannot be undone. This will permanently delete your account
-                and remove your data from our servers.
+                Descoperă rețetele potrivite pentru tine cu ajutorul filtrelor
               </SheetDescription>
             </SheetHeader>
           </SheetContent>

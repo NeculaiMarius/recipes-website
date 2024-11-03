@@ -10,9 +10,10 @@ export default async function RootLayout({
   const session=await getServerSession(options);
 
   return (
-    <div className="h-screen">
+    <>
       <NavigationBar username={session?.user.firstName}  />
-        {children}
-    </div>
+      {children}
+    </>
+      
   );
 }

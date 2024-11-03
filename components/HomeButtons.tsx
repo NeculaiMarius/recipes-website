@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
 const HomeButtons = ({ image, text, route }: { image: string; text: string; route: string }) => {
   const [isMobile, setIsMobile] = useState(false);
@@ -31,19 +32,31 @@ const HomeButtons = ({ image, text, route }: { image: string; text: string; rout
         initial="initial"
         className=""
       >
-        <motion.div className=" button-style w-[320px] text-7xl" whileTap={{ scale: 0.95 }} >
+        <motion.div className=" button-style w-[300px] max-md:w-[260px] text-6xl my-4" whileTap={{ scale: 0.95 }} >
           {isMobile ? (
-            <span className="mr-4">{image}</span>
+            
+              <Image 
+                height={70}
+                width={70}
+                src={image}
+                alt='Icon'
+              />
+            
           ) : (
             <motion.span
               className="relative right-2"
               variants={emojiVariants}
               transition={{ duration: 0.3 }}
             >
-              {image}
+              <Image 
+                height={80}
+                width={80}
+                src={image}
+                alt='Icon'
+              />
             </motion.span>
           )}
-          <span className='text-lg font-bold text-gray-700'>
+          <span className='text-lg font-bold text-gray-700 max-md:text-base'>
             {text}
           </span>
         </motion.div>

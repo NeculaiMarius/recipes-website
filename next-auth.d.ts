@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 
 declare module "next-auth" {
-  // Extindem tipul User
+  // Extindem tipul User pastrat in sesiune
   interface User {
     id: string;
     role: string; 

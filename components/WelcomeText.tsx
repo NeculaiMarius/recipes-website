@@ -27,8 +27,8 @@ export default function WelcomeText({username}:{username:string|undefined}) {
   }, []);
 
   return (
-    <span className="text-center">
-      <motion.span className="text-white text-6xl font-bold bold-symbol">
+    <span className="-center">
+      <motion.span className="text-white text-2xl font-bold bold-symbol max-md:text-xl ">
           {displayText}
       </motion.span>
       {showCursor && <CursorBlinker /> }

@@ -1,3 +1,4 @@
+import { routeModule } from "next/dist/build/templates/app-page"
 
 export const mainFeatures=[
   {
@@ -9,25 +10,29 @@ export const mainFeatures=[
     route:"/My-fridge",
   },
   {
-    label:"Verifica produs",
+    label:"Verifică produs",
     route:'/Product-scanner',
+  },
+  {
+    label:"Descoperă rețete",
+    route: "/Discover-recipes",
   }
 ]
 
 export const homeButtons=[
   {
     text:"Descopera retete",
-    image:"🥗",
-    route:"/",
+    image:"/svg-icons/food.svg",
+    route:"/Discover-recipes",
   },
   {
     text:"Frigiderul meu",
-    image:"🧊",
+    image:"/svg-icons/fridge.svg",
     route:"/My-fridge",
   },
   {
     text:"Verifica un produs",
-    image:"🛒",
+    image:"/svg-icons/shopping-cart.svg",
     route:'/Product-scanner',
   },
 ]
@@ -50,5 +55,11 @@ export const recipes=[
     rating:"4.5",
     author:"Irina Apostol",
     route:"/images/butter.jpg"
+  },
+  {
+    name:"Paste carbonara",
+    rating:"4.9",
+    author:"Andrei Ioan",
+    route:"/images/carbonara.jpg"
   }
 ]
