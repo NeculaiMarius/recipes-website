@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import RecipeCard from "@/components/RecipeCard";
 
+export const revalidate= 0
+
 
 export default  async function Home() {
   const session=await getServerSession(options);  
@@ -14,7 +16,7 @@ export default  async function Home() {
     <>
     
     <div className=" pt-[80px] h-screen w-full grid grid-cols-[2fr_1.5fr] max-md:grid-cols-1 max-md:grid-rows-[1fr_1fr] bg-transparent">
-      <div className="flex items-center justify-center bg-emerald-700 rounded-r-full">
+      <div className="flex items-center justify-center bg-emerald-700 rounded-r-full round">
         <div className="flex flex-col w-full h-full justify-evenly">
 
           <div className="text-white text-3xl font-bold flex flex-col gap-6 pr-12 max-md:gap-2">
@@ -26,8 +28,6 @@ export default  async function Home() {
             <h1 className="homepage-text pl-[5vw]">CREEAZĂ-ȚI PROPRIA COLECȚIE DE REȚETE</h1>
           </div>
           
-
-
           <Link href={"/Add-recipe"} className="w-fit mx-auto">
             <div className="flex justify-center items-center text-emerald-800 font-bold text-lg bg-gray-200 py-2 px-3 rounded-2xl shadow-lg ">
               <span className="material-symbols-outlined bold-symbol text-3xl mr-3">
@@ -44,7 +44,7 @@ export default  async function Home() {
         <div className="flex flex-col justify-center items-start">
           {homeButtons.map((item)=>{
             return(
-              <HomeButtons text={item.text} image={item.image} route={item.route} key={item.text}/>
+              <HomeButtons text={item.text} image={item.image} route={item.route} key={item.route}/>
             )
           })}
         </div>

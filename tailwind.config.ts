@@ -9,11 +9,11 @@ const config: Config = {
   ],
   theme: {
   	extend: {
-			backgroundImage: {
-				'verified-gradient':'linear-gradient( 0deg,  rgba(39,103,187,1) 10.4%, rgba(16,72,144,1) 87.7% );',
-        'welcome-gradient-hor': 'linear-gradient(to right, #EAB308 50%, #d1d5db 60%)',
-				'welcome-gradient-ver': 'linear-gradient(#EAB308 40%, #d1d5db 50%)'
-      },
+  		backgroundImage: {
+  			'verified-gradient': 'linear-gradient( 0deg,  rgba(39,103,187,1) 10.4%, rgba(16,72,144,1) 87.7% );',
+  			'welcome-gradient-hor': 'linear-gradient(to right, #EAB308 50%, #d1d5db 60%)',
+  			'welcome-gradient-ver': 'linear-gradient(#EAB308 40%, #d1d5db 50%)'
+  		},
   		colors: {
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
@@ -60,6 +60,28 @@ const config: Config = {
   			lg: 'var(--radius)',
   			md: 'calc(var(--radius) - 2px)',
   			sm: 'calc(var(--radius) - 4px)'
+  		},
+  		keyframes: {
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
+  			'accordion-up': {
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
+  			}
+  		},
+  		animation: {
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
   		}
   	}
   },

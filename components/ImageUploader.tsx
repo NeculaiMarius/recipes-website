@@ -10,10 +10,10 @@ export default function ImageUploader() {
     if (file) {
       const reader = new FileReader();
       
-      reader.readAsDataURL(file); // Citește imaginea ca Data URL
+      reader.readAsDataURL(file);
 
       reader.onloadend = () => {
-        setSelectedImage(reader.result as string||null); // Cast la `string`
+        setSelectedImage(reader.result as string||null); 
       };
     }
   };

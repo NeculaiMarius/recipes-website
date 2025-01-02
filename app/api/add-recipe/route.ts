@@ -10,7 +10,7 @@ export async function POST(request:Request) {
 
   try {
     const insertRecipeResult= await sql`
-      INSERT INTO l_retete (nume,descriere,pasi_preparare,image_url,utilizator,image_public_id)
+      INSERT INTO l_retete (nume,descriere,pasi_preparare,image_url,id_utilizator,image_public_id)
       VALUES (${recipeName},${recipeDescription},${steps.join(";")},${imageUrl},${userId},${imagePublicId})
       RETURNING id`;
 

@@ -15,6 +15,7 @@ import { Button } from './ui/button';
 import { Textarea } from "./ui/textarea";
 import Image from 'next/image';
 import { cn } from "@/lib/utils";
+import { useRouter } from "next/navigation";
 
 
 
@@ -32,6 +33,8 @@ const formSchema = z.object({
 
 
 const RecipeForm = ({userId}:{userId:string|undefined}) => {
+  const router=useRouter();
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -91,7 +94,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
   const handleAddIngredient = (ingredient: { id: string; nume: string; um: string }) => {
     const isIngredientAlreadySelected = selectedIngredients.some(item => item.id === ingredient.id);
     if (!isIngredientAlreadySelected) {
-      setSelectedIngredients((prev) => [...prev, { ...ingredient, quantity: (ingredient.um==="g"||ingredient.um==="ml")?10:1 }]); // Adăugăm câmpul pentru cantitate
+      setSelectedIngredients((prev) => [...prev, { ...ingredient, quantity: (ingredient.um==="g"||ingredient.um==="ml")?10:1 }]); 
     }
     setIngredientQuery("");
     setIngredientSuggestions([]);
@@ -156,6 +159,9 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
   
       if (!response.ok) {
         throw new Error('Failed to submit recipe');
+      }
+      else{
+        router.push("/");
       }
   
     } catch (error) {

@@ -2,6 +2,7 @@ import NavigationBar from "@/components/NavigationBar";
 import { getServerSession } from "next-auth";
 import { options } from "../api/auth/[...nextauth]/options";
 
+
 export default async function RootLayout({
   children,
 }: Readonly<{
@@ -11,7 +12,7 @@ export default async function RootLayout({
 
   return (
     <>
-      <NavigationBar username={session?.user.firstName}  />
+      <NavigationBar username={session?.user.firstName} />
       {children}
     </>
       

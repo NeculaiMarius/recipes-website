@@ -2,7 +2,6 @@ import { FaStar } from 'react-icons/fa'; // Folosim react-icons pentru stele
 
 const Rating = ({ rating }:{rating:string}) => {
   const n_rating=Number(rating)
-  // Creăm un array pentru cele 5 stele
   const stars = Array.from({ length: 5 }, (_, index) => {
     const starRating = index + 1;
 

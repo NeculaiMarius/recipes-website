@@ -15,7 +15,7 @@ const FeatureSelector = () => {
   const curFeature=mainFeatures.find(feature=>feature.route===pathname);
   return (
     <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger >
           <div className='flex items-center'>
             {curFeature?.label}
               <span className="material-symbols-outlined">unfold_more</span>

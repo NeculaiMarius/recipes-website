@@ -19,28 +19,12 @@ export const options: NextAuthOptions={
             },
         },
         async authorize(credentials) {
-
-            // const {rows}=await sql`SELECT * FROM users WHERE email=${credentials?.email} AND password=${credentials?.password}`
-
-            // if(rows.length>0){
-            //     const user={
-            //         id:rows[0].user_id,
-            //         name:rows[0].username,
-            //         email:rows[0].email,
-            //     }
-            //     console.log(user);
-            //     return user
-            // }
-            // else{
-            //     return null;
-            // }
-
             const {rows}=await sql`SELECT * FROM l_utilizatori WHERE email=${credentials?.email} AND parola=${credentials?.password}`
             if(rows.length>0){
                 return {
                     email:rows[0].email,
                     id: rows[0].id,
-                    name: rows[0].nume + rows[0].prenume,
+                    name: rows[0].nume +" "+ rows[0].prenume,
                     role: rows[0].rol, 
                     image: "https://example.com/profile.jpg", 
                     firstName: rows[0].prenume ,
@@ -58,11 +42,10 @@ export const options: NextAuthOptions={
 
     callbacks: {
         async jwt({ token, user }) {
-            // Adaugă date suplimentare la token în timpul autentificării
             if (user) {
                 token.id = user.id;
-                token.role = user.role; // De exemplu, un câmp 'role'
-                token.image = user.image; // Imaginea profilului, dacă este necesară
+                token.role = user.role; 
+                token.image = user.image;
                 token.firstName=user.firstName;
                 token.lastName=user.lastName;
             }

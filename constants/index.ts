@@ -63,3 +63,17 @@ export const recipes=[
     route:"/images/carbonara.jpg"
   }
 ]
+
+export const ingredientsCategories=[
+  'Lactate',
+  'Dulciuri',
+  'Panificație',
+  'Pește și fructe de mare',
+  'Legume',
+  'Carne',
+  'Diverse',
+  'Condimente',
+  'Cereale',
+  'Uleiuri',
+  'Fructe',
+]

@@ -11,13 +11,14 @@ export async function GET(request: Request) {
 
   try {
     const results = await sql`
-      SELECT nume,id,um FROM l_ingrediente WHERE nume ILIKE ${'%' + query + '%'} LIMIT 5
+      SELECT nume,id,um,categorie FROM l_ingrediente WHERE nume ILIKE ${'%' + query + '%'} LIMIT 5
     `;
 
     const ingredients = results.rows.map(row => ({
       id: row.id,
-      nume: row.nume,
-      um: row.um
+      name: row.nume,
+      um: row.um,
+      category: row.categorie
     }));
 
     return NextResponse.json({ ingredients });
