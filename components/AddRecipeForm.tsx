@@ -53,8 +53,8 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
   const fileRef = form.register("file");
 
   const [ingredientQuery, setIngredientQuery] = useState("");
-  const [ingredientSuggestions, setIngredientSuggestions] = useState<{ id: string; nume: string; um: string }[]>([]);
-  const [selectedIngredients, setSelectedIngredients] = useState<{ id: string; nume: string; um: string; quantity: number }[]>([]);
+  const [ingredientSuggestions, setIngredientSuggestions] = useState<{ id: string; name: string; um: string; category:string }[]>([]);
+  const [selectedIngredients, setSelectedIngredients] = useState<{ id: string; name: string; um: string; quantity: number }[]>([]);
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);  
@@ -91,7 +91,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
   }, [ingredientQuery]);
 
 
-  const handleAddIngredient = (ingredient: { id: string; nume: string; um: string }) => {
+  const handleAddIngredient = (ingredient: { id: string; name: string; um: string }) => {
     const isIngredientAlreadySelected = selectedIngredients.some(item => item.id === ingredient.id);
     if (!isIngredientAlreadySelected) {
       setSelectedIngredients((prev) => [...prev, { ...ingredient, quantity: (ingredient.um==="g"||ingredient.um==="ml")?10:1 }]); 
@@ -260,7 +260,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
                     className="cursor-pointer p-1 hover:bg-gray-200"
                     onClick={() => handleAddIngredient(ingredient)}
                   >
-                    {ingredient.nume} ({ingredient.um})
+                    {ingredient.name} ({ingredient.um})
                   </li>
                 ))}
               </ul>
@@ -268,7 +268,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
             <div className="flex flex-wrap space-x-2 mt-2">
               {selectedIngredients.map((ingredient) => (
                 <div key={ingredient.id} className="bg-gray-300 rounded px-2 py-1 text-sm flex items-center space-x-2">
-                  <span>{ingredient.nume} ({ingredient.um})</span>
+                  <span>{ingredient.name} ({ingredient.um})</span>
                   <Input
                     type="number"
                     value={ingredient.quantity}
