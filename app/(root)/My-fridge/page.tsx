@@ -28,7 +28,7 @@ const MyFridge = () => {
       const data=await response.json();
 
       if (data && data.rows) {
-        const ingredients = data.rows.map((item: any) => ({
+        const ingredients = data.rows.map((item: IngredientResponse) => ({
           id: item.id,
           name: item.nume,
           um: item.um,
@@ -160,7 +160,7 @@ const MyFridge = () => {
                 const filteredIngredients=selectedIngredients.filter(ingredient=> ingredient.category === category);
                 const noIngredients=filteredIngredients.length;
               return (
-                <AccordionItem value={category} className=''>
+                <AccordionItem value={category} className='' key={category}>
                 <AccordionTrigger className='font-bold px-4 text-gray-800 py-1 '>
                   <div className='flex items-center gap-3'>
                     <Image
@@ -222,4 +222,12 @@ interface SelectedIngredient {
   um: string;
   quantity: number;
   category: string;
+}
+
+interface IngredientResponse {
+  id: string;
+  nume: string;
+  um: string;
+  cantitate: string;
+  categorie: string;
 }

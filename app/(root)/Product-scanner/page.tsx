@@ -9,7 +9,7 @@ const ProductScanenr = () => {
       <div className='mt-[80px] flex flex-wrap justify-center pt-8 '>
         {Array.from({ length: 12 }).map((_, index) => {
           return (
-            <Card className='flex flex-col hover:shadow-md m-2 w-[300px] h-[450px] max-md:w-[200px] max-md:h-[350px] max-md:text-sm max-sm:w-[170px] max-sm:m-1 overflow-hidden relative'>
+            <Card className='flex flex-col hover:shadow-md m-2 w-[300px] h-[450px] max-md:w-[200px] max-md:h-[350px] max-md:text-sm max-sm:w-[170px] max-sm:m-1 overflow-hidden relative' key={index}>
 
 
               <Skeleton className='relative aspect-[1/1] bg-gray-200'></Skeleton>
