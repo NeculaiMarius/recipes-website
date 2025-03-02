@@ -36,7 +36,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
     `;
 
   const recipe=recipeResult?.rows[0];
-  let isLiked=recipe.id_aprecieri != null
+  const isLiked=recipe.id_aprecieri != null
 
   const ingredientsResult=await sql`
     SELECT 
@@ -48,24 +48,6 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
   `
   const ingredients=ingredientsResult?.rows;
   const pasi_preparare=recipe.pasi_preparare.split(';')
-
-  let reviewss=[
-    {
-      content:"Foarte bun, mi-a placut",
-      rating:4,
-      user:"Michael Jackson"
-    },
-    {
-      content:"Cea mai buna mancare",
-      rating:5,
-      user:"Tina Turner"
-    },
-    {
-      content:"Ne-a placut foarte mult",
-      rating:5,
-      user:"UB40"
-    }
-  ]
 
   const reviewsResult=await sql`
     SELECT u.nume, u.prenume, r.* 

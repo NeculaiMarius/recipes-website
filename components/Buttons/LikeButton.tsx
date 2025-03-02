@@ -13,12 +13,12 @@ const LikeButton = ({ id_user, id_recipe, liked }: { id_user: string; id_recipe:
     setIsLoading(true);
     try {
       if (!isLiked) {
-        let success=await likeRecipe(id_recipe,id_user)
+        const success=await likeRecipe(id_recipe,id_user)
         if(success){
           setIsLiked(true);
         }
       } else {
-        let success=await unlikeRecipe(id_recipe,id_user)
+        const success=await unlikeRecipe(id_recipe,id_user)
         if(success){
           setIsLiked(false);
         }

@@ -22,7 +22,7 @@ const AddReviewForm = ({id_recipe}:{id_recipe:string}) => {
     setError(false);
 
     try {
-      let response=await addReview(id_recipe,content,rating)
+      const response=await addReview(id_recipe,content,rating)
       if(response){
         console.log('REview adaugat');
       }

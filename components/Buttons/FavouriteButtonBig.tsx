@@ -13,12 +13,12 @@ const FavouriteButtonBig = ({ id_user, id_recipe, isLiked }: { id_user: string; 
       setIsLoading(true);
       try {
         if (!isLikedState) {
-          let success=await likeRecipe(id_recipe,id_user)
+          const success=await likeRecipe(id_recipe,id_user)
           if(success){
             setIsLikedState(true);
           }
         } else {
-          let success=await unlikeRecipe(id_recipe,id_user)
+          const success=await unlikeRecipe(id_recipe,id_user)
           if(success){
             setIsLikedState(false);
           }
