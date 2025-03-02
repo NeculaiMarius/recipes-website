@@ -53,12 +53,14 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
 
   return (
     <>
-      <div className='mt-[80px] flex flex-wrap justify-center pt-8'>
-        {rows?.map((recipe) => {
-          return (
-            <RecipeDisplayCard id_recipe={recipe.id} name={recipe.nume} rating={"5"} author={recipe.utilizator} route={recipe.image_url} id_user={session?.user.id||""} liked={recipe.id_aprecieri != null} key={recipe.id}></RecipeDisplayCard>
-          );
-        })}
+      <div className='flex mt-[80px] w-full'>
+        <div className=' justify-center flex flex-wrap pt-8'>
+          {rows?.map((recipe) => {
+            return (
+              <RecipeDisplayCard id_recipe={recipe.id} name={recipe.nume} rating={"5"} author={recipe.utilizator} route={recipe.image_url} id_user={session?.user.id||""} liked={recipe.id_aprecieri != null} key={recipe.id}></RecipeDisplayCard>
+            );
+          })}
+        </div>
       </div>
       
       <PaginationComponent totalPages={totalPages} page={page}/>

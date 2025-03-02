@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/card"
 import Image from 'next/image'
 import Rating from './Rating'
-import LikeButton from './LikeButton'
+import LikeButton from './Buttons/LikeButton'
 import Link from 'next/link'
 
 

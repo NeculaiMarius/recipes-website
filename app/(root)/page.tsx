@@ -1,13 +1,13 @@
 import { getServerSession } from "next-auth/next";
 import { options } from "../api/auth/[...nextauth]/options";
 import WelcomeText from "@/components/WelcomeText";
-import HomeButtons from "@/components/HomeButtons";
+import HomeButtons from "@/components/Buttons/HomeButtons";
 import { homeButtons, recipes } from "@/constants";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import RecipeCard from "@/components/RecipeCard";
 
-export const revalidate= 0
+export const revalidate= 1
 
 
 export default  async function Home() {

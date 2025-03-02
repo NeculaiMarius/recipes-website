@@ -9,7 +9,6 @@ export default withAuth(
       response.headers.set('Pragma', 'no-cache');
       response.headers.set('Expires', '0');
     
-      console.log("ACESTA E MIDDLWARE-ul")
       return response;
   },
 )
