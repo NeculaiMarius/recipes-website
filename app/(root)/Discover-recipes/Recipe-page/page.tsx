@@ -16,6 +16,8 @@ import {
 import { FaInfoCircle, FaRegUserCircle } from 'react-icons/fa';
 import { Label } from '@/components/ui/label';
 import AddReviewForm from '@/components/Forms/AddReviewForm';
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
+import NutritionChart from '@/components/Charts/NutririonChart';
 
 
 const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => {
@@ -56,6 +58,28 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
     AND  id_reteta=${searchParams.recipeId}
   `
   const reviews=reviewsResult?.rows;
+
+
+  let carbs=0;
+  let fats=0;
+  let proteins=0;
+  let kcal=0;
+  for(const ingredient of ingredients){
+    if(ingredient.um==='buc'){
+      kcal+=ingredient.kcal*ingredient.cantitate
+      carbs+=ingredient.carbohidrati*ingredient.cantitate;
+      fats+=ingredient.grasimi*ingredient.cantitate;
+      proteins+=ingredient.proteine*ingredient.cantitate;
+    }
+    else{
+      kcal+=parseFloat((ingredient.kcal*(ingredient.cantitate/100)).toFixed(2))
+      fats+=parseFloat((ingredient.grasimi*(ingredient.cantitate/100)).toFixed(2))
+      proteins+=parseFloat((ingredient.proteine*(ingredient.cantitate/100)).toFixed(2))
+      carbs+=parseFloat((ingredient.carbohidrati*(ingredient.cantitate/100)).toFixed(2))
+    }
+  }
+
+  const totalKcal=kcal.toFixed(2)
 
   return (
     <div className='pt-[80px] '>
@@ -132,7 +156,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
                             </div>
                             <div className="grid grid-cols-2 items-center gap-4">
                               <Label htmlFor="maxWidth">Grasimi</Label>
-                              <div className='nutrition-field text-amber-700'>{(ingredient.um=='buc'?ingredient.grasimi*ingredient.cantitate:ingredient.grasimi*(ingredient.cantitate/100)).toFixed(2)} g</div>
+                              <div className='nutrition-field text-amber-600'>{(ingredient.um=='buc'?ingredient.grasimi*ingredient.cantitate:ingredient.grasimi*(ingredient.cantitate/100)).toFixed(2)} g</div>
                             </div>
                             <div className="grid grid-cols-2  items-center gap-4">
                               <Label htmlFor="height">Carbohidrați</Label>
@@ -140,7 +164,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
                             </div>
                             <div className="grid grid-cols-2 items-center gap-4">
                               <Label htmlFor="maxHeight">Proteine</Label>
-                              <div className='nutrition-field text-blue-700'>{(ingredient.um=='buc'?ingredient.proteine*ingredient.cantitate:ingredient.proteine*(ingredient.cantitate/100)).toFixed(2)} g</div>
+                              <div className='nutrition-field text-cyan-700'>{(ingredient.um=='buc'?ingredient.proteine*ingredient.cantitate:ingredient.proteine*(ingredient.cantitate/100)).toFixed(2)} g</div>
                             </div>
                           </div>
                         </div>
@@ -159,8 +183,28 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
         </div>
       </div>
 
-      <Separator className='my-8'></Separator>
+      <Separator className='mt-8'></Separator>
 
+      <Accordion type="single" className='mb-8' collapsible>
+        <AccordionItem value="item-1 flex items-center ">
+          <AccordionTrigger className='flex flex-1'>
+          <div className='bg-red-400 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md'>
+            Valori nutriționale
+          </div>
+          </AccordionTrigger>
+          <AccordionContent className='flex justify-center'>
+            <NutritionChart
+              totalKcal={totalKcal}
+              data={[
+                { name: "Carbohidrați", value: carbs, fill: "hsl(37.7 92.1% 50.2%)" },
+                { name: "Proteine", value: proteins, fill: "hsl(173.4 80.4% 40%)" },
+                { name: "Grăsimi", value: fats, fill: "hsl(333.3 71.4% 50.6%)" },
+              ]}
+            />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+      
       <div>
         <div className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md'>
           Pașii de preparare a rețetei
@@ -193,10 +237,6 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
         <div className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md'>
           Review-urile utilizatorilor noștri
         </div>
-        
-        {/* <div className='mt-8 border-4 border-yellow-600 text-yellow-700 font-bold text-xl w-fit px-4 py-2 rounded-md mx-auto shadow-md cursor-pointer'>
-          Lasa un review
-        </div> */}
 
         <div className='mx-auto w-fit'>
           <AddReviewForm id_recipe={searchParams.recipeId}></AddReviewForm>
