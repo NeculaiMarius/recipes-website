@@ -1,38 +1,43 @@
+"use client";
 
-import React from 'react';
+import React from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   Pagination,
   PaginationContent,
   PaginationEllipsis,
   PaginationItem,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination";
-import { cn } from '@/lib/utils';
-import { buttonVariants } from './ui/button';
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "./ui/button";
 
 const PaginationComponent = ({ totalPages, page }: { totalPages: number; page: number }) => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const updatePage = (newPage: number) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", newPage.toString());
+    router.push(`?${params.toString()}`, { scroll: false }); // Evită scroll-ul la top
+  };
+
   return (
     <Pagination className="py-12">
       <PaginationContent>
         <PaginationItem>
           {page > 1 && (
-            <a
-              href={`?page=${page - 1}`}
-              className="pagination-previous"
-              
-            >
+            <button onClick={() => updatePage(page - 1)} className="pagination-previous">
               Previous
-            </a>
+            </button>
           )}
         </PaginationItem>
 
         {Array.from({ length: totalPages }, (_, i) => {
           const isActive = page === i + 1;
           return (
-            <a
+            <button
               key={i}
-              href={`?page=${i + 1}`}
+              onClick={() => updatePage(i + 1)}
               className={cn(
                 buttonVariants({
                   variant: isActive ? "outline" : "ghost",
@@ -43,10 +48,9 @@ const PaginationComponent = ({ totalPages, page }: { totalPages: number; page: n
               aria-current={isActive ? "page" : undefined}
             >
               {i + 1}
-            </a>
+            </button>
           );
         })}
-
 
         <PaginationItem>
           <PaginationEllipsis />
@@ -54,13 +58,9 @@ const PaginationComponent = ({ totalPages, page }: { totalPages: number; page: n
 
         <PaginationItem>
           {page < totalPages && (
-            <a
-              href={`?page=${page + 1}`}
-              className="pagination-next"
-            
-            >
+            <button onClick={() => updatePage(page + 1)} className="pagination-next">
               Next
-            </a>
+            </button>
           )}
         </PaginationItem>
       </PaginationContent>

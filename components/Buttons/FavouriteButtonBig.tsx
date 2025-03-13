@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import React, { useState } from 'react'
 import { FaHeart } from 'react-icons/fa';
 
-const FavouriteButtonBig = ({ id_user, id_recipe, isLiked }: { id_user: string; id_recipe: string; isLiked: boolean }) => {
+const FavouriteButtonBig = ({ id_user, id_recipe, isLiked }: { id_user: string; id_recipe: number; isLiked: boolean }) => {
   const [isLikedState,setIsLikedState]=useState(isLiked);
   const [isLoading, setIsLoading] = useState(false);
 

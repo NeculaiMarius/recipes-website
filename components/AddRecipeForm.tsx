@@ -16,12 +16,17 @@ import { Textarea } from "./ui/textarea";
 import Image from 'next/image';
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command";
+import { recipeTypes } from "@/constants";
+import { ChevronsUpDown, Check } from "lucide-react";
 
 
 
 const formSchema = z.object({
   file: z.any().refine((value) => {return value && value instanceof FileList && value.length > 0;}, { message: "File is required" }),
   recipeName: z.string().min(1, "Recipe name is required"),
+  recipeType: z.string().min(1,"Recipe type is required"),
   steps: z.array(
     z.object({
       description: z.string().min(1, "Introduceti descrierea pasului").max(199,"Maxim 200 caractere"),
@@ -39,6 +44,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       recipeName: "",
+      recipeType:'',
       steps: [{ description: "" }],
       recipeDescription: "",
     },
@@ -112,17 +118,14 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
     );
   };
 
+
   async function onSubmit(values: z.infer<typeof formSchema>) {
-
     if (!selectedFile || selectedIngredients.length<=0) return;
-
 
     const ingredientsWithQuantities = selectedIngredients.map((ingredient) => ({
       id: ingredient.id, 
       quantity: ingredient.quantity, 
     }));
-
-
 
     //IMAGE UPLOAD IN CLOUDINARY 
 
@@ -137,7 +140,6 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
     const imagePublicId=result.id;
     const imageUrl=result.imageUrl;
 
-
     // INSERT RECIPE IN DATABASE
 
     try {
@@ -149,6 +151,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
         body: JSON.stringify({
           recipeName: values.recipeName,
           recipeDescription: values.recipeDescription,
+          recipeType: values.recipeType,
           steps: values.steps.map(step => step.description), 
           ingredients: ingredientsWithQuantities,
           imageUrl:imageUrl,
@@ -239,6 +242,56 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
                   className="min-h-[100px]"
                   {...field} 
                 />
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name="recipeType"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='text-lg font-semibold'>Tipul rețetei</FormLabel>
+                <FormControl>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      role="combobox"
+                      className={cn("w-full justify-between", !field.value && "text-muted-foreground")}
+                    >
+                      {field.value
+                        ? recipeTypes.find((type) => type.value === field.value)?.label
+                        : "Selectați tipul rețetei"}
+                      <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-full p-0">
+                    <Command>
+                      <CommandInput placeholder="Căutați tipul rețetei..." />
+                      <CommandList>
+                        <CommandEmpty>Nu s-a găsit niciun tip de rețetă.</CommandEmpty>
+                        <CommandGroup>
+                          {recipeTypes.map((type) => (
+                            <CommandItem
+                              key={type.value}
+                              value={type.value}
+                              onSelect={() => {
+                                form.setValue("recipeType", type.value)
+                              }}
+                            >
+                              <Check
+                                className={cn("mr-2 h-4 w-4", type.value === field.value ? "opacity-100" : "opacity-0")}
+                              />
+                              {type.label}
+                            </CommandItem>
+                          ))}
+                        </CommandGroup>
+                      </CommandList>
+                    </Command>
+                  </PopoverContent>
+                </Popover>
                 </FormControl>
               </FormItem>
             )}

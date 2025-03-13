@@ -8,11 +8,10 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const session=await getServerSession(options);
 
   return (
     <>
-      <NavigationBar username={session?.user.firstName} />
+      <NavigationBar  />
       {children}
     </>
       

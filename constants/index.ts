@@ -64,6 +64,15 @@ export const recipes=[
   }
 ]
 
+export const recipeTypes = [
+  { label: "Aperitiv", value: "aperitiv" },
+  { label: "Fel principal", value: "fel_principal" },
+  { label: "Desert", value: "desert" },
+  { label: "Supă", value: "supa" },
+  { label: "Salată", value: "salata" },
+  { label: "Băutură", value: "bautura" },
+]
+
 export const ingredientsCategories=[
   'Lactate',
   'Dulciuri',
@@ -76,4 +85,42 @@ export const ingredientsCategories=[
   'Cereale',
   'Uleiuri',
   'Fructe',
+]
+
+export const ingredientsFilters=[
+  {
+    id: '117',
+    name: 'Piept de pui'
+  },
+  {
+    id: '55',
+    name: 'Ou'
+  },
+  {
+    id: '15',
+    name: 'Carne de vita'
+  },
+  {
+    id: '34',
+    name: 'Lapte'
+  },
+  {
+    id: '2',
+    name: 'Mar'
+  },
+]
+
+export const orderFilters=[
+  {
+    label:'Cele mai populare',
+    value:'populare'
+  },
+  {
+    label:'Cele mai apreciate',
+    value:'numar_aprecieri'
+  },
+  {
+    label:'Cele mai multe salvări',
+    value:'numar_salvari'
+  },
 ]

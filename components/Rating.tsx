@@ -1,6 +1,6 @@
 import { FaStar } from 'react-icons/fa'; // Folosim react-icons pentru stele
 
-const Rating = ({ rating }:{rating:string}) => {
+const Rating = ({ rating }:{rating:number}) => {
   const n_rating=Number(rating)
   const stars = Array.from({ length: 5 }, (_, index) => {
     const starRating = index + 1;

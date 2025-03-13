@@ -9,6 +9,7 @@ export async function GET(request: Request) {
     return NextResponse.json({ ingredients: [] });
   }
 
+
   try {
     const results = await sql`
       SELECT nume,id,um,categorie FROM l_ingrediente WHERE nume ILIKE ${'%' + query + '%'} LIMIT 5

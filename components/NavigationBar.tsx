@@ -9,39 +9,28 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import FeatureSelector from './FeatureSelector'
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet"
 import Link from 'next/link'
+import { getServerSession } from "next-auth";
+import { options } from '@/app/api/auth/[...nextauth]/options'
+import Search from './Search';
 
 
 
-const NavigationBar = ({ username }: { username?: string }) => {
+
+const NavigationBar = async () => {
+    const session=await getServerSession(options);
+    const username=session?.user.firstName
+
   return (
-    <div className='flex w-full items-center justify-between fixed top-0 left-0 h-[80px] bg-white px-4 z-50'>
+    <div className='flex w-full items-center justify-between fixed top-0 left-0 h-[80px] bg-white lg:px-16 p-4 z-50'>
       <div className='flex items-center'>
-        <Sheet>
-          <SheetTrigger className='flex items-center p-3'>
-            <span className="material-symbols-outlined bold-symbol text-4xl">menu</span></SheetTrigger>
-          <SheetContent side={'left'}>
-            <SheetHeader>
-              <SheetTitle>Filtre</SheetTitle>
-              <SheetDescription>
-                Descoperă rețetele potrivite pentru tine cu ajutorul filtrelor
-              </SheetDescription>
-            </SheetHeader>
-          </SheetContent>
-        </Sheet>
 
-        <FeatureSelector />
+        <div className='ml-10'>
+          <FeatureSelector />
+        </div>
       </div>
       
-      <p>BRAND NAME</p>
+      <Search placeholder='Caută o rețetă...'></Search>
 
       <DropdownMenu>
         <DropdownMenuTrigger >
@@ -53,7 +42,7 @@ const NavigationBar = ({ username }: { username?: string }) => {
         <DropdownMenuContent>
           <DropdownMenuLabel>Contul meu</DropdownMenuLabel>
           <DropdownMenuSeparator />
-          <Link href="/My-account">
+          <Link href={`/Account/${session?.user.id}`}>
             <DropdownMenuItem>Contul meu</DropdownMenuItem>
           </Link>
           <Link href="/api/auth/signout">

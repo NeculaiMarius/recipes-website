@@ -4,7 +4,7 @@ import { likeRecipe, unlikeRecipe } from '@/app/stores/RecipeStore';
 import React, { useEffect, useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
 
-const LikeButton = ({ id_user, id_recipe, liked }: { id_user: string; id_recipe: string; liked: boolean }) => {
+const LikeButton = ({ id_user, id_recipe, liked }: { id_user: string; id_recipe: number; liked: boolean }) => {
   const [isLiked, setIsLiked] = useState(liked);
   const [isLoading, setIsLoading] = useState(false);
 

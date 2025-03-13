@@ -1,4 +1,4 @@
-import LikeButtonBig from '@/components/Buttons/LikeButtonBig';
+import SaveButtonBig from '@/components/Buttons/SaveButtonBig';
 import { sql } from '@vercel/postgres'
 import Image from 'next/image'
 import React from 'react'
@@ -13,11 +13,15 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { FaInfoCircle, FaRegUserCircle } from 'react-icons/fa';
+import { FaInfoCircle, FaRegUserCircle, FaStar } from 'react-icons/fa';
 import { Label } from '@/components/ui/label';
 import AddReviewForm from '@/components/Forms/AddReviewForm';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import NutritionChart from '@/components/Charts/NutririonChart';
+import Link from 'next/link';
+import { RecipePage } from '@/interfaces/recipe';
+import { IngredientRecipePage } from '@/interfaces/ingredient';
+import { ReviewRecipePage } from '@/interfaces/review';
 
 
 const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => {
@@ -27,18 +31,40 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       SELECT 
         r.*,
         u.nume AS utilizator, 
-        a.id AS id_aprecieri 
+        COALESCE(AVG(v.rating), 0) AS rating_reteta,
+        COUNT(DISTINCT a.id) AS numar_aprecieri,
+        COUNT(DISTINCT s.id) AS numar_salvari,
+        CASE 
+          WHEN EXISTS (
+              SELECT 1 FROM l_retete_apreciate a 
+              WHERE a.id_reteta = r.id AND a.id_utilizator = ${session?.user.id}
+          ) THEN TRUE 
+          ELSE FALSE 
+        END AS liked,
+        CASE 
+            WHEN EXISTS (
+                SELECT 1 FROM l_retete_salvate s 
+                WHERE s.id_reteta = r.id AND s.id_utilizator = ${session?.user.id}
+            ) THEN TRUE 
+            ELSE FALSE 
+        END AS saved
       FROM 
         l_retete r
       JOIN 
         l_utilizatori u ON r.id_utilizator = u.id
       LEFT JOIN 
         l_retete_apreciate a ON a.id_reteta = r.id  
-      WHERE r.id=${searchParams.recipeId}
+      LEFT JOIN
+        l_retete_salvate s ON s.id_reteta = r.id
+      LEFT JOIN 
+        l_reviews v ON v.id_reteta = r.id
+      WHERE 
+        r.id = ${searchParams.recipeId}
+      GROUP BY 
+        r.id, u.nume
     `;
 
-  const recipe=recipeResult?.rows[0];
-  const isLiked=recipe.id_aprecieri != null
+  const recipe: RecipePage = recipeResult?.rows[0] as RecipePage;
 
   const ingredientsResult=await sql`
     SELECT 
@@ -48,7 +74,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
     WHERE i.id=ri.id_ingredient
     AND ri.id_reteta=${searchParams.recipeId}
   `
-  const ingredients=ingredientsResult?.rows;
+  const ingredients :IngredientRecipePage[]=ingredientsResult?.rows as IngredientRecipePage[];
   const pasi_preparare=recipe.pasi_preparare.split(';')
 
   const reviewsResult=await sql`
@@ -57,7 +83,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
     WHERE r.id_utilizator=u.id
     AND  id_reteta=${searchParams.recipeId}
   `
-  const reviews=reviewsResult?.rows;
+  const reviews:ReviewRecipePage[]=reviewsResult?.rows as ReviewRecipePage[];
 
 
   let carbs=0;
@@ -78,8 +104,13 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       carbs+=parseFloat((ingredient.carbohidrati*(ingredient.cantitate/100)).toFixed(2))
     }
   }
-
   const totalKcal=kcal.toFixed(2)
+
+  const currentUserReviewResponse=await sql`SELECT * FROM l_reviews 
+    WHERE id_reteta=${searchParams?.recipeId}
+    AND id_utilizator=${session?.user.id}
+  `
+  const currentUserReview=await currentUserReviewResponse.rows[0];
 
   return (
     <div className='pt-[80px] '>
@@ -105,14 +136,19 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
               <span>{recipe?.utilizator}</span>
             </span>
             <span className='flex items-center gap-2'>
-              <span className='font-semibold ml-2'>{4}</span>
-              <Rating rating={'4'} /> 
+              <span className='font-semibold ml-2'>{recipe.rating_reteta}</span>
+              <Rating rating={recipe.rating_reteta} /> 
             </span>
           </div>
 
           <div className='max-md:my-4 flex justify-evenly'>
-            <LikeButtonBig id_user={session?.user.id||""} id_recipe={recipe.id} isLiked={isLiked} />
-            <FavouriteButtonBig id_user={session?.user.id||""} id_recipe={recipe.id} isLiked={isLiked}/>
+            <SaveButtonBig id_user={session?.user.id||""} id_recipe={recipe.id} isLiked={recipe.saved} />
+            <FavouriteButtonBig id_user={session?.user.id||""} id_recipe={recipe.id} isLiked={recipe.liked}/>
+            <a href='#review'>
+              <div className='like-button font-bold px-4 py-2 shadow-xl w-[170px] justify-around text-lg bg-yellow-600 text-gray-100'>
+                Review-uri <FaStar size={25}></FaStar>
+              </div>
+            </a>
           </div>
         </div>
         {/* COL 2 */}
@@ -234,12 +270,12 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       <Separator className='my-8'></Separator>
 
       <div>
-        <div className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md'>
+        <div id='review' className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md'>
           Review-urile utilizatorilor noștri
         </div>
 
         <div className='mx-auto w-fit'>
-          <AddReviewForm id_recipe={searchParams.recipeId}></AddReviewForm>
+          <AddReviewForm id_recipe={searchParams.recipeId} currentReview={currentUserReview}></AddReviewForm>
         </div>
 
 
@@ -253,12 +289,14 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
               <FaRegUserCircle className="text-4xl text-gray-500" />
               
               <div>
+                <Link href={`/Account/${review.id_utilizator}`}>
                 <span 
                   className="block font-semibold text-gray-900 hover:text-emerald-700 hover:underline"
                 >
                   {review.nume+" "+review.prenume}
                 </span>
-                <Rating rating={`${review.rating}`} />
+                </Link>
+                <Rating rating={review.rating} />
                 <p className="text-gray-700">{review.continut}</p>
               </div>
             </div>
@@ -266,6 +304,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
           })}
         </div>
       </div>
+
     </div>
   )
 }

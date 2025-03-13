@@ -12,10 +12,13 @@ import { sql } from '@vercel/postgres';
 import RecipeDisplayCard from '@/components/RecipeDisplayCard';
 import { Button } from '@/components/ui/button';
 
-const page = async () => {
+const page = async ({ params}:{params:{user:string}}) => {
   const session=await getServerSession(options);
-  const user=session?.user;
-  
+
+  const userResponse=await sql`SELECT * FROM l_utilizatori WHERE id=${params.user}`
+  const user=userResponse.rows[0]
+  if(!user) return
+
   const result = await sql`
     SELECT 
       r.id, 
@@ -26,7 +29,7 @@ const page = async () => {
     FROM 
       l_retete r
     JOIN 
-      l_utilizatori u ON r.id_utilizator = ${session?.user.id}
+      l_utilizatori u ON r.id_utilizator = ${params.user}
     LEFT JOIN 
       l_retete_apreciate a ON a.id_reteta = r.id  
   `;
@@ -49,13 +52,13 @@ const page = async () => {
           <div className='h-32 m-2 flex flex-col justify-center'>
             <div className='bg-gray-100 p-4 grid grid-cols-2 grid-rows-2 rounded-lg gap-2 max-md:grid-cols-1 max-md:gap-0'>
               <p className='font-bold text-right max-md:text-center'> Urmăritori </p>
-              <p className='text-center text-emerald-800 font-bold'>999</p>
+              <p className='text-center text-emerald-800 font-bold'>{999}</p>
               <p className='font-bold text-right max-md:text-center '> Retete </p>
               <p className='text-center text-emerald-800 font-bold'>{rows.length}</p>
             </div>
           </div>
           <div className='flex flex-col items-center text-center'>
-            <p className='font-bold text-2xl'>{user?.name}</p>
+            <p className='font-bold text-2xl'>{user.nume}</p>
             <p className='hover:text-blue-500 hover:cursor-pointer hover:underline'>{user?.email}</p>
           </div>
 
