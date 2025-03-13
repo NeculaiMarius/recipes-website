@@ -11,6 +11,7 @@ import {
 import { sql } from '@vercel/postgres';
 import RecipeDisplayCard from '@/components/RecipeDisplayCard';
 import { Button } from '@/components/ui/button';
+import { RecipeDisplay } from '@/interfaces/recipe';
 
 const page = async ({ params}:{params:{user:string}}) => {
   const session=await getServerSession(options);
@@ -20,20 +21,49 @@ const page = async ({ params}:{params:{user:string}}) => {
   if(!user) return
 
   const result = await sql`
-    SELECT 
+      SELECT 
       r.id, 
       r.nume, 
       u.nume AS utilizator, 
       r.image_url, 
-      a.id AS id_aprecieri 
+      COALESCE(AVG(v.rating), 0) AS rating,
+      COUNT(DISTINCT a.id) AS numar_aprecieri,
+      COUNT(DISTINCT s.id) AS numar_salvari,
+      CASE 
+          WHEN EXISTS (
+              SELECT 1 FROM l_retete_apreciate a 
+              WHERE a.id_reteta = r.id AND a.id_utilizator = ${session?.user.id}
+          ) THEN TRUE 
+          ELSE FALSE 
+      END AS liked,
+      CASE 
+          WHEN EXISTS (
+              SELECT 1 FROM l_retete_salvate s 
+              WHERE s.id_reteta = r.id AND s.id_utilizator = ${session?.user.id}
+          ) THEN TRUE 
+          ELSE FALSE 
+      END AS saved
     FROM 
       l_retete r
     JOIN 
       l_utilizatori u ON r.id_utilizator = ${params.user}
     LEFT JOIN 
-      l_retete_apreciate a ON a.id_reteta = r.id  
+      l_reviews v ON v.id_reteta = r.id
+    LEFT JOIN 
+      l_retete_apreciate a ON a.id_reteta = r.id
+    LEFT JOIN 
+      l_retete_salvate s ON s.id_reteta = r.id
+    LEFT JOIN 
+      l_retete_ingrediente ri ON ri.id_reteta = r.id
+    LEFT JOIN 
+      l_ingrediente i ON i.id = ri.id_ingredient
+    GROUP BY 
+      r.id, r.nume, u.nume, r.image_url
+    ORDER BY (r.id) DESC
   `;
-  const rows = result?.rows;
+  const rows:RecipeDisplay[] = result?.rows as RecipeDisplay[];
+
+  
   return (
     <div className='pt-[80px] w-full'>
       
@@ -82,7 +112,7 @@ const page = async ({ params}:{params:{user:string}}) => {
           <div className='flex flex-wrap justify-center pt-8'>
             {rows?.map((recipe) => {
               return (
-                <RecipeDisplayCard id_recipe={recipe.id} name={recipe.nume} rating={"5"} author={recipe.utilizator} route={recipe.image_url} id_user={session?.user.id||""} liked={recipe.id_aprecieri != null} key={recipe.id}></RecipeDisplayCard>
+                <RecipeDisplayCard recipe={recipe} id_user={session?.user.id||''}></RecipeDisplayCard>
               );
             })}
           </div>
