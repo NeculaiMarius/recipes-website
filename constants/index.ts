@@ -40,25 +40,25 @@ export const homeButtons=[
 export const recipes=[
   {
     name:"Omleta",
-    rating:"4.2",
+    rating:4.2,
     author:"Popescu Ion",
     route:"/images/omleta.jpg"
   },
   {
     name:"Paste cu sos de roșii",
-    rating:"4.8",
+    rating:4.8,
     author:"Maria Ana",
     route:"/images/paste.jpg"
   },
   {
     name:"Butter chicken",
-    rating:"4.5",
+    rating:4.5,
     author:"Irina Apostol",
     route:"/images/butter.jpg"
   },
   {
     name:"Paste carbonara",
-    rating:"4.9",
+    rating:4.9,
     author:"Andrei Ioan",
     route:"/images/carbonara.jpg"
   }
