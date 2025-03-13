@@ -18,14 +18,6 @@ export default function FilterOrderContainer() {
     replace(`${pathname}?${params.toString()}`);
   }
 
-  let timeout: NodeJS.Timeout;
-
-  function handleSearchWithDebounce(term: string) {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => {
-      handleSearch(term);
-    }, 350);
-  }
 
   return (
     <div className="flex gap-4 justify-center">
@@ -33,6 +25,7 @@ export default function FilterOrderContainer() {
         return(
           <div className="bg-gray-100 rounded-md px-4 py-2 cursor-pointer"
             onClick={()=>handleSearch(order.value)}
+            key={order.value}
           >
             {order.label}
           </div>

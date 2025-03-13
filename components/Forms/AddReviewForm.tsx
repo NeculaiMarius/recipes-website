@@ -5,8 +5,9 @@ import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
 import { addReview } from '@/app/stores/ReviewStore'
 import { FaStar } from 'react-icons/fa'
+import { ReviewRecipePage } from '@/interfaces/review'
 
-const AddReviewForm = ({id_recipe,currentReview}:{id_recipe:string,currentReview:any}) => {
+const AddReviewForm = ({id_recipe,currentReview}:{id_recipe:string,currentReview:ReviewRecipePage}) => {
   const [content,setContent]=useState(currentReview?.continut);
   const [rating,setRating]=useState(currentReview?.rating);
   const [error,setError]=useState(false);

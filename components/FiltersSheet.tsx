@@ -10,19 +10,8 @@ const FiltersSheet = ({ ingredients ,type}: { ingredients: string[] ,type:string
   const [optimisticType,setOptimisticType]=useOptimistic(type);
   const [pending, startTransition] = useTransition();
 
-  function updateIngredients(genres: string[],type:string) {
-    let newParams = new URLSearchParams(
-      genres.map((genre) => ["ingredient", genre])
-    );
-    startTransition(() => {
-      setOptimsticIngredients(ingredients);
-      router.push(`?${newParams}`);
-    });
-  }
-
-
   function updateFilters(newIngredients?: string[], newType?: string) {
-    let newParams = new URLSearchParams();
+    const newParams = new URLSearchParams();
   
     (newIngredients || optimisticIngredients).forEach((ingredient) => {
       newParams.append("ingredient", ingredient);
@@ -61,7 +50,7 @@ const FiltersSheet = ({ ingredients ,type}: { ingredients: string[] ,type:string
                       className={`cursor-pointer px-3 py-1 rounded-full transition-colors duration-200 
                         ${isSelected ? "bg-emerald-700 text-white" : "bg-gray-200 text-gray-800"}`}
                       onClick={() => {
-                        let newGenres = isSelected
+                        const newGenres = isSelected
                           ? optimisticIngredients.filter((i) => i !== ingredient.id)
                           : [...optimisticIngredients, ingredient.id];
                         updateFilters(newGenres,optimisticType);

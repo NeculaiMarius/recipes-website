@@ -110,7 +110,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
     WHERE id_reteta=${searchParams?.recipeId}
     AND id_utilizator=${session?.user.id}
   `
-  const currentUserReview=await currentUserReviewResponse.rows[0];
+  const currentUserReview:ReviewRecipePage=await currentUserReviewResponse.rows[0] as ReviewRecipePage;
 
   return (
     <div className='pt-[80px] '>

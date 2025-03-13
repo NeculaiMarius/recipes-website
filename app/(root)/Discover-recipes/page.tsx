@@ -24,13 +24,13 @@ let totalCountCache: number | null = null;
 const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string,query?:string,order?:string, [key: string]: string | string[] | undefined} }) => {
   const session=await getServerSession(options);
 
-  let ingredients = Array.isArray(searchParams.ingredient)
+  const ingredients = Array.isArray(searchParams.ingredient)
     ? searchParams.ingredient
     : searchParams.ingredient
     ? [searchParams.ingredient]
     : [];
 
-  let type = Array.isArray(searchParams.type) 
+  const type = Array.isArray(searchParams.type) 
     ? searchParams.type[0]  
     : searchParams.type || ""; 
   const searchQuery = searchParams?.query || '';
@@ -42,7 +42,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
 
   
   const ingredientsQuery = ingredients.length > 0 ? ingredients.join(',') : null;
-  let query: string = `
+  const query: string = `
     SELECT 
       r.id, 
       r.nume, 
