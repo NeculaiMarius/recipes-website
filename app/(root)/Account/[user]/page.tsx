@@ -112,7 +112,7 @@ const page = async ({ params}:{params:{user:string}}) => {
           <div className='flex flex-wrap justify-center pt-8'>
             {rows?.map((recipe) => {
               return (
-                <RecipeDisplayCard recipe={recipe} id_user={session?.user.id||''}></RecipeDisplayCard>
+                <RecipeDisplayCard recipe={recipe} id_user={session?.user.id||''} key={recipe.id}></RecipeDisplayCard>
               );
             })}
           </div>
