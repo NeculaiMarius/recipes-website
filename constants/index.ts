@@ -112,8 +112,8 @@ export const ingredientsFilters=[
 
 export const orderFilters=[
   {
-    label:'Cele mai populare',
-    value:'populare'
+    label:'După rating',
+    value:'rating'
   },
   {
     label:'Cele mai apreciate',

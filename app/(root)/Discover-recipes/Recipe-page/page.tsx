@@ -117,9 +117,10 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       <div className='grid grid-cols-2 h-[calc(100vh-80px)] 
                       max-lg:flex max-lg:flex-col max-lg:h-fit'>
         {/* COL 1 */}
-        <div className='px-10 flex flex-col justify-evenly'>
+        <div className='px-10 flex flex-col justify-evenly
+                        max-md:px-2'>
           <h1 className='text-2xl font-bold'>{recipe?.nume}</h1>
-          <div className='px-24 bg-gray-100'>
+          <div className='px-24 bg-gray-100 max-sm:px-2'>
             <AspectRatio ratio={4/3} className=''>
               <Image
                 src={recipe?.image_url?recipe.image_url:""}
@@ -145,8 +146,8 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
             <SaveButtonBig id_user={session?.user.id||""} id_recipe={recipe.id} isLiked={recipe.saved} />
             <FavouriteButtonBig id_user={session?.user.id||""} id_recipe={recipe.id} isLiked={recipe.liked}/>
             <a href='#review'>
-              <div className='like-button font-bold px-4 py-2 shadow-xl w-[170px] justify-around text-lg bg-yellow-600 text-gray-100'>
-                Review-uri <FaStar size={25}></FaStar>
+              <div className='like-button font-bold px-4 py-2 shadow-xl w-[170px] justify-around text-lg bg-yellow-600 text-gray-100  max-md:w-[100px]'>
+                <span className='max-md:hidden'>Review-uri</span> <FaStar size={25}></FaStar>
               </div>
             </a>
           </div>
@@ -157,13 +158,14 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
             Lista de ingrediente
           </div>
 
-          <div className='relative w-[80%] mx-auto bg-gray-50 shadow-md py-4 lg:h-[70vh]'>
+          <div className='relative w-[80%] mx-auto bg-gray-50 shadow-md py-4 lg:h-[70vh]
+                          max-md:w-full'>
             <div className="overflow-auto h-full">
               {ingredients.map(ingredient => (
                 <>
                   <div
                     className='text-xl grid grid-cols-[4fr_3fr_3fr_13fr_2fr] py-2 px-8 w-full items-center
-                              max-md:text-base max-md:py-1'
+                              max-md:text-base max-md:py-1 max-md:px-4'
                     key={ingredient.id}
                   >
                     <Image
@@ -248,7 +250,8 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
 
         <Separator className='bg-transparent my-4'></Separator>
 
-        <div className='flex flex-col gap-4  w-[70%] mx-auto'>
+        <div className='flex flex-col gap-4  w-[70%] mx-auto
+                        max-md:w-full max-md:px-4'>
           {pasi_preparare.map((pas:string,index:number)=>{
             return(
               <div className='grid grid-cols-[1fr_3fr] text-lg -4 rounded-md border-gray-100 bg-gray-50 shadow-md px-4 py-2 items-center
@@ -282,7 +285,8 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
 
 
         <Separator className='my-8'></Separator>
-        <div className='grid grid-cols-2 w-[80%] mx-auto gap-x-4 gap-y-4'>
+        <div className='grid grid-cols-2 w-[80%] mx-auto gap-x-4 gap-y-4
+                        max-md:w-full max-md:grid-cols-1'>
           {reviews?.map(review=>{
             return(
             <div className="flex items-center gap-3 p-4 bg-gray-50 shadow-md rounded-lg" key={review.id}>
