@@ -190,7 +190,6 @@ const MyFridge = () => {
                       >
                         <span className="material-symbols-outlined line-clamp-1">delete</span>
                       </div>
-
                     </AccordionContent>
                   ))}
                 

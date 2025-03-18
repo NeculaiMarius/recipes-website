@@ -25,7 +25,6 @@ export async function POST(request:NextRequest) {
 export async function DELETE(request:NextRequest) {
   try {
     const {id_recipe,id_user}=await request.json();
-    console.log(id_recipe,id_user);
 
     if (!id_recipe || !id_user || typeof id_recipe !== "string" || typeof id_user !== "string") {
       return new NextResponse("Invalid input", { status: 400 });

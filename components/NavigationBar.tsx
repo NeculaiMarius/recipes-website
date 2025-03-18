@@ -22,7 +22,7 @@ const NavigationBar = async () => {
     const username=session?.user.firstName
 
   return (
-    <div className='flex w-full items-center justify-between fixed top-0 left-0 h-[80px] bg-white lg:px-16 p-4 z-50'>
+    <div className='flex w-full items-center justify-between fixed top-0 left-0 h-[80px] bg-white lg:px-16 p-4 z-50 '>
       <div className='flex items-center'>
 
         <div className='ml-10'>

@@ -110,8 +110,10 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
         <div className='fixed top-2 z-50 lg:left-6'>
           <FiltersSheet ingredients={ingredients} type={type} />
         </div>
-        <FilterOrderContainer />
-        <div className='justify-center flex flex-wrap pt-8 w-full'>
+        <div className='pt-4 text-sm'>
+          <FilterOrderContainer />
+        </div>
+        <div className='justify-center flex flex-wrap pt-4 w-full'>
           {rows?.map((recipe) => {
             return (
               <RecipeDisplayCard recipe={recipe} id_user={session?.user.id||''} key={recipe.id}></RecipeDisplayCard>
