@@ -22,7 +22,7 @@ const PaginationComponent = ({ totalPages, page }: { totalPages: number; page: n
   };
 
   return (
-    <Pagination className="py-12">
+    <Pagination className="py-12 ">
       <PaginationContent>
         <PaginationItem>
           {page > 1 && (

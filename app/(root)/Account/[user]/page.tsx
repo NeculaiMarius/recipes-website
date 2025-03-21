@@ -12,6 +12,10 @@ import { sql } from '@vercel/postgres';
 import RecipeDisplayCard from '@/components/RecipeDisplayCard';
 import { RecipeDisplay } from '@/interfaces/recipe';
 import FollowButton from '@/components/Buttons/FollowButton';
+import { GiCookingPot } from "react-icons/gi";
+import { FaFlag, FaHeart } from 'react-icons/fa';
+import { RiUserFollowFill, RiUserFollowLine } from 'react-icons/ri';
+
 
 const page = async ({ params}:{params:{user:string}}) => {
   const session=await getServerSession(options);
@@ -159,10 +163,10 @@ const page = async ({ params}:{params:{user:string}}) => {
       <div className=''>
         <Tabs defaultValue="account" className="w-full">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="recipes">Retete proprii</TabsTrigger>
-          <TabsTrigger value="followers">Urmaritori</TabsTrigger>
-          <TabsTrigger value="likes">Apreciate</TabsTrigger>
-          <TabsTrigger value="saves">Salvate</TabsTrigger>
+          <TabsTrigger value="recipes"> <GiCookingPot size={20}/> Retete proprii</TabsTrigger>
+          <TabsTrigger value="followers"><RiUserFollowFill /> Urmaritori</TabsTrigger>
+          <TabsTrigger value="likes"><FaHeart />Apreciate</TabsTrigger>
+          <TabsTrigger value="saves"><FaFlag/>Salvate</TabsTrigger>
         </TabsList>
 
         <TabsContent value="recipes">

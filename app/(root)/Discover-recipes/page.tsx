@@ -110,7 +110,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
         <div className='fixed top-2 z-50 lg:left-6'>
           <FiltersSheet ingredients={ingredients} type={type} />
         </div>
-        <div className='pt-4 text-sm'>
+        <div className='pt-4 text-xs px-4'>
           <FilterOrderContainer />
         </div>
         <div className='justify-center flex flex-wrap pt-4 w-full'>

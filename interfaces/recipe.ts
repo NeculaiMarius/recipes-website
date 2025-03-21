@@ -8,6 +8,9 @@ export interface RecipeDisplay {
   numar_salvari:number;
   liked: boolean;
   saved: boolean;
+  ingrediente_gasite:number;
+  ingrediente_reteta:number;
+  procent_potrivire:number;
 }
 
 export interface RecipePage{
@@ -24,3 +27,4 @@ export interface RecipePage{
   liked: boolean;
   saved: boolean;
 }
+

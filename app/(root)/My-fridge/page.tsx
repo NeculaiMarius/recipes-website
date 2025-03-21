@@ -1,212 +1,113 @@
-"use client"
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input'
+
 import React, { useEffect, useState } from 'react'
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion"
-import Image from 'next/image';
-import { ingredientsCategories } from '@/constants';
-import { toast } from 'sonner';
+
+import { RecipeDisplay } from '@/interfaces/recipe';
+import RecipeDisplayCard from '@/components/RecipeDisplayCard';
+import FilterOrderContainer from '@/components/FilterOrderContainer';
+import { useSearchParams } from 'next/navigation';
+import FridgeIngredientsSections from '@/components/FridgeIngredientsSections';
+import { getServerSession } from 'next-auth';
+import { options } from '@/app/api/auth/[...nextauth]/options';
+import { sql } from '@vercel/postgres';
+import PaginationComponent from '@/components/PaginationComponent';
 
 
-const MyFridge = () => {
-  const [categories,setCategories]=useState(ingredientsCategories);
-  const [ingredientQuery, setIngredientQuery] = useState("");
-  const [ingredientSuggestions, setIngredientSuggestions] = useState<{ id: string; name: string; um: string; category:string }[]>([]);
-  const [selectedIngredients, setSelectedIngredients] = useState<SelectedIngredient[]>([]);
+let totalCountCache: number | null = null;
 
-  useEffect(()=>{
-    const fetchSelectedIngredients=async()=>{
-      const response= await fetch('/api/fridge/get-ingredients')
-      if(!response.ok){
-        throw new Error('Failed to fetch selected ingredients');
-      }
-      const data=await response.json();
+const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?:string,order?:string } }) => {
+  const session=await getServerSession(options)
+  const searchQuery = searchParams?.query || '';
+  const order = searchParams?.order || ''; 
 
-      if (data && data.rows) {
-        const ingredients = data.rows.map((item: IngredientResponse) => ({
-          id: item.id,
-          name: item.nume,
-          um: item.um,
-          quantity: parseFloat(item.cantitate), 
-          category: item.categorie,
-        }));
-  
-        setSelectedIngredients(ingredients);
-      }
-    }
-    fetchSelectedIngredients();     
-  },[]);
+  const page = parseInt(searchParams.page || '1', 10); 
+  const limit=12;
+  const offset = (page - 1) * limit;
 
-  useEffect(() => {
-    const fetchIngredients = async () => {
-      if (ingredientQuery.trim()) {
-        try {
-          const response = await fetch(`/api/ingredients?query=${encodeURIComponent(ingredientQuery)}`);
-          const data = await response.json();
-          setIngredientSuggestions(data.ingredients || []);
-        } catch (error) {
-          console.error("Failed to fetch ingredients:", error);
-        }
-      } else {
-        setIngredientSuggestions([]);
-      }
-    };
-    fetchIngredients();
-  }, [ingredientQuery]);
-
-  const handleAddIngredient = (ingredient: { id: string; name: string; um: string; category:string }) => {
-    const isIngredientAlreadySelected = selectedIngredients.some(item => item.id === ingredient.id);
-    if (!isIngredientAlreadySelected) {
-      setSelectedIngredients((prev) => [...prev, { ...ingredient, quantity: (ingredient.um==="g"||ingredient.um==="ml")?10:1 }]);
-    }
-    setIngredientQuery("");
-    setIngredientSuggestions([]);
-    
-  };
-
-  const handleRemoveIngredient = (id: string) => {
-    setSelectedIngredients((prev) => prev.filter(ingredient => ingredient.id !== id));
-  };
-  
-
-  const handleQuantityChange = (id: string, quantity: number) => {
-    setSelectedIngredients((prev) =>
-      prev.map(ingredient =>
-        ingredient.id === id ? { ...ingredient, quantity } : ingredient
-      )
-    );
-  };
-
-
-  const onClickButton=async ()=>{
-    try{
-      const response=await fetch('/api/fridge/save-ingredients',{
-        method:'POST',
-        headers:{
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(selectedIngredients),
-      })
-
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      const data = await response.json();
-      console.log('Response from API:', data);
-    }
-    catch(error){
-      console.error('Error saving ingredients:', error);
-    }
+  if (totalCountCache === null) {
+    const countResult = await sql`SELECT COUNT(*) FROM l_retete`;
+    totalCountCache = parseInt(countResult?.rows[0].count, 10);
   }
+
+  const totalPages = Math.ceil(totalCountCache / limit);
+
+  const query =`
+    SELECT 
+      r.id, 
+      r.nume, 
+      u.nume AS utilizator, 
+      r.image_url, 
+      COALESCE(AVG(v.rating), 0) AS rating,
+      COUNT(DISTINCT a.id) AS numar_aprecieri,
+      COUNT(DISTINCT s.id) AS numar_salvari,
+      CASE 
+          WHEN EXISTS (
+              SELECT 1 FROM l_retete_apreciate a 
+              WHERE a.id_reteta = r.id AND a.id_utilizator = ${session?.user.id}
+          ) THEN TRUE 
+          ELSE FALSE 
+      END AS liked,
+      CASE 
+          WHEN EXISTS (
+              SELECT 1 FROM l_retete_salvate s 
+              WHERE s.id_reteta = r.id AND s.id_utilizator = ${session?.user.id}
+          ) THEN TRUE 
+          ELSE FALSE 
+      END AS saved,
+      SUM(
+          CASE 
+              WHEN f.cantitate IS NOT NULL THEN LEAST(f.cantitate / NULLIF(ri.cantitate, 0), 1)
+              ELSE 0
+          END
+      ) AS ingrediente_gasite,
+      COUNT(ri.id_ingredient) AS ingrediente_totale,
+      COALESCE(
+          SUM(
+              CASE 
+                  WHEN f.cantitate IS NOT NULL THEN LEAST(f.cantitate / NULLIF(ri.cantitate, 0), 1)
+                  ELSE 0
+              END
+          ) / NULLIF(COUNT(ri.id_ingredient), 0),
+          0
+      ) AS procent_ingrediente
+    FROM l_retete r
+    JOIN 
+      l_utilizatori u ON r.id_utilizator = u.id
+    LEFT JOIN 
+      l_reviews v ON v.id_reteta = r.id
+    LEFT JOIN 
+      l_retete_apreciate a ON a.id_reteta = r.id
+    LEFT JOIN 
+      l_retete_salvate s ON s.id_reteta = r.id
+    JOIN l_retete_ingrediente ri ON r.id = ri.id_reteta
+    LEFT JOIN l_ingrediente_frigider f 
+        ON ri.id_ingredient = f.id_ingredient 
+        AND f.id_utilizator = 1
+    WHERE
+      lower(r.nume) LIKE lower('%${searchQuery}%')
+    GROUP BY r.id, r.nume, u.nume, r.image_url
+    ORDER BY procent_ingrediente DESC, (${order?order:'r.id'}) DESC
+    LIMIT ${limit} OFFSET ${offset};
+    `;
+
+    const result=await sql.query(query)
+    const recipes:RecipeDisplay[]=result?.rows 
+
+
 
   return (
     <div className='p-[1vw] pt-[90px] h-screen w-full max-md:h-fit'>
-      <div className='bg-gray-300 w-full h-full grid grid-cols-[40%_60%] rounded-3xl max-md:grid-cols-1 overflow-hidden'>
-        <div className='flex flex-col overflow-auto'>
-          <div className='pb-5 bg-blue-300 relative'>
-            <div className='flex justify-between items-center sticky'>
-              <div className='w-fit bg-blue-500 rounded-r-3xl p-2 pr-3 my-4 text-white font-bold text-3xl'>
-                Frigiderul meu
-              </div>
-              <Button onClick={onClickButton} className='bg-green-800'>Salveaza modificarile</Button>
-            </div>
-            
-            
-            <Input 
-              className='rounded-full w-[400px] mx-auto z-20'
-              value={ingredientQuery}
-              onChange={(e)=>setIngredientQuery(e.target.value)}
-            />
-
-            {ingredientSuggestions.length > 0 && (
-              <ul className=" p-2 max-h-40 overflow-y-auto bg-white w-[500px] mx-auto absolute">
-                {ingredientSuggestions.map((ingredient) => (
-                  <li
-                    key={ingredient.id}
-                    className="cursor-pointer p-1 hover:bg-gray-200 flex items-center gap-4"
-                    onClick={() => {
-                      handleAddIngredient(ingredient);
-                      toast("Ingredient adaugat", {
-                        description: `${ingredient.name}`,
-                        action: {
-                          label: "Anulează",
-                          onClick: () => handleRemoveIngredient(ingredient.id),
-                        },
-                      })
-                    }}
-                  >
-                    <Image
-                      src={`/svg-icons/${ingredient.category}.svg`}
-                      height={30}
-                      width={30}
-                      alt=''
-                    />
-                    {ingredient.name} ({ingredient.um})
-                  </li>
-                ))}
-              </ul>
-            )}
-
+      <div className='w-full h-full grid grid-cols-[30%_70%] rounded-3xl max-md:grid-cols-1 overflow-hidden'>
+        <FridgeIngredientsSections />
+        <div className=' overflow-auto'>
+          <FilterOrderContainer/>
+          <div className='justify-evenly flex flex-wrap pt-4 w-full'>
+            {recipes.map((recipe)=>{
+              return(
+                <RecipeDisplayCard recipe={recipe} id_user={session?.user.id||''} key={recipe.id}></RecipeDisplayCard>
+              )
+            })}
           </div>
-
-          <div className=' flex-grow'>
-            <Accordion type="multiple">
-              {categories?.map(category=>{
-                const filteredIngredients=selectedIngredients.filter(ingredient=> ingredient.category === category);
-                const noIngredients=filteredIngredients.length;
-              return (
-                <AccordionItem value={category} className='' key={category}>
-                <AccordionTrigger className='font-bold px-4 text-gray-800 py-1 '>
-                  <div className='flex items-center gap-3'>
-                    <Image
-                      src={`/svg-icons/${category}.svg`}
-                      height={50}
-                      width={50}
-                      alt=''
-                    />
-                    {category}
-                    
-                    <div className={`rounded-full text-white h-6 w-6 ${noIngredients>0?'bg-red-600':'bg-gray-400'}`}>
-                      {noIngredients}
-                    </div>
-                  </div>
-                  
-                  
-                </AccordionTrigger>
-                {filteredIngredients
-                  .map(filteredIngredient => (
-                    <AccordionContent key={filteredIngredient.id} className='flex justify-between px-8 py-1 items-center'>
-                      <div>
-                      {filteredIngredient.name}
-                      </div>
-                      <div  
-                        onClick={()=>handleRemoveIngredient(filteredIngredient.id)} 
-                        className="self-end bg-white text-red-600 rounded-md p-1 cursor-pointer border-red-600 border-2 hover:bg-red-600 hover:text-white"
-                      >
-                        <span className="material-symbols-outlined line-clamp-1">delete</span>
-                      </div>
-                    </AccordionContent>
-                  ))}
-                
-                </AccordionItem>
-              )})}
-
-            </Accordion>
-          </div>
-        </div>
-        <div className='bg-green-400 h-[200px]'>
-          <Button
-            variant="outline"
-          >
-            ceva
-          </Button>
-
-
+          <PaginationComponent totalPages={totalPages} page={page}/>
         </div>
       </div>
     </div>
@@ -215,18 +116,5 @@ const MyFridge = () => {
 
 export default MyFridge
 
-interface SelectedIngredient {
-  id: string;
-  name: string;
-  um: string;
-  quantity: number;
-  category: string;
-}
 
-interface IngredientResponse {
-  id: string;
-  nume: string;
-  um: string;
-  cantitate: string;
-  categorie: string;
-}
+

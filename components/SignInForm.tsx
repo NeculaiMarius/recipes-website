@@ -76,7 +76,7 @@ const SignInForm = () => {
             <FormItem>
               <FormLabel className='flex justify-between'><span>Password</span><span className='underline'>Forgot your password?</span></FormLabel>
               <FormControl>
-                <Input placeholder="Enter your password" {...field} />
+                <Input placeholder="Enter your password" type='password' {...field} />
               </FormControl>
             </FormItem>
           )}

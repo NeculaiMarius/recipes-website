@@ -27,7 +27,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
     }, 350);
   }
   
-  if (pathname !== "/Discover-recipes") {
+  if (!["/Discover-recipes", "/My-fridge"].includes(pathname)) {
     return null;
   }
 
