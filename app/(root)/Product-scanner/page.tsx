@@ -9,10 +9,12 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/
 import Image from "next/image"
 import Link from "next/link"
 import { useState } from "react"
-import { Search, Filter, Sparkles, Scan, CheckCircle } from "lucide-react"
+import { Search, Sparkles, Scan, CheckCircle } from "lucide-react"
 import BarcodeScanner from "@/components/BarcodeScanner"
 import { SearchProduct } from "@/interfaces/product"
-import { FaRegSadTear } from "react-icons/fa";
+import { FaFilter, FaRegSadTear, FaSearch } from "react-icons/fa";
+import { FaBarcode } from "react-icons/fa6";
+
 
 
 
@@ -157,22 +159,25 @@ const ProductScanner = () => {
               <TabsList className="grid w-full grid-cols-3 mb-6 bg-gray-100">
                 <TabsTrigger
                   value="search"
-                  className="data-[state=active]:bg-emerald-700 data-[state=active]:text-white"
+                  className="data-[state=active]:bg-emerald-700 data-[state=active]:text-white gap-2"
                 >
-                  Căutare Simplă
+                  <span className="max-sm:hidden">Căutare Simplă</span>
+                  <FaSearch size={20} />
                 </TabsTrigger>
                 <TabsTrigger
                   value="advanced"
-                  className="data-[state=active]:bg-emerald-700 data-[state=active]:text-white"
+                  className="data-[state=active]:bg-emerald-700 data-[state=active]:text-white gap-2"
                 >
-                  <Filter className="h-4 w-4 mr-2" />
-                  Filtre Avansate
+                  <span className="max-sm:hidden">Filtre Avansate</span>
+                  <FaFilter size={20}/>
                 </TabsTrigger>
                 <TabsTrigger
                   value="scan"
-                  className="data-[state=active]:bg-emerald-700 data-[state=active]:text-white"
+                  className="data-[state=active]:bg-emerald-700 data-[state=active]:text-white gap-2"
                 >
-                  Scanează codul de bare
+                  <span className="max-sm:hidden">Scanează codul de bare</span>
+                  <FaBarcode size={20}/>
+
                 </TabsTrigger>
               </TabsList>
 
