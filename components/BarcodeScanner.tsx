@@ -26,7 +26,7 @@ const BarcodeScanner = ({ onScan, onError, active }: BarcodeScannerProps) => {
         Html5QrcodeSupportedFormats.CODE_128
       ],
       fps: 10,
-      qrbox: 250
+      qrbox: {width:200, height:100}
     };
 
     scannerRef.current = new Html5QrcodeScanner(elementId, config, false);
@@ -37,7 +37,7 @@ const BarcodeScanner = ({ onScan, onError, active }: BarcodeScannerProps) => {
     };
 
     const errorHandler = (errorMessage: string) => {
-      onError?.(errorMessage);
+      // onError?.(errorMessage); 
     };
 
     scannerRef.current.render(successHandler, errorHandler);
@@ -50,7 +50,7 @@ const BarcodeScanner = ({ onScan, onError, active }: BarcodeScannerProps) => {
     };
   }, [active, onScan, onError]);
 
-  return active ? <div id="scanner-container" className="w-full max-w-2xl" /> : null;
+  return active ? <div id="scanner-container" className="sm:w-full lg:w-[50%] md:w-[70%]" /> : null;
 };
 
 export default BarcodeScanner;

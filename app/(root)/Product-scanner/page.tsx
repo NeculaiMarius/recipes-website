@@ -13,6 +13,8 @@ import { Search, Filter, Sparkles, Scan, CheckCircle } from "lucide-react"
 import BarcodeScanner from "@/components/BarcodeScanner"
 import { SearchProduct } from "@/interfaces/product"
 import { nutritionColors } from "@/constants"
+import { FaRegSadTear } from "react-icons/fa";
+
 
 
 
@@ -20,6 +22,7 @@ const ProductScanner = () => {
   const [searchQuery, setSearchQuery] = useState("")
   const [searchResults, setSearchResults] = useState<SearchProduct[]>([])
   const [isLoading, setIsLoading] = useState(false)
+  const [productNotFount,setProductNotFount]=useState(false)
 
   // Score filters
   const [nutritionGradeTag, setNutritionGradeTag] = useState("any")
@@ -94,6 +97,11 @@ const ProductScanner = () => {
       }
 
       const data = await response.json()
+      if (data.count === 0) {
+        setProductNotFount(true);
+      } else {
+        setProductNotFount(false);
+      }
       setSearchResults(data.products.slice(0, 15) || [])
     } catch (error) {
       setSearchResults([])
@@ -451,7 +459,8 @@ const ProductScanner = () => {
               </TabsContent>
 
 
-              <TabsContent value="scan">
+              <TabsContent value="scan" className="w-full">
+                <div className="h-fit flex justify-center">
                 {!barcode ? (
                   <BarcodeScanner 
                     active={!barcode}
@@ -479,6 +488,7 @@ const ProductScanner = () => {
                     </Button>
                   </div>
                 )}
+                </div>
               </TabsContent>
             </Tabs>
           </div>
@@ -560,14 +570,18 @@ const ProductScanner = () => {
                 <div className="animate-spin mx-auto w-8 h-8 border-4 border-emerald-700 border-t-transparent rounded-full"></div>
                 <p className="text-lg text-gray-600">Se caută produse...</p>
               </div>
-            ) : (
+            ) : productNotFount?(
               searchQuery && (
                 <div className="space-y-2">
+                  <div className="flex justify-center items-center">
+                    <p className="text-xl text-red-700">Oops.. </p>
+                    <FaRegSadTear size={30} className="text-red-700" />
+                  </div>
                   <p className="text-lg text-gray-700">Nu s-au găsit produse care să corespundă criteriilor tale.</p>
                   <p className="text-muted-foreground">Încearcă să ajustezi termenii de căutare sau filtrele.</p>
                 </div>
               )
-            )}
+            ):null}
           </div>
         )}
         
