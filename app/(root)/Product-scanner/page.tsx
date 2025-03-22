@@ -44,6 +44,9 @@ const ProductScanner = () => {
   const [barcode,setBarcode]=useState<string>('')
   
 
+  
+
+
   const getScoreColor = (grade: string) => {
     const gradeMap: Record<string, string> = {
       A: "bg-green-500",
