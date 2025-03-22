@@ -12,7 +12,6 @@ import { useState } from "react"
 import { Search, Filter, Sparkles, Scan, CheckCircle } from "lucide-react"
 import BarcodeScanner from "@/components/BarcodeScanner"
 import { SearchProduct } from "@/interfaces/product"
-import { nutritionColors } from "@/constants"
 import { FaRegSadTear } from "react-icons/fa";
 
 
@@ -343,12 +342,12 @@ const ProductScanner = () => {
 
                           {/* Sugars (per serving) filter */}
                           <div
-                            className={`space-y-2 border rounded-md p-3 shadow-sm hover:shadow-md transition-shadow border-l-4 ${nutritionColors.carbs.borderClass}`}
+                            className={`space-y-2 border rounded-md p-3 shadow-sm hover:shadow-md transition-shadow border-l-4 border-amber-400`}
                           >
                             <label
-                              className={`text-sm font-medium ${nutritionColors.carbs.textClass} flex items-center gap-2`}
+                              className={`text-sm font-medium text-amber-700 flex items-center gap-2`}
                             >
-                              <div className={`w-3 h-3 rounded-full ${nutritionColors.carbs.bgClass}`}></div>
+                              <div className={`w-3 h-3 rounded-full bg-amber-400`}></div>
                               Zaharuri (per porție)
                             </label>
                             <div className="flex gap-2">
@@ -377,12 +376,12 @@ const ProductScanner = () => {
 
                           {/* Saturated fat (per 100g) filter */}
                           <div
-                            className={`space-y-2 border rounded-md p-3 shadow-sm hover:shadow-md transition-shadow border-l-4 ${nutritionColors.fats.borderClass}`}
+                            className={`space-y-2 border rounded-md p-3 shadow-sm hover:shadow-md transition-shadow border-l-4 border-rose-400`}
                           >
                             <label
-                              className={`text-sm font-medium ${nutritionColors.fats.textClass} flex items-center gap-2`}
+                              className={`text-sm font-medium text-rose-700 flex items-center gap-2`}
                             >
-                              <div className={`w-3 h-3 rounded-full ${nutritionColors.fats.bgClass}`}></div>
+                              <div className={`w-3 h-3 rounded-full bg-rose-400`}></div>
                               Grăsimi Saturate (per 100g)
                             </label>
                             <div className="flex gap-2">
@@ -411,12 +410,12 @@ const ProductScanner = () => {
 
                           {/* Salt (prepared per serving) filter */}
                           <div
-                            className={`space-y-2 border rounded-md p-3 shadow-sm hover:shadow-md transition-shadow border-l-4 ${nutritionColors.proteins.borderClass}`}
+                            className={`space-y-2 border rounded-md p-3 shadow-sm hover:shadow-md transition-shadow border-l-4 border-emerald-500`}
                           >
                             <label
-                              className={`text-sm font-medium ${nutritionColors.proteins.textClass} flex items-center gap-2`}
+                              className={`text-sm font-medium text-emerald-700 flex items-center gap-2`}
                             >
-                              <div className={`w-3 h-3 rounded-full ${nutritionColors.proteins.bgClass}`}></div>
+                              <div className={`w-3 h-3 rounded-full bg-emerald-500`}></div>
                               Sare (preparată per porție)
                             </label>
                             <div className="flex gap-2">

@@ -128,27 +128,5 @@ export const orderFilters=[
   },
 ]
 
-export const nutritionColors = {
-  carbs: {
-    label: "Carbohidrați",
-    color: "hsl(37.7 92.1% 50.2%)",
-    bgClass: "bg-amber-400",
-    borderClass: "border-amber-400",
-    textClass: "text-amber-700",
-  },
-  proteins: {
-    label: "Proteine",
-    color: "hsl(173.4 80.4% 40%)",
-    bgClass: "bg-emerald-500",
-    borderClass: "border-emerald-500",
-    textClass: "text-emerald-700",
-  },
-  fats: {
-    label: "Grăsimi",
-    color: "hsl(333.3 71.4% 50.6%)",
-    bgClass: "bg-rose-400",
-    borderClass: "border-rose-400",
-    textClass: "text-rose-700",
-  },
-}
+
 
