@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth/next";
 import { options } from "../api/auth/[...nextauth]/options";
 import WelcomeText from "@/components/WelcomeText";
 import HomeButtons from "@/components/Buttons/HomeButtons";
-import { homeButtons, recipes } from "@/constants";
+import { navigationButtons, recipes } from "@/constants";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import RecipeCard from "@/components/RecipeCard";
@@ -42,7 +42,7 @@ export default  async function Home() {
       </div>
       <div className="bg-gray-300 rounded-l-full flex justify-center relative">
         <div className="flex flex-col justify-center items-start">
-          {homeButtons.map((item)=>{
+          {navigationButtons.map((item)=>{
             return(
               <HomeButtons text={item.text} image={item.image} route={item.route} key={item.route}/>
             )

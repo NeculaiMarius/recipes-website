@@ -121,7 +121,7 @@ const FridgeIngredientsSections = () => {
             
             
             <Input 
-              className='rounded-full w-[400px] mx-auto z-20'
+              className='rounded-full max-w-[400px] mx-auto z-20'
               value={ingredientQuery}
               onChange={(e)=>setIngredientQuery(e.target.value)}
             />

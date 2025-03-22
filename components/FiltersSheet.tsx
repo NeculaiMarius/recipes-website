@@ -3,6 +3,7 @@ import React, { useOptimistic, useTransition } from 'react'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
 import { useRouter } from 'next/navigation';
 import { ingredientsFilters, recipeTypes } from '@/constants';
+import { FaFilter } from 'react-icons/fa';
 
 const FiltersSheet = ({ ingredients ,type}: { ingredients: string[] ,type:string}) => {
   const router = useRouter();
@@ -32,8 +33,9 @@ const FiltersSheet = ({ ingredients ,type}: { ingredients: string[] ,type:string
   return (
     <div>
       <Sheet>
-          <SheetTrigger className='flex items-center p-2 bg-emerald-700 text-white rounded-md'>
-            <span className="material-symbols-outlined bold-symbol text-4xl">menu</span></SheetTrigger>
+          <SheetTrigger className='h-12 w-12 flex justify-center items-center p-2 bg-emerald-700 text-white rounded-md'>
+            <FaFilter className='text-2xl' />
+          </SheetTrigger>
           <SheetContent side={'left'}>
             <SheetHeader>
               <SheetTitle>Filtre</SheetTitle>

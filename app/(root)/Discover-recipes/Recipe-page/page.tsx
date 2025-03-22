@@ -22,6 +22,8 @@ import Link from 'next/link';
 import { RecipePage } from '@/interfaces/recipe';
 import { IngredientRecipePage } from '@/interfaces/ingredient';
 import { ReviewRecipePage } from '@/interfaces/review';
+import { IoMdSettings } from "react-icons/io";
+
 
 
 const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => {
@@ -113,7 +115,12 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
   const currentUserReview:ReviewRecipePage=await currentUserReviewResponse.rows[0] as ReviewRecipePage;
 
   return (
+    
     <div className='pt-[80px] '>
+      <div className='fixed top-4 left-6 z-50 h-12 w-12 p-2 bg-emerald-700 rounded-md items-center flex'>
+        <IoMdSettings className='text-3xl text-white'/>
+      </div>
+
       <div className='grid grid-cols-2 h-[calc(100vh-80px)] 
                       max-lg:flex max-lg:flex-col max-lg:h-fit'>
         {/* COL 1 */}

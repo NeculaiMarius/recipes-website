@@ -9,6 +9,7 @@ import {
 import { usePathname } from 'next/navigation';
 import { mainFeatures } from '@/constants';
 import Link from 'next/link';
+import { Menu } from 'lucide-react';
 
 const FeatureSelector = () => {
   const pathname=usePathname();
@@ -16,9 +17,9 @@ const FeatureSelector = () => {
   return (
     <DropdownMenu>
         <DropdownMenuTrigger >
-          <div className='flex items-center'>
+          <div className='flex items-center gap-2 bg-emerald-700 text-white rounded-md px-2 py-1 shadow-md font-semibold'>
             {curFeature?.label}
-              <span className="material-symbols-outlined">unfold_more</span>
+            <Menu size={36}></Menu>
           </div>     
         </DropdownMenuTrigger>
         <DropdownMenuContent>

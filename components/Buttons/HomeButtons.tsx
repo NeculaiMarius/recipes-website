@@ -13,10 +13,10 @@ const HomeButtons = ({ image, text, route }: { image: string; text: string; rout
     };
 
     handleResize(); 
-    window.addEventListener('resize', handleResize); // Ascultă modificările dimensiunii ferestrei
+    window.addEventListener('resize', handleResize); 
 
     return () => {
-      window.removeEventListener('resize', handleResize); // Curăță evenimentul la demontare
+      window.removeEventListener('resize', handleResize); 
     };
   }, []);
 

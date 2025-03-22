@@ -1,6 +1,5 @@
 import NavigationBar from "@/components/NavigationBar";
-import { getServerSession } from "next-auth";
-import { options } from "../api/auth/[...nextauth]/options";
+import Footer from "@/components/Footer";
 
 
 export default async function RootLayout({
@@ -13,6 +12,7 @@ export default async function RootLayout({
     <>
       <NavigationBar  />
       {children}
+      <Footer />
     </>
       
   );

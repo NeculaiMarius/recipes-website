@@ -1,4 +1,3 @@
-import { routeModule } from "next/dist/build/templates/app-page"
 
 export const mainFeatures=[
   {
@@ -19,7 +18,7 @@ export const mainFeatures=[
   }
 ]
 
-export const homeButtons=[
+export const navigationButtons=[
   {
     text:"Descopera retete",
     image:"/svg-icons/food.svg",

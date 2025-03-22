@@ -504,72 +504,97 @@ const ProductScanner = () => {
 
       <div className="xl:px-10 md:px-5 sm:px-2 mt-8">
         {searchResults.length > 0 ? (
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-4 p-4 max-sm:p-2">
-            {searchResults.map((product) => (
-              <div className="flex justify-center" key={product.code}>
-                <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 w-full border border-gray-200">
-                  <div className="flex flex-row h-full">
-                    <Link
-                      href={`/Product-scanner/Product-page?productCode=${product.code}`}
-                      className="w-[180px] h-[150px] bg-gray-50 flex items-center justify-center border-r shrink-0
-                                max-sm:w-[100px] max-sm:h-[90px]"
-                    >
-                      <Image
-                        src={product.image_url || "/placeholder.svg"}
-                        alt={product.product_name}
-                        height={150}
-                        width={180}
-                        className="object-contain p-2"
-                        priority={false}
-                      />
-                    </Link>
-                    <CardContent className="flex-1 p-3">
-                      <div className="flex flex-col h-full justify-between">
-                        <div>
-                          <Link href={`/Product-scanner/Product-page?productCode=${product.code}`}>
-                            <h3 className="font-semibold text-sm hover:text-emerald-700 hover:underline line-clamp-1">
-                              {product.product_name}
-                            </h3>
-                          </Link>
-
-                          <p className="text-muted-foreground text-xs mb-2">{product.brands}</p>
-                        </div>
-
-                        <div className="space-y-2">
-                          <div className="flex flex-wrap gap-2">
-                            <div className="flex items-center gap-1">
-                              <span className="text-xs font-medium">Nutri</span>
-                              <Badge
-                                className={`${getScoreColor(product.nutriscore_grade)} text-white px-1.5 py-0.5 text-xs`}
-                              >
-                                {product.nutriscore_grade.toUpperCase()}
-                              </Badge>
-                            </div>
-
-                            <div className="flex items-center gap-1">
-                              <span className="text-xs font-medium">Eco</span>
-                              <Badge
-                                className={`${getScoreColor(product.ecoscore_grade)} text-white px-1.5 py-0.5 text-xs`}
-                              >
-                                {product.ecoscore_grade.toUpperCase()}
-                              </Badge>
-                            </div>
+          <div className="w-full px-2 sm:px-4 md:px-5 xl:px-10 mt-8">
+          {searchResults.length > 0 ? (
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+              {searchResults.map((product) => (
+                <div className="w-full" key={product.code}>
+                  <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+                    {/* Mobile layout (stacked) */}
+                    <div className="flex flex-col sm:flex-row h-full">
+                      <Link
+                        href={`/Product-scanner/Product-page?productCode=${product.code}`}
+                        className="w-full sm:w-[180px] h-[120px] sm:h-[150px] bg-gray-50 flex items-center justify-center sm:border-r"
+                      >
+                        <Image
+                          src={product.image_url || "/placeholder.svg"}
+                          alt={product.product_name}
+                          height={150}
+                          width={180}
+                          className="object-contain p-2 max-h-[120px] sm:max-h-[150px]"
+                          priority={false}
+                        />
+                      </Link>
+                      <CardContent className="flex-1 p-3">
+                        <div className="flex flex-col h-full justify-between">
+                          <div>
+                            <Link href={`/Product-scanner/Product-page?productCode=${product.code}`}>
+                              <h3 className="font-semibold text-sm hover:text-emerald-700 hover:underline line-clamp-2">
+                                {product.product_name}
+                              </h3>
+                            </Link>
+                            <p className="text-muted-foreground text-xs mb-2 line-clamp-1">{product.brands}</p>
                           </div>
-
-                          {product.categories && (
-                            <div className="flex items-center gap-1 text-xs pt-1 border-t">
-                              <span className="font-medium">Categorie:</span>
-                              <span className="text-muted-foreground truncate">{product.categories.split(",")[0]}</span>
+    
+                          <div className="space-y-2">
+                            <div className="flex flex-wrap gap-2">
+                              <div className="flex items-center gap-1">
+                                <span className="text-xs font-medium">Nutri</span>
+                                <Badge
+                                  className={`${getScoreColor(product.nutriscore_grade)} text-white px-1.5 py-0.5 text-xs`}
+                                >
+                                  {product.nutriscore_grade.toUpperCase()}
+                                </Badge>
+                              </div>
+    
+                              <div className="flex items-center gap-1">
+                                <span className="text-xs font-medium">Eco</span>
+                                <Badge
+                                  className={`${getScoreColor(product.ecoscore_grade)} text-white px-1.5 py-0.5 text-xs`}
+                                >
+                                  {product.ecoscore_grade.toUpperCase()}
+                                </Badge>
+                              </div>
                             </div>
-                          )}
+    
+                            {product.categories && (
+                              <div className="flex items-center gap-1 text-xs pt-1 border-t">
+                                <span className="font-medium">Categorie:</span>
+                                <span className="text-muted-foreground truncate">{product.categories.split(",")[0]}</span>
+                              </div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    </CardContent>
+                      </CardContent>
+                    </div>
+                  </Card>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              {isLoading ? (
+                <div className="space-y-4">
+                  <div className="animate-spin mx-auto w-8 h-8 border-4 border-emerald-700 border-t-transparent rounded-full"></div>
+                  <p className="text-lg text-gray-600">Se caută produse...</p>
+                </div>
+              ) : productNotFount ? (
+                searchQuery && (
+                  <div className="space-y-2">
+                    <div className="flex justify-center items-center gap-2">
+                      <p className="text-xl text-red-700">Oops.. </p>
+                      {/* Assuming FaRegSadTear is imported from react-icons */}
+                      <span className="text-red-700 text-2xl">😢</span>
+                    </div>
+                    <p className="text-lg text-gray-700">Nu s-au găsit produse care să corespundă criteriilor tale.</p>
+                    <p className="text-muted-foreground">Încearcă să ajustezi termenii de căutare sau filtrele.</p>
                   </div>
-                </Card>
-              </div>
-            ))}
-          </div>
+                )
+              ) : null}
+            </div>
+          )}
+        </div>
+      
         ) : (
           <div className="text-center py-12">
             {isLoading ? (
