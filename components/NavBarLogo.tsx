@@ -28,7 +28,7 @@ const NavBarLogo = () => {
       >
         <UtensilsCrossed className="h-5 w-5 text-white" strokeWidth={2} />
       </motion.div>
-      <span className="font-semibold text-lg text-emerald-700 whitespace-nowrap">
+      <span className="font-semibold text-lg max-sm:text-base text-emerald-700 whitespace-nowrap">
         Recipe Website
       </span>
     </Link>
