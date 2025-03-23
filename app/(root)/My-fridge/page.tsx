@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 import { RecipeDisplay } from '@/interfaces/recipe';
 import RecipeDisplayCard from '@/components/RecipeDisplayCard';
 import FilterOrderContainer from '@/components/FilterOrderContainer';
-import { useSearchParams } from 'next/navigation';
 import FridgeIngredientsSections from '@/components/FridgeIngredientsSections';
 import { getServerSession } from 'next-auth';
 import { options } from '@/app/api/auth/[...nextauth]/options';

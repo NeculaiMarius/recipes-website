@@ -11,7 +11,7 @@ export async function POST(request:NextRequest) {
       return new NextResponse("Invalid input", { status: 400 });
     }
 
-    const likeRecipe = await sql`
+    await sql`
     INSERT INTO l_retete_apreciate (id_reteta, id_utilizator)
     VALUES (${id_recipe}, ${id_user});
     `;

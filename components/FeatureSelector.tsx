@@ -22,7 +22,7 @@ const FeatureSelector = () => {
       <DropdownMenuContent className="w-64 p-0 overflow-hidden rounded-xl border-none shadow-lg" align="start">
         {/* Decorative header */}
         <div className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 p-3">
-          <h3 className="text-base font-bold text-white">Features</h3>
+          <h3 className="text-base font-bold text-white">Navigare</h3>
           <div className="mt-1 h-0.5 w-10 rounded-full bg-white/30"></div>
         </div>
 

@@ -13,6 +13,10 @@ import { options } from "@/app/api/auth/[...nextauth]/options"
 import Search from "./Search"
 import MobileNavigation from "./MobileNavigation"
 import NavBarLogo from "./NavBarLogo"
+import { Separator } from "./ui/separator"
+import { LogOut, Settings, User } from "lucide-react"
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet"
+import { Button } from "./ui/button"
 
 const NavigationBar = async () => {
   const session = await getServerSession(options)
@@ -35,24 +39,63 @@ const NavigationBar = async () => {
           <Search placeholder="Caută o rețetă..."></Search>
         </div>
 
-        <DropdownMenu>
-          <DropdownMenuTrigger>
-            <div className="flex items-center">
-              <span className="material-symbols-outlined text-[3rem] flex justify-center">account_circle</span>
-              <span className="max-sm:hidden">{username}</span>
+        <Sheet>
+          <SheetTrigger asChild>
+            <Button variant="ghost" className="h-auto p-0 hover:bg-emerald-700/10 hover:text-emerald-700">
+              <div className="flex items-center">
+                <span className="material-symbols-outlined flex justify-center text-[3rem]">account_circle</span>
+                <span className="max-sm:hidden">{username}</span>
+              </div>
+            </Button>
+          </SheetTrigger>
+          <SheetContent className="w-[300px] border-l-emerald-700 sm:w-[400px]">
+            <SheetHeader>
+              <SheetTitle className="text-emerald-700">Setări cont</SheetTitle>
+            </SheetHeader>
+
+            <div className="py-6">
+              <div className="flex items-center gap-4 pb-6">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-700/10 text-emerald-700">
+                  <User className="h-8 w-8" />
+                </div>
+                <div>
+                  <h3 className="font-medium text-emerald-700">{username}</h3>
+                  <p className="text-sm text-muted-foreground">{session?.user.email}</p>
+                </div>
+              </div>
+
+              <Separator className="my-4" />
+
+              <div className="space-y-4">
+                <Link
+                  href={`/Account/${session?.user.id}`}
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-emerald-700/10 hover:text-emerald-700"
+                >
+                  <User className="h-5 w-5" />
+                  Contul meu
+                </Link>
+
+                <Link
+                  href="/settings"
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-emerald-700/10 hover:text-emerald-700"
+                >
+                  <Settings className="h-5 w-5" />
+                  Setări
+                </Link>
+
+                <Separator className="my-4" />
+
+                <Link
+                  href="/api/auth/signout"
+                  className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium text-destructive hover:bg-destructive/10"
+                >
+                  <LogOut className="h-5 w-5" />
+                  Delogare
+                </Link>
+              </div>
             </div>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuLabel>Contul meu</DropdownMenuLabel>
-            <DropdownMenuSeparator />
-            <Link href={`/Account/${session?.user.id}`}>
-              <DropdownMenuItem>Contul meu</DropdownMenuItem>
-            </Link>
-            <Link href="/api/auth/signout">
-              <DropdownMenuItem>Delogare</DropdownMenuItem>
-            </Link>
-          </DropdownMenuContent>
-        </DropdownMenu>
+          </SheetContent>
+        </Sheet>
       </div>
 
       {/* Mobile Navigation - only visible on small screens */}

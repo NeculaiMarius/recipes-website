@@ -21,6 +21,7 @@ export interface RecipePage{
   pasi_preparare:string;
   image_url: string;
   utilizator: string;
+  id_utilizator:string;
   rating_reteta: number;
   numar_aprecieri: number;
   numar_salvari: number;

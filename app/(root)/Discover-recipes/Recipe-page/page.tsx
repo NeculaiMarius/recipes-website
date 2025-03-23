@@ -23,6 +23,8 @@ import { RecipePage } from '@/interfaces/recipe';
 import { IngredientRecipePage } from '@/interfaces/ingredient';
 import { ReviewRecipePage } from '@/interfaces/review';
 import { IoMdSettings } from "react-icons/io";
+import RecipeSettingsButton from '@/components/Buttons/RecipeSettingsButton';
+import { AlertTriangle } from 'lucide-react';
 
 
 
@@ -65,8 +67,27 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       GROUP BY 
         r.id, u.nume
     `;
-
   const recipe: RecipePage = recipeResult?.rows[0] as RecipePage;
+
+  if(!recipe){
+    return (
+      <div className="pt-[80px] h-screen bg-gray-500  flex items-center">
+      <div className="mx-auto flex max-w-2xl flex-col items-center justify-center rounded-lg bg-white p-8 shadow-lg">
+        <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-red-100">
+          <AlertTriangle className="h-8 w-8 text-red-600" />
+        </div>
+        <h2 className="mb-2 text-center text-2xl font-bold text-gray-800">Rețetă indisponibilă</h2>
+        <p className="mb-6 text-center text-gray-600">
+          Rețeta pe care ați accesat-o nu există sau este posibil să fi fost ștearsă de utilizatorul care a postat-o.
+        </p>
+        <Link href={"/Discover-recipes"} className="rounded-md bg-emerald-700 px-4 py-2 text-white transition-colors hover:bg-emerald-800">
+          Înapoi la rețete
+        </Link>
+      </div>
+    </div>
+    )
+  }
+
 
   const ingredientsResult=await sql`
     SELECT 
@@ -115,11 +136,15 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
   const currentUserReview:ReviewRecipePage=await currentUserReviewResponse.rows[0] as ReviewRecipePage;
 
   return (
-    
     <div className='pt-[80px] '>
-      <div className='fixed top-4 left-6 z-50 h-12 w-12 p-2 bg-emerald-700 rounded-md items-center flex'>
-        <IoMdSettings className='text-3xl text-white'/>
-      </div>
+      {
+        recipe.id_utilizator==session?.user.id?
+        <div className='fixed top-4 left-6 z-50 '>
+          <RecipeSettingsButton recipeId={recipe.id}/>
+        </div>
+        :null
+      }
+      
 
       <div className='grid grid-cols-2 h-[calc(100vh-80px)] 
                       max-lg:flex max-lg:flex-col max-lg:h-fit'>

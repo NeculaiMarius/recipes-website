@@ -66,3 +66,15 @@ export const unSaveRecipe=async(id_recipe:number,id_user:string)=>{
   return true
 }
 
+export const deleteRecipe=async(recipeId:number)=>{
+  const response=await fetch(`/api/recipe/${recipeId}`,{
+    method: 'DELETE',
+  })
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  else{
+    return true;
+  }
+}
+
