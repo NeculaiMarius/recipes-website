@@ -1,12 +1,13 @@
 "use client"
 
 import { useState } from "react"
-import { ArrowRight, Menu, X } from "lucide-react"
+import { ArrowRight, Home, Menu, X } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { cn } from "@/lib/utils"
 import { mainFeatures } from "@/constants"
 import { AnimatePresence, motion } from "framer-motion"
+import Image from "next/image"
 
 export default function MobileNavigation() {
   const [isOpen, setIsOpen] = useState(false)
@@ -79,7 +80,16 @@ export default function MobileNavigation() {
                               : "bg-emerald-100 text-emerald-700 group-hover:bg-emerald-200",
                           )}
                         >
-                          {/* {featureIcons[item.route as keyof typeof featureIcons]} */}
+                          {item.image ? (
+                            <Image
+                              src={item.image || "/placeholder.svg"}
+                              alt={item.label}
+                              width={24}
+                              height={24}
+                            />
+                          ) : (
+                            <Home className="h-5 w-5" />
+                          )}
                         </div>
                         <span className="font-medium">{item.label}</span>
                       </div>

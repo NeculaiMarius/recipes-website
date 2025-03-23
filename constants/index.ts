@@ -2,19 +2,23 @@
 export const mainFeatures=[
   {
     label:"Acasa",
-    route:"/"
+    route:"/",
+    image: "",
   },
   {
     label:"Frigiderul meu",
     route:"/My-fridge",
+    image:"/svg-icons/fridge.svg",
   },
   {
     label:"Verifică produs",
     route:'/Product-scanner',
+    image:"/svg-icons/shopping-cart.svg",
   },
   {
     label:"Descoperă rețete",
     route: "/Discover-recipes",
+    image:"/svg-icons/food.svg",
   }
 ]
 
