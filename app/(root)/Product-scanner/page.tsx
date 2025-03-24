@@ -14,6 +14,7 @@ import BarcodeScanner from "@/components/BarcodeScanner"
 import { SearchProduct } from "@/interfaces/product"
 import { FaFilter, FaRegSadTear, FaSearch } from "react-icons/fa";
 import { FaBarcode } from "react-icons/fa6";
+import { Separator } from "@/components/ui/separator"
 
 
 
@@ -62,6 +63,7 @@ const ProductScanner = () => {
   const searchProduct = async () => {
     try {
       setIsLoading(true)
+      setProductNotFount(false);
       const nutritionParam = nutritionGradeTag !== "any" ? `&nutrition_grades_tags=${nutritionGradeTag}` : ""
       const ecoParam = ecoscoreTag !== "any" ? `&ecoscore_tags=${ecoscoreTag}` : ""
 
@@ -103,8 +105,6 @@ const ProductScanner = () => {
       const data = await response.json()
       if (data.count === 0) {
         setProductNotFount(true);
-      } else {
-        setProductNotFount(false);
       }
       setSearchResults(data.products.slice(0, 15) || [])
     } catch (error) {
@@ -114,30 +114,42 @@ const ProductScanner = () => {
     }
   }
 
-  const searchProductByBarcode=async (barcode:string)=>{
+  const searchProductByBarcode = async (barcode: string) => {
     try {
       setIsLoading(true);
-      const response =await fetch(`https://world.openfoodfacts.net/api/v2/product/${barcode}`,{
-        headers: {
-          "User-Agent": "recipe-website - neculaimarius60@gmail.com",
-        },
-      })
-  
-      if(!response.ok){
-        throw new Error(`HTTP error! Status: ${response.status}`)
-      }
-      const data = await response.json();
-      setSearchResults([data.product])
-    } catch (error) {
+      setProductNotFount(false); // Resetăm înainte de a face request-ul
       setSearchResults([]);
-    }
-    finally{
+  
+      const response = await fetch(
+        `https://world.openfoodfacts.net/api/v2/product/${barcode}`,
+        {
+          headers: {
+            "User-Agent": "recipe-website - neculaimarius60@gmail.com",
+          },
+        }
+      );
+      if (response.status === 404) {
+        setProductNotFount(true);
+        setIsLoading(false);
+        return;
+      }
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+  
+      const data = await response.json();    
+      setProductNotFount(false);
+      setSearchResults([data.product]);
+      
+    } catch (error) {
+      console.error("Fetch error:", error);
+      setProductNotFount(true);
+      setSearchResults([]);
+    } finally {
       setIsLoading(false);
     }
-    
-
-  }
-
+  };
+  
 
 
   return (
@@ -503,121 +515,84 @@ const ProductScanner = () => {
       </div>
 
       <div className="xl:px-10 md:px-5 sm:px-2 mt-8">
-        {searchResults.length > 0 ? (
-          <div className="w-full px-2 sm:px-4 md:px-5 xl:px-10 mt-8">
-          {searchResults.length > 0 ? (
-            <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-              {searchResults.map((product) => (
-                <div className="w-full" key={product.code}>
-                  <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200">
-                    {/* Mobile layout (stacked) */}
-                    <div className="flex flex-col sm:flex-row h-full">
-                      <Link
-                        href={`/Product-scanner/Product-page?productCode=${product.code}`}
-                        className="w-full sm:w-[180px] h-[120px] sm:h-[150px] bg-gray-50 flex items-center justify-center sm:border-r"
-                      >
-                        <Image
-                          src={product.image_url || "/placeholder.svg"}
-                          alt={product.product_name}
-                          height={150}
-                          width={180}
-                          className="object-contain p-2 max-h-[120px] sm:max-h-[150px]"
-                          priority={false}
-                        />
-                      </Link>
-                      <CardContent className="flex-1 p-3">
-                        <div className="flex flex-col h-full justify-between">
-                          <div>
-                            <Link href={`/Product-scanner/Product-page?productCode=${product.code}`}>
-                              <h3 className="font-semibold text-sm hover:text-emerald-700 hover:underline line-clamp-2">
-                                {product.product_name}
-                              </h3>
-                            </Link>
-                            <p className="text-muted-foreground text-xs mb-2 line-clamp-1">{product.brands}</p>
-                          </div>
-    
-                          <div className="space-y-2">
-                            <div className="flex flex-wrap gap-2">
-                              <div className="flex items-center gap-1">
-                                <span className="text-xs font-medium">Nutri</span>
-                                <Badge
-                                  className={`${getScoreColor(product.nutriscore_grade)} text-white px-1.5 py-0.5 text-xs`}
-                                >
-                                  {product.nutriscore_grade.toUpperCase()}
-                                </Badge>
-                              </div>
-    
-                              <div className="flex items-center gap-1">
-                                <span className="text-xs font-medium">Eco</span>
-                                <Badge
-                                  className={`${getScoreColor(product.ecoscore_grade)} text-white px-1.5 py-0.5 text-xs`}
-                                >
-                                  {product.ecoscore_grade.toUpperCase()}
-                                </Badge>
-                              </div>
-                            </div>
-    
-                            {product.categories && (
-                              <div className="flex items-center gap-1 text-xs pt-1 border-t">
-                                <span className="font-medium">Categorie:</span>
-                                <span className="text-muted-foreground truncate">{product.categories.split(",")[0]}</span>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </CardContent>
-                    </div>
-                  </Card>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="text-center py-12">
-              {isLoading ? (
-                <div className="space-y-4">
-                  <div className="animate-spin mx-auto w-8 h-8 border-4 border-emerald-700 border-t-transparent rounded-full"></div>
-                  <p className="text-lg text-gray-600">Se caută produse...</p>
-                </div>
-              ) : productNotFount ? (
-                searchQuery && (
-                  <div className="space-y-2">
-                    <div className="flex justify-center items-center gap-2">
-                      <p className="text-xl text-red-700">Oops.. </p>
-                      {/* Assuming FaRegSadTear is imported from react-icons */}
-                      <span className="text-red-700 text-2xl">😢</span>
-                    </div>
-                    <p className="text-lg text-gray-700">Nu s-au găsit produse care să corespundă criteriilor tale.</p>
-                    <p className="text-muted-foreground">Încearcă să ajustezi termenii de căutare sau filtrele.</p>
-                  </div>
-                )
-              ) : null}
-            </div>
-          )}
-        </div>
-      
-        ) : (
-          <div className="text-center py-12">
-            {isLoading ? (
-              <div className="space-y-4">
-                <div className="animate-spin mx-auto w-8 h-8 border-4 border-emerald-700 border-t-transparent rounded-full"></div>
-                <p className="text-lg text-gray-600">Se caută produse...</p>
-              </div>
-            ) : productNotFount?(
-              searchQuery && (
-                <div className="space-y-2">
-                  <div className="flex justify-center items-center">
-                    <p className="text-xl text-red-700">Oops.. </p>
-                    <FaRegSadTear size={30} className="text-red-700" />
-                  </div>
-                  <p className="text-lg text-gray-700">Nu s-au găsit produse care să corespundă criteriilor tale.</p>
-                  <p className="text-muted-foreground">Încearcă să ajustezi termenii de căutare sau filtrele.</p>
-                </div>
-              )
-            ):null}
-          </div>
-        )}
-        
+  {isLoading ? (
+    <div className="text-center py-12 space-y-4">
+      <div className="animate-spin mx-auto w-8 h-8 border-4 border-emerald-700 border-t-transparent rounded-full"></div>
+      <p className="text-lg text-gray-600">Se caută produse...</p>
+    </div>
+  ) : productNotFount ? (
+    <div className="text-center py-12 space-y-2">
+      <div className="flex justify-center items-center gap-2">
+        <p className="text-xl text-red-700">Oops..</p>
+        <span className="text-red-700 text-2xl">😢</span>
       </div>
+      <p className="text-lg text-gray-700">Nu s-a găsit produsul căutat</p>
+      <p className="text-muted-foreground">Încearcă să cauți din nou</p>
+    </div>
+  ) : searchResults.length > 0 ? (
+    <div className="w-full px-2 sm:px-4 md:px-5 xl:px-10 mt-8">
+      <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+        {searchResults.map((product) => (
+          <div className="w-full" key={product.code}>
+            <Card className="overflow-hidden hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+              <div className="flex flex-col sm:flex-row h-full">
+                <Link
+                  href={`/Product-scanner/Product-page?productCode=${product.code}`}
+                  className="w-full sm:w-[180px] h-[120px] sm:h-[150px] bg-gray-50 flex items-center justify-center sm:border-r"
+                >
+                  <Image
+                    src={product.image_url || "/placeholder.svg"}
+                    alt={product.product_name}
+                    height={150}
+                    width={180}
+                    className="object-contain p-2 max-h-[120px] sm:max-h-[150px]"
+                    priority={false}
+                  />
+                </Link>
+                <CardContent className="flex-1 p-3">
+                  <div className="flex flex-col h-full justify-between">
+                    <div>
+                      <Link href={`/Product-scanner/Product-page?productCode=${product.code}`}>
+                        <h3 className="font-semibold text-sm hover:text-emerald-700 hover:underline line-clamp-2">
+                          {product.product_name}
+                        </h3>
+                      </Link>
+                      <p className="text-muted-foreground text-xs mb-2 line-clamp-1">{product.brands}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex flex-wrap gap-2">
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs font-medium">Nutri</span>
+                          <Badge className={`${getScoreColor(product.nutriscore_grade)} text-white px-1.5 py-0.5 text-xs`}>
+                            {product.nutriscore_grade.toUpperCase()}
+                          </Badge>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <span className="text-xs font-medium">Eco</span>
+                          <Badge className={`${getScoreColor(product.ecoscore_grade)} text-white px-1.5 py-0.5 text-xs`}>
+                            {product.ecoscore_grade.toUpperCase()}
+                          </Badge>
+                        </div>
+                      </div>
+                      {product.categories && (
+                        <div className="flex items-center gap-1 text-xs pt-1 border-t">
+                          <span className="font-medium">Categorie:</span>
+                          <span className="text-muted-foreground truncate">{product.categories.split(",")[0]}</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </CardContent>
+              </div>
+            </Card>
+          </div>
+        ))}
+      </div>
+    </div>
+  ) : null}
+</div>
+
+      <Separator className='my-8'></Separator>
     </div>
   )
 }

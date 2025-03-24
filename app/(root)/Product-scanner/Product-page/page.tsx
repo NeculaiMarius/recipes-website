@@ -5,6 +5,7 @@ import { AlertCircle, Leaf, ShieldAlert} from "lucide-react"
 import Link from "next/link"
 import ProductGallery from "@/components/ProductGallery"
 import { Product } from "@/interfaces/product"
+import { Separator } from "@/components/ui/separator"
 
 const page = async ({ searchParams }: { searchParams: { productCode: string } }) => {
   let product: Product | null = null

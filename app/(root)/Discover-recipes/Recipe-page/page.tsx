@@ -340,7 +340,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
           })}
         </div>
       </div>
-
+      <Separator className='my-8'></Separator>
     </div>
   )
 }
