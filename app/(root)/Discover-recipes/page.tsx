@@ -6,7 +6,6 @@ import PaginationComponent from '@/components/PaginationComponent';
 import RecipeDisplayCard from '@/components/RecipeDisplayCard'
 import { RecipeDisplay } from '@/interfaces/recipe';
 import { sql } from '@vercel/postgres';
-import { Session } from 'inspector/promises';
 import { getServerSession } from 'next-auth';
 import React from 'react'
 

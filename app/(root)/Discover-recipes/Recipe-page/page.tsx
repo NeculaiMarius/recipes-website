@@ -25,6 +25,7 @@ import { ReviewRecipePage } from '@/interfaces/review';
 import { IoMdSettings } from "react-icons/io";
 import RecipeSettingsButton from '@/components/Buttons/RecipeSettingsButton';
 import { AlertTriangle } from 'lucide-react';
+import RecipeRecommendationsSection from '@/components/RecipeRecommendationsSection';
 
 
 
@@ -340,6 +341,10 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
           })}
         </div>
       </div>
+      <Separator className='my-8'></Separator>
+
+      <RecipeRecommendationsSection recipeId={searchParams.recipeId} userId={session?.user.id} />
+
       <Separator className='my-8'></Separator>
     </div>
   )
