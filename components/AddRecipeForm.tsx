@@ -25,13 +25,14 @@ import { ChevronsUpDown, Check } from "lucide-react";
 
 const formSchema = z.object({
   file: z.any().refine((value) => {return value && value instanceof FileList && value.length > 0;}, { message: "File is required" }),
-  recipeName: z.string().min(1, "Recipe name is required"),
-  recipeType: z.string().min(1,"Recipe type is required"),
+  recipeName: z.string().min(1,"Numele rețetei este necesar"),
+  recipeType: z.string().min(1,"Tipul rețetei este necesar"),
+  portions: z.number().min(1,"Numarul de porții este necesar"),
   steps: z.array(
     z.object({
       description: z.string().min(1, "Introduceti descrierea pasului").max(199,"Maxim 200 caractere"),
     })
-  ).nonempty({ message: "At least one step is required" }),
+  ).nonempty({ message: "Este necesar cel putin un pas de preparare" }),
   recipeDescription: z.string().min(1).max(1000),
 });
 
@@ -45,6 +46,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
     defaultValues: {
       recipeName: "",
       recipeType:'',
+      portions:0,
       steps: [{ description: "" }],
       recipeDescription: "",
     },
@@ -152,6 +154,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
           recipeName: values.recipeName,
           recipeDescription: values.recipeDescription,
           recipeType: values.recipeType,
+          portions:values.portions,
           steps: values.steps.map(step => step.description), 
           ingredients: ingredientsWithQuantities,
           imageUrl:imageUrl,
@@ -293,6 +296,33 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
                   </PopoverContent>
                 </Popover>
                 </FormControl>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={control}
+            name="portions"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel className='text-lg font-semibold'>Număr de porții</FormLabel>
+                <FormControl>
+                <Input
+                    className="w-16"
+                    type="number"
+                    min={1}
+                    max={20}
+                    {...field}
+                    onChange={(e) => {
+                      field.onChange(parseFloat(e.target.value));
+                    }}
+                  />
+                </FormControl>
+                {errors.portions && (
+        <div className="text-red-500 text-sm">
+          {errors.portions.message}
+        </div>
+      )}
               </FormItem>
             )}
           />

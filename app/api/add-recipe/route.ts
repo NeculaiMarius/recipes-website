@@ -6,12 +6,12 @@ export interface Ingredient{
 }
 
 export async function POST(request:Request) {
-  const {recipeName,recipeDescription,recipeType,steps,ingredients,imageUrl,userId,imagePublicId} = await request.json();
+  const {recipeName,recipeDescription,recipeType,portions,steps,ingredients,imageUrl,userId,imagePublicId} = await request.json();
 
   try {
     const insertRecipeResult= await sql`
-      INSERT INTO l_retete (nume,descriere,tip,pasi_preparare,image_url,id_utilizator,image_public_id)
-      VALUES (${recipeName},${recipeDescription},${recipeType},${steps.join(";")},${imageUrl},${userId},${imagePublicId})
+      INSERT INTO l_retete (nume,descriere,tip,numar_portii,pasi_preparare,image_url,id_utilizator,image_public_id)
+      VALUES (${recipeName},${recipeDescription},${recipeType},${portions},${steps.join(";")},${imageUrl},${userId},${imagePublicId})
       RETURNING id`;
 
     const recipeId=insertRecipeResult.rows[0].id;

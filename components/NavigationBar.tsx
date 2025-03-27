@@ -17,10 +17,12 @@ import { Separator } from "./ui/separator"
 import { LogOut, Settings, User } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet"
 import { Button } from "./ui/button"
+import UserEditModal from "./Forms/UserEditModal"
 
 const NavigationBar = async () => {
   const session = await getServerSession(options)
-  const username = session?.user.firstName
+  const username = session?.user.lastName
+  console.log(session?.user.lastName)
 
   return (
     <>
@@ -75,13 +77,7 @@ const NavigationBar = async () => {
                   Contul meu
                 </Link>
 
-                <Link
-                  href="/settings"
-                  className="flex w-full items-center gap-3 rounded-md px-3 py-2 text-sm font-medium hover:bg-emerald-700/10 hover:text-emerald-700"
-                >
-                  <Settings className="h-5 w-5" />
-                  Setări
-                </Link>
+                <UserEditModal id={session?.user.id as string} currentEmail={session?.user.email as string} currentFirstName={session?.user.firstName as string} currentLastName={session?.user.lastName as string}/>
 
                 <Separator className="my-4" />
 

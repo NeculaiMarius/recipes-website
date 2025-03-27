@@ -343,7 +343,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       </div>
       <Separator className='my-8'></Separator>
 
-      <RecipeRecommendationsSection recipeId={searchParams.recipeId} userId={session?.user.id} />
+      <RecipeRecommendationsSection recipeId={searchParams.recipeId} userId={session?.user.id} authorId={recipe.id_utilizator}/>
 
       <Separator className='my-8'></Separator>
     </div>

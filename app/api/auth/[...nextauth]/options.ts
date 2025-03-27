@@ -1,6 +1,8 @@
-    import { sql } from "@vercel/postgres";
+import { sql } from "@vercel/postgres";
 import { NextAuthOptions } from "next-auth";
-    import  CredentialsProvider  from "next-auth/providers/credentials";
+import  CredentialsProvider  from "next-auth/providers/credentials";
+import * as bcrypt from "bcrypt";
+
 
 
 export const options: NextAuthOptions={
@@ -19,8 +21,17 @@ export const options: NextAuthOptions={
             },
         },
         async authorize(credentials) {
-            const {rows}=await sql`SELECT * FROM l_utilizatori WHERE email=${credentials?.email} AND parola=${credentials?.password}`
+            if (!credentials?.email || !credentials?.password) {
+                return null;
+            }
+            const {rows}=await sql`SELECT * FROM l_utilizatori WHERE email=${credentials?.email}`
             if(rows.length>0){
+                const user= rows[0];
+
+                const isPasswordValid=await bcrypt.compare(credentials.password,user.parola);
+                if (!isPasswordValid){
+                    return null;
+                }
                 return {
                     email:rows[0].email,
                     id: rows[0].id,
