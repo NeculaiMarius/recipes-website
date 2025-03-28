@@ -6,12 +6,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import FeatureSelector from "./FeatureSelector"
+import FeatureSelector from "./Menus/FeatureSelector"
 import Link from "next/link"
 import { getServerSession } from "next-auth"
 import { options } from "@/app/api/auth/[...nextauth]/options"
 import Search from "./Search"
-import MobileNavigation from "./MobileNavigation"
+import MobileNavigation from "./Menus/MobileNavigation"
 import NavBarLogo from "./NavBarLogo"
 import { Separator } from "./ui/separator"
 import { LogOut, Settings, User } from "lucide-react"

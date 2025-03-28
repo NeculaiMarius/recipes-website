@@ -6,6 +6,11 @@ export const mainFeatures=[
     image: "",
   },
   {
+    label:"Pentru tine",
+    route:"/Discover-recipes/Feed",
+    image:"/svg-icons/Notite.svg"
+  },
+  {
     label:"Frigiderul meu",
     route:"/My-fridge",
     image:"/svg-icons/fridge.svg",
