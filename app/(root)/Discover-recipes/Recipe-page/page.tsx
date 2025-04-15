@@ -13,7 +13,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover"
-import { FaInfoCircle, FaRegUserCircle, FaStar } from 'react-icons/fa';
+import { FaFlag, FaHeart, FaInfoCircle, FaRegUserCircle, FaStar } from 'react-icons/fa';
 import { Label } from '@/components/ui/label';
 import AddReviewForm from '@/components/Forms/AddReviewForm';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
@@ -168,6 +168,14 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
             <span className='flex items-center'>
               <span className="material-symbols-outlined text-[3rem] flex justify-center">account_circle</span>
               <span>{recipe?.utilizator}</span>
+            </span>
+            <span className='flex gap-2 items-center'>
+              <FaHeart size={20} className='text-red-600'/>
+              {recipe.numar_aprecieri}
+            </span>
+            <span className='flex gap-2 items-center'>
+              <FaFlag size={20} className='text-blue-700'/>
+              {recipe.numar_salvari}
             </span>
             <span className='flex items-center gap-2'>
               <span className='font-semibold ml-2'>{recipe.rating_reteta}</span>

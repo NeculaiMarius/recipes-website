@@ -19,6 +19,7 @@ import Search from '@/components/Search';
 import { useSearchParams } from 'next/navigation';
 
 const FridgeIngredientsSections = () => {
+  const [isOpen, setIsOpen] = useState(false)
   const [selectedIngredients, setSelectedIngredients] = useState<SelectedIngredient[]>([]);
   const [categories,setCategories]=useState(ingredientsCategories);
   const [ingredientQuery, setIngredientQuery] = useState("");
@@ -55,11 +56,13 @@ const FridgeIngredientsSections = () => {
               const response = await fetch(`/api/ingredients?query=${encodeURIComponent(ingredientQuery)}`);
               const data = await response.json();
               setIngredientSuggestions(data.ingredients || []);
+              setIsOpen(true)
             } catch (error) {
               console.error("Failed to fetch ingredients:", error);
             }
           } else {
             setIngredientSuggestions([]);
+            setIsOpen(false)
           }
         };
         fetchIngredients();
@@ -116,7 +119,7 @@ const FridgeIngredientsSections = () => {
               <div className='w-fit bg-blue-500 rounded-r-3xl p-2 pr-3 my-4 text-white font-bold text-3xl'>
                 Frigiderul meu
               </div>
-              <Button onClick={onClickButton} className='bg-green-800'>Salveaza modificarile</Button>
+              <Button onClick={onClickButton} className='bg-emerald-700'>Salveaza modificarile</Button>
             </div>
             
             
@@ -124,9 +127,11 @@ const FridgeIngredientsSections = () => {
               className='rounded-full max-w-[400px] mx-auto z-20'
               value={ingredientQuery}
               onChange={(e)=>setIngredientQuery(e.target.value)}
+              onFocus={() => ingredientQuery.trim() && setIsOpen(true)}
+              onBlur={() => setTimeout(() => setIsOpen(false), 500)}
             />
 
-            {ingredientSuggestions.length > 0 && (
+            {isOpen && ingredientSuggestions.length > 0 && (
               <ul className=" p-2 max-h-40 overflow-y-auto bg-white w-[500px] mx-auto absolute">
                 {ingredientSuggestions.map((ingredient) => (
                   <li

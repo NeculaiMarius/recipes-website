@@ -18,7 +18,8 @@ const PaginationComponent = ({ totalPages, page }: { totalPages: number; page: n
   const updatePage = (newPage: number) => {
     const params = new URLSearchParams(searchParams);
     params.set("page", newPage.toString());
-    router.push(`?${params.toString()}`, { scroll: false }); // Evită scroll-ul la top
+    router.push(`?${params.toString()}`, { scroll: true }); // Evită scroll-ul la top
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   return (

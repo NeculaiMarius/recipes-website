@@ -6,12 +6,83 @@ import { navigationButtons, recipes } from "@/constants";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import RecipeCard from "@/components/RecipeCard";
+import { sql } from "@vercel/postgres";
+import RecipeDisplayCard from "@/components/RecipeDisplayCard";
+import { RecipeDisplay } from "@/interfaces/recipe";
+import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import FollowButton from "@/components/Buttons/FollowButton";
+import UserSearchBar from "@/components/UserSearchBar";
 
 export const revalidate= 1
 
 
 export default  async function Home() {
   const session=await getServerSession(options);  
+
+  const recipeResult=await sql
+  `
+  SELECT 
+      r.id, 
+      r.nume, 
+      u.nume AS utilizator, 
+      r.image_url, 
+      COALESCE(AVG(v.rating), 0) AS rating,
+      COUNT(DISTINCT a.id) AS numar_aprecieri,
+      COUNT(DISTINCT s.id) AS numar_salvari,
+      CASE 
+          WHEN EXISTS (
+              SELECT 1 FROM l_retete_apreciate a 
+              WHERE a.id_reteta = r.id AND a.id_utilizator = ${session?.user.id}
+          ) THEN TRUE 
+          ELSE FALSE 
+      END AS liked,
+      CASE 
+          WHEN EXISTS (
+              SELECT 1 FROM l_retete_salvate s 
+              WHERE s.id_reteta = r.id AND s.id_utilizator = ${session?.user.id}
+          ) THEN TRUE 
+          ELSE FALSE 
+      END AS saved
+    FROM 
+      l_retete r
+    JOIN 
+      l_utilizatori u ON r.id_utilizator = u.id
+    LEFT JOIN 
+      l_reviews v ON v.id_reteta = r.id
+    LEFT JOIN 
+      l_retete_apreciate a ON a.id_reteta = r.id
+    LEFT JOIN 
+      l_retete_salvate s ON s.id_reteta = r.id
+    LEFT JOIN 
+      l_retete_ingrediente ri ON ri.id_reteta = r.id
+    LEFT JOIN 
+      l_ingrediente i ON i.id = ri.id_ingredient
+    GROUP BY 
+      r.id, r.nume, u.nume, r.image_url
+    ORDER BY 
+      (COUNT(DISTINCT a.id) + COUNT(DISTINCT s.id)) DESC
+    LIMIT 8;
+  `
+  const recipes:RecipeDisplay[]=recipeResult.rows as RecipeDisplay[];
+
+
+  const accountsResults=await sql`
+  SELECT 
+    u.nume,
+    u.id,
+    u.prenume,
+    u.email,
+    COUNT(fu.id) AS urmaritori
+  FROM l_utilizatori u
+  LEFT JOIN l_urmariri_utilizatori fu ON u.id = fu.id_utilizator_urmarit
+  GROUP BY u.id, u.nume, u.prenume, u.email
+  ORDER BY COUNT(fu.id) desc;
+  `;
+  const accounts=accountsResults.rows;
+
+
+
   return (
     <>
     
@@ -51,16 +122,27 @@ export default  async function Home() {
       </div>
     </div>
 
-    <div className="h-fit my-16 py-4">
-      <h1 className="text-4xl font-bold text-center">Cele mai populare retete</h1>
-      <div className="flex justify-evenly mt-4 max-md:flex-col max-md:px-4">
-        {recipes.map((item)=>{
-            return(
-              <RecipeCard name={item.name} rating={item.rating} author={item.author} route={item.route} key={item.name} />
-            )
+    <div className="my-20 bg-amber-300 shadow-2xl px-8 py-12 relative overflow-hidden">
+      <div className="absolute inset-0 bg-[url('/gold-texture.jpg')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+      <h1 className="text-3xl font-extrabold text-center text-yellow-900 drop-shadow-lg tracking-wide uppercase">
+        Cele mai populare rețete
+      </h1>
+      <p className="text-center text-lg text-yellow-800 mt-4 font-medium italic">
+        Descoperă rețetele care au cucerit inimile tuturor!
+      </p>
+      <div className="mt-10 flex flex-wrap justify-evenly gap-4">
+        {recipes.map((recipe) => {
+          return (
+            <RecipeDisplayCard
+              recipe={recipe}
+              id_user={session?.user.id || ''}
+              key={recipe.id}
+            />
+          );
         })}
       </div>
     </div>
+
     
     <div className="h-fit my-16 bg-verified-gradient grid grid-cols-[1fr_1fr] max-md:grid-cols-1 max-md:grid-rows-[1fr_1fr]">
       <div className="flex flex-col items-center justify-center text-gray-200">
@@ -78,6 +160,43 @@ export default  async function Home() {
         </div>
 
         <Button className="my-4 bg-white text-blue-900">Aplica acum</Button>
+      </div>
+    </div>
+
+
+    <div className="container mx-auto mb-10">
+      
+      <h1 className="text-2xl font-extrabold text-center text-blue-800 drop-shadow-lg tracking-wide uppercase mb-4">
+        Cei mai cunoscuți bucătari 
+      </h1>
+
+      <div className="md:max-w-[500px] w-full mx-auto my-4">
+        <UserSearchBar placeholder="Cauta un utilizator..." navbar={false}></UserSearchBar>
+      </div>
+      
+      <div className="px-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        {accounts.map((user) => (
+          <Card key={user.id} className="overflow-hidden">
+            <CardContent className="p-3">
+              <div className="flex items-center gap-4">
+                <Avatar className="h-12 w-12 border">
+                  <AvatarFallback>{(user.nume[0]+user.prenume[0]).toUpperCase()}</AvatarFallback>
+                </Avatar>
+                <div className="grid gap-1">
+                  <h3 className="font-semibold">{user.nume} {user.prenume}</h3>
+                  <p className="text-sm text-muted-foreground">{user.email}</p>
+                  <p className="text-sm">
+                    <span className="font-medium">{user.urmaritori}</span>{" "}
+                    <span className="text-muted-foreground">followers</span>
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+            <div className="h-8 px-10 my-2"> 
+              <FollowButton id_user={session?.user.id as string} id_followed_user={user.id} followed={false}></FollowButton>
+            </div>
+          </Card>
+        ))}
       </div>
     </div>
     </>

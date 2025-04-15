@@ -19,7 +19,7 @@ import { useRouter } from "next/navigation";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "./ui/command";
 import { recipeTypes } from "@/constants";
-import { ChevronsUpDown, Check } from "lucide-react";
+import { ChevronsUpDown, Check, Plus, Clock, Minus } from "lucide-react";
 
 
 
@@ -27,6 +27,7 @@ const formSchema = z.object({
   file: z.any().refine((value) => {return value && value instanceof FileList && value.length > 0;}, { message: "File is required" }),
   recipeName: z.string().min(1,"Numele rețetei este necesar"),
   recipeType: z.string().min(1,"Tipul rețetei este necesar"),
+  preparationTime:z.number().min(10,"Timpul de preparare este necesar"),
   portions: z.number().min(1,"Numarul de porții este necesar"),
   steps: z.array(
     z.object({
@@ -46,7 +47,8 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
     defaultValues: {
       recipeName: "",
       recipeType:'',
-      portions:0,
+      portions:1,
+      preparationTime:10,
       steps: [{ description: "" }],
       recipeDescription: "",
     },
@@ -63,6 +65,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
   const [ingredientQuery, setIngredientQuery] = useState("");
   const [ingredientSuggestions, setIngredientSuggestions] = useState<{ id: string; name: string; um: string; category:string }[]>([]);
   const [selectedIngredients, setSelectedIngredients] = useState<{ id: string; name: string; um: string; quantity: number }[]>([]);
+
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);  
@@ -154,6 +157,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
           recipeName: values.recipeName,
           recipeDescription: values.recipeDescription,
           recipeType: values.recipeType,
+          preparationTime:values.preparationTime,
           portions:values.portions,
           steps: values.steps.map(step => step.description), 
           ingredients: ingredientsWithQuantities,
@@ -231,8 +235,6 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
             )}
           />
 
-          
-
           <FormField
             control={control}
             name="recipeDescription"
@@ -250,11 +252,64 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
             )}
           />
 
+          <div className="flex flex-row-reverse w-full justify-around gap-10">
+          <FormField
+            control={control}
+            name="preparationTime"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel className="text-lg font-semibold">Timp de preparare</FormLabel>
+                <FormControl>
+                  <div className="">
+                      <div className="">
+                        <div className="flex items-center justify-start">
+                          <div className="relative flex items-center">
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="rounded-r-none"
+                              onClick={() => field.onChange(Math.max(0, (field.value || 0) - 5))}
+                            >
+                              <Minus className="h-4 w-4" />
+                            </Button>
+                            <div className="relative">
+                              <Clock className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                              <Input
+                                type="number"
+                                value={field.value || 0}
+                                onChange={(e) => field.onChange(Number.parseInt(e.target.value) || 0)}
+                                className={cn(
+                                  "rounded-none border-x-0 pl-10 pr-3 text-center w-[100px]",
+                                  "[-moz-appearance:_textfield] [&::-webkit-inner-spin-button]:m-0 [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:m-0 [&::-webkit-outer-spin-button]:appearance-none",
+                                )}
+                                min={0}
+                              />
+                            </div>
+                            <Button
+                              type="button"
+                              variant="outline"
+                              size="icon"
+                              className="rounded-l-none"
+                              onClick={() => field.onChange((field.value || 0) + 5)}
+                            >
+                              <Plus className="h-4 w-4" />
+                            </Button>
+                          </div>
+                          <span className="ml-2 font-medium">minute</span>
+                        </div>
+                      </div>
+                  </div>
+                </FormControl>
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={control}
             name="recipeType"
             render={({ field }) => (
-              <FormItem>
+              <FormItem className="w-full">
                 <FormLabel className='text-lg font-semibold'>Tipul rețetei</FormLabel>
                 <FormControl>
                 <Popover>
@@ -299,6 +354,7 @@ const RecipeForm = ({userId}:{userId:string|undefined}) => {
               </FormItem>
             )}
           />
+          </div>
 
           <FormField
             control={control}

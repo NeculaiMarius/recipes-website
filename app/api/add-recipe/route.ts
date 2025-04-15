@@ -6,7 +6,10 @@ export interface Ingredient{
 }
 
 export async function POST(request:Request) {
-  const {recipeName,recipeDescription,recipeType,portions,steps,ingredients,imageUrl,userId,imagePublicId} = await request.json();
+  const {recipeName,recipeDescription,recipeType,preparationTime,portions,steps,ingredients,imageUrl,userId,imagePublicId} = await request.json();
+
+
+  //TO DO: Insert preparation time in the database
 
   try {
     const insertRecipeResult= await sql`

@@ -1,23 +1,28 @@
 import { options } from "@/app/api/auth/[...nextauth]/options"
 import FavouriteButtonBig from "@/components/Buttons/FavouriteButtonBig"
+import FollowButton from "@/components/Buttons/FollowButton"
 import SaveButtonBig from "@/components/Buttons/SaveButtonBig"
+import PaginationComponent from "@/components/PaginationComponent"
 import Rating from "@/components/Rating"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
-import { RecipeDisplay, RecipeFeed } from "@/interfaces/recipe"
+import { RecipeFeed } from "@/interfaces/recipe"
 import { QueryResultRow, sql } from "@vercel/postgres"
-import { BookmarkIcon, Heart, Home, MessageCircle, Search, Share2, Utensils, Users } from "lucide-react"
+import { Heart} from "lucide-react"
 import { getServerSession } from "next-auth"
 import Image from "next/image"
-import { use } from "react"
 import { FaStar } from "react-icons/fa"
 
 
-export default async function Feed() {
-
+export default async function Feed({ searchParams }: { searchParams: { page?: string}}) {
   const session=await getServerSession(options);
+
+  let totalCountCache: number | null = null;
+  const page = parseInt(searchParams.page || '1', 10); 
+  const limit=12;
+  const offset = (page - 1) * limit;
 
   const userResponse=await sql`
   Select 
@@ -61,13 +66,26 @@ export default async function Feed() {
     WHERE
       ur.id_utilizator = ${session?.user.id}
     ORDER BY 
-      r.id DESC;
+      r.id DESC
+    LIMIT ${limit} OFFSET ${offset};
   `;
   const recipes:RecipeFeed[] = result?.rows as RecipeFeed[];
 
+  if (totalCountCache === null) {
+      const countResult = await sql`
+      SELECT COUNT(*) 
+      FROM l_retete r
+      JOIN l_utilizatori u ON r.id_utilizator = u.id
+      JOIN l_urmariri_utilizatori ur ON r.id_utilizator = ur.id_utilizator_urmarit
+      WHERE ur.id_utilizator = ${session?.user.id};`;
+      totalCountCache = parseInt(countResult?.rows[0].count, 10);
+    }
+  
+    const totalPages = Math.ceil(totalCountCache / limit);
+
   return (
-    <div className="flex flex-col min-h-screen bg-gray-100 pt-[80px]">
-      <div className="flex-1 container mx-auto py-4 px-2 md:px-4">
+    <div className="flex flex-col  bg-gray-100 pt-[80px]">
+      <div className="flex-1 container mx-auto pb-4 px-2 md:px-4">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
           {/* Left Sidebar - Only visible on large screens */}
           <div className="hidden lg:block lg:col-span-3">
@@ -76,11 +94,12 @@ export default async function Feed() {
 
           {/* Main Feed */}
           <div className="lg:col-span-6">
-            <ScrollArea className="h-[calc(100vh-2rem)]">
+            <ScrollArea className="">
               <div className="space-y-4 pb-20">
                 {recipes.map((recipe) => (
                   <RecipeCardFeed key={recipe.id} recipe={recipe} id_user={session?.user.id as string} />
                 ))}
+                <PaginationComponent totalPages={totalPages} page={page}></PaginationComponent>
               </div>
             </ScrollArea>
           </div>
@@ -98,7 +117,7 @@ export default async function Feed() {
 
 function LeftSidebar({user}:{user:QueryResultRow}) {
   return (
-    <div className="space-y-4 sticky top-4">
+    <div className="space-y-4 sticky top-20">
       {/* User Profile Summary */}
       <Card>
         <CardContent className="p-4">
@@ -130,7 +149,7 @@ function LeftSidebar({user}:{user:QueryResultRow}) {
 
       {/* Favorite Categories */}
       
-      <Card>
+      {/* <Card>
         <CardHeader className="pb-2">
           <h3 className="font-semibold">Favorite Categories</h3>
         </CardHeader>
@@ -153,18 +172,33 @@ function LeftSidebar({user}:{user:QueryResultRow}) {
             </Button>
           </div>
         </CardContent>
-      </Card>
+      </Card> */}
     </div>
   )
 }
 
-function RightSidebar({
-}: {
-}) {
-  return (
-    <div className="space-y-4 sticky top-4">
+async function RightSidebar() {
+  const session=await getServerSession(options);
 
-      {/* Suggested Accounts
+  const accountsResults=await sql`
+  SELECT 
+    u.nume,
+    u.id,
+    u.prenume,
+    u.email,
+    COUNT(fu.id) AS urmaritori
+  FROM l_utilizatori u
+  LEFT JOIN l_urmariri_utilizatori fu ON u.id = fu.id_utilizator_urmarit
+  LEFT JOIN l_urmariri_utilizatori fu2 
+      ON u.id = fu2.id_utilizator_urmarit 
+      AND fu2.id_utilizator = 1
+  WHERE fu2.id_utilizator IS NULL 
+  GROUP BY u.id, u.nume, u.prenume, u.email;
+  `;
+  const suggestedAccounts=accountsResults.rows;
+
+  return (
+    <div className="space-y-4 sticky top-20">
       <Card>
         <CardHeader className="pb-2">
           <h3 className="font-semibold">Suggested Accounts</h3>
@@ -172,25 +206,25 @@ function RightSidebar({
         <CardContent className="p-3 pt-0">
           <div className="space-y-3">
             {suggestedAccounts.map((account) => (
-              <div key={account.id} className="flex items-center justify-between">
+              <div key={account.id} className="flex items-center justify-between py-1">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-8 w-8">
                     <AvatarImage src={account.avatar} alt={account.name} />
-                    <AvatarFallback>{account.name.substring(0, 2)}</AvatarFallback>
+                    <AvatarFallback>{(account.nume[0]+account.prenume[0]).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div>
-                    <h4 className="text-sm font-medium">{account.name}</h4>
-                    <p className="text-xs text-muted-foreground">{account.followers} followers</p>
+                    <h4 className="text-sm font-medium">{account.nume+" "+account.prenume}</h4>
+                    <p className="text-xs text-muted-foreground">{account.urmaritori} urmăritori</p>
                   </div>
                 </div>
-                <Button variant="outline" size="sm">
-                  Follow
-                </Button>
+                <div className="w-20 h-7 text-sm">
+                  <FollowButton id_user={session?.user.id as string} followed={false} id_followed_user={account.id} />
+                </div>
               </div>
             ))}
           </div>
         </CardContent>
-      </Card> */}
+      </Card>
     </div>
   )
 }
@@ -225,14 +259,15 @@ function RecipeCardFeed({ recipe ,id_user}: {recipe:RecipeFeed,id_user:string}) 
       <CardFooter className="flex flex-col pt-0">
         <div className="flex justify-between items-center w-full pb-2 border-b">
           <div className="flex items-center gap-1 text-sm text-muted-foreground">
-            <Heart className="h-4 w-4 text-red-500 fill-red-500" />
+            <Heart className="h-6 w-6 text-red-500 fill-red-500" />
             <span>{formatNumber(recipe.numar_aprecieri)}</span>
           </div>
           <div className="text-sm text-muted-foreground flex gap-2 items-center">
-            <Rating rating={recipe.rating} />{recipe.numar_reviews} reviews</div>
+            <Rating rating={recipe.rating} />{recipe.numar_reviews} reviews
+          </div>
         </div>
 
-        <div className="flex justify-between items-center w-full pt-1">
+        <div className="flex justify-between items-center w-full pt-1 gap-2">
           <FavouriteButtonBig id_recipe={recipe.id} id_user={id_user} isLiked={recipe.liked}/>
           <SaveButtonBig id_recipe={recipe.id} id_user={id_user} isLiked={recipe.saved}/>
           <a href={`/Discover-recipes/Recipe-page?recipeId=${recipe.id}#review`}>

@@ -14,7 +14,7 @@ const NavBarLogo = () => {
   return (
     <Link
       href="/"
-      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 hover:from-emerald-100 hover:to-emerald-200 transition-all duration-300 shadow-md"
+      className="flex items-center gap-2 px-3 py-2 rounded-lg bg-gradient-to-r from-gray-100 to-gray-200 hover:from-gray-200 hover:to-gray-300 transition-all duration-300 shadow-md"
     >
       <motion.div
         className="p-2 bg-emerald-700 rounded-full shadow-md"

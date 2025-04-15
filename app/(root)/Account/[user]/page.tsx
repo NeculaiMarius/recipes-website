@@ -150,9 +150,14 @@ const page = async ({ params}:{params:{user:string}}) => {
             <p className='hover:text-blue-500 hover:cursor-pointer hover:underline'>{user?.email}</p>
           </div>
 
-          <div className='flex items-center m-2'>
-            <FollowButton id_user={session?.user.id || ""} id_followed_user={params.user} followed={user.followed}></FollowButton>
-          </div>
+
+          {
+          user.id!=session?.user.id?
+            <div className='flex items-center m-2'>
+              <FollowButton id_user={session?.user.id || ""} id_followed_user={params.user} followed={user.followed}></FollowButton>
+            </div>:null
+          }
+          
         </div>
         
         </div>
@@ -162,9 +167,8 @@ const page = async ({ params}:{params:{user:string}}) => {
 
       <div className=''>
         <Tabs defaultValue="account" className="w-full">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="recipes"> <GiCookingPot size={20}/> Retete proprii</TabsTrigger>
-          <TabsTrigger value="followers"><RiUserFollowFill /> Urmaritori</TabsTrigger>
           <TabsTrigger value="likes"><FaHeart />Apreciate</TabsTrigger>
           <TabsTrigger value="saves"><FaFlag/>Salvate</TabsTrigger>
         </TabsList>
@@ -179,9 +183,6 @@ const page = async ({ params}:{params:{user:string}}) => {
           </div>
         </TabsContent>
 
-        <TabsContent value="followers">
-
-        </TabsContent>
 
         <TabsContent value='likes'>
           <div className='flex flex-wrap justify-center pt-8'>

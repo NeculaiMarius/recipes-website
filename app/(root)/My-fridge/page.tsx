@@ -9,6 +9,7 @@ import { getServerSession } from 'next-auth';
 import { options } from '@/app/api/auth/[...nextauth]/options';
 import { sql } from '@vercel/postgres';
 import PaginationComponent from '@/components/PaginationComponent';
+import Search from '@/components/Search';
 
 
 let totalCountCache: number | null = null;
@@ -23,8 +24,23 @@ const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?
   const offset = (page - 1) * limit;
 
   if (totalCountCache === null) {
-    const countResult = await sql`SELECT COUNT(*) FROM l_retete`;
-    totalCountCache = parseInt(countResult?.rows[0].count, 10);
+    const countResult = await sql`SELECT COUNT(*) FROM (
+      SELECT 
+          r.id
+        FROM l_retete r
+        JOIN l_utilizatori u ON r.id_utilizator = u.id
+        LEFT JOIN l_reviews v ON v.id_reteta = r.id
+        LEFT JOIN l_retete_apreciate a ON a.id_reteta = r.id
+        LEFT JOIN l_retete_salvate s ON s.id_reteta = r.id
+        JOIN l_retete_ingrediente ri ON r.id = ri.id_reteta
+        LEFT JOIN l_ingrediente_frigider f 
+            ON ri.id_ingredient = f.id_ingredient 
+            AND f.id_utilizator = 1 
+        WHERE
+          lower(r.nume) LIKE lower(${`%${searchQuery}%`})
+        GROUP BY r.id, r.nume, u.nume, r.image_url
+      );`;
+    totalCountCache = parseInt(countResult?.rows[0].count, 10); 
   }
 
   const totalPages = Math.ceil(totalCountCache / limit);
@@ -97,16 +113,21 @@ const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?
     <div className='p-[1vw] pt-[90px] h-screen w-full max-md:h-fit'>
       <div className='w-full h-full grid grid-cols-[30%_70%] rounded-3xl max-md:grid-cols-1 overflow-hidden'>
         <FridgeIngredientsSections />
-        <div className=' overflow-auto'>
-          <FilterOrderContainer/>
+
+        <div className='md:hidden bg-emerald-700 py-8 my-10'>
+          Rețete sugerate
+        </div>
+
+        <div className='flex flex-col-reverse overflow-auto'>
+          <PaginationComponent totalPages={totalPages} page={page}/>
           <div className='justify-evenly flex flex-wrap pt-4 w-full'>
             {recipes.map((recipe)=>{
               return(
-                <RecipeDisplayCard recipe={recipe} id_user={session?.user.id||''} key={recipe.id}></RecipeDisplayCard>
+                <RecipeDisplayCard recipe={recipe} id_user={session?.user.id||''} key={recipe.id} />
               )
             })}
           </div>
-          <PaginationComponent totalPages={totalPages} page={page}/>
+          <FilterOrderContainer/>          
         </div>
       </div>
     </div>

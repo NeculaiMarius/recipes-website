@@ -27,13 +27,11 @@ export default function Search({ placeholder }: { placeholder: string }) {
     }, 350);
   }
   
-  if (!["/Discover-recipes", "/My-fridge"].includes(pathname)) {
+  if (!["/Discover-recipes"].includes(pathname)) {
     return null;
   }
 
-  // if (!["/Discover-recipes"].includes(pathname)) {
-  //   return null;
-  // }
+
 
   return (
     <div className="relative flex flex-1 flex-shrink-0 max-w-[500px]">

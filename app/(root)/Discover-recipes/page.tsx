@@ -36,7 +36,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
   const order = searchParams?.order || ''; 
 
   const page = parseInt(searchParams.page || '1', 10); 
-  const limit=12;
+  const limit=20;
   const offset = (page - 1) * limit;
 
   
@@ -96,10 +96,21 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
 
 
 
-  if (totalCountCache === null) {
-    const countResult = await sql`SELECT COUNT(*) FROM l_retete`;
-    totalCountCache = parseInt(countResult?.rows[0].count, 10);
-  }
+  const countQuery = `
+    SELECT COUNT(DISTINCT r.id) 
+    FROM l_retete r
+    JOIN l_utilizatori u ON r.id_utilizator = u.id
+    LEFT JOIN l_retete_ingrediente ri ON ri.id_reteta = r.id
+    LEFT JOIN l_ingrediente i ON i.id = ri.id_ingredient
+    WHERE r.tip LIKE '%${type}%'
+    AND lower(r.nume) LIKE lower('%${searchQuery}%')
+    ${ingredients.length > 0 ? `AND i.id IN (${ingredientsQuery})` : ''}
+    ${ingredients.length > 0 ? `GROUP BY r.id HAVING COUNT(DISTINCT i.id) = ${ingredients.length}` : ''}
+  `;
+
+    const countResult=await sql.query(countQuery);
+
+    totalCountCache = parseInt(countResult?.rows[0]?.count, 10);
 
   const totalPages = Math.ceil(totalCountCache / limit);
 

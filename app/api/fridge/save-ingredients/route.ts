@@ -19,14 +19,19 @@ export async function POST(req:Request) {
     `
     await sql.query(deleteQuery);
 
-    const query = `
+    if(ingredients.length>0){
+      const query = `
       INSERT INTO l_ingrediente_frigider (id_ingredient,id_utilizator,cantitate)
       VALUES 
       ${ingredients.map(ingredient => `('${ingredient.id}', '${session?.user.id}', '${ingredient.quantity}')`).join(', ')}
-      RETURNING *;
+      ;
     `;
+
+      const result = await sql.query(query);
+    }
     
-    const result = await sql.query(query);
+
+    
     return NextResponse.json("Ingredient saved sucessfully",{status: 201})
   } catch (error) {
     console.error("Error inserting ingredients:", error);

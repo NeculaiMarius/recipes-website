@@ -57,7 +57,7 @@ const ProductScanner = () => {
       D: "bg-orange-400",
       E: "bg-red-500",
     }
-    return gradeMap[grade.toUpperCase()] || "bg-gray-400"
+    return gradeMap[grade?.toUpperCase()] || "bg-gray-400"
   }
 
   const searchProduct = async () => {
@@ -564,13 +564,13 @@ const ProductScanner = () => {
                         <div className="flex items-center gap-1">
                           <span className="text-xs font-medium">Nutri</span>
                           <Badge className={`${getScoreColor(product.nutriscore_grade)} text-white px-1.5 py-0.5 text-xs`}>
-                            {product.nutriscore_grade.toUpperCase()}
+                            {product.nutriscore_grade?.toUpperCase()}
                           </Badge>
                         </div>
                         <div className="flex items-center gap-1">
                           <span className="text-xs font-medium">Eco</span>
                           <Badge className={`${getScoreColor(product.ecoscore_grade)} text-white px-1.5 py-0.5 text-xs`}>
-                            {product.ecoscore_grade.toUpperCase()}
+                            {product.ecoscore_grade?.toUpperCase()}
                           </Badge>
                         </div>
                       </div>

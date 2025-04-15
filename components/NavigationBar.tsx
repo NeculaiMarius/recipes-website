@@ -18,6 +18,7 @@ import { LogOut, Settings, User } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet"
 import { Button } from "./ui/button"
 import UserEditModal from "./Forms/UserEditModal"
+import UserSearchBar from "./UserSearchBar"
 
 const NavigationBar = async () => {
   const session = await getServerSession(options)
@@ -39,7 +40,11 @@ const NavigationBar = async () => {
         
         <div className="md:max-w-[500px] w-full mx-4">
           <Search placeholder="Caută o rețetă..."></Search>
+          <UserSearchBar placeholder="Caută un utilizator..." navbar={true}></UserSearchBar>
+
         </div>
+
+        
 
         <Sheet>
           <SheetTrigger asChild>
