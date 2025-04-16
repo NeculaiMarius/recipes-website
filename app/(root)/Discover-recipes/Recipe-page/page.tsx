@@ -26,6 +26,7 @@ import { IoMdSettings } from "react-icons/io";
 import RecipeSettingsButton from '@/components/Buttons/RecipeSettingsButton';
 import { AlertTriangle } from 'lucide-react';
 import RecipeRecommendationsSection from '@/components/RecipeRecommendationsSection';
+import SaveRecipeLS from '@/components/SaveRecipeLS';
 
 
 
@@ -138,6 +139,8 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
 
   return (
     <div className='pt-[80px] '>
+      <SaveRecipeLS recipe={recipe}/>
+
       {
         recipe.id_utilizator==session?.user.id?
         <div className='fixed top-4 left-6 z-50 '>
@@ -187,7 +190,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
             <SaveButtonBig id_user={session?.user.id||""} id_recipe={recipe.id} isLiked={recipe.saved} />
             <FavouriteButtonBig id_user={session?.user.id||""} id_recipe={recipe.id} isLiked={recipe.liked}/>
             <a href='#review'>
-              <div className='like-button font-bold px-4 py-2 shadow-xl w-[170px] justify-around text-lg bg-yellow-600 text-gray-100  max-md:w-[100px]'>
+              <div className='like-button font-bold px-4 py-2 shadow-xl w-[170px] justify-around text-lg bg-yellow-600 text-gray-100  max-md:w-[90px]'>
                 <span className='max-md:hidden'>Review-uri</span> <FaStar size={25}></FaStar>
               </div>
             </a>

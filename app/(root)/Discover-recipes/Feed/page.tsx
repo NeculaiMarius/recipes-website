@@ -5,10 +5,10 @@ import SaveButtonBig from "@/components/Buttons/SaveButtonBig"
 import PaginationComponent from "@/components/PaginationComponent"
 import Rating from "@/components/Rating"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { RecipeFeed } from "@/interfaces/recipe"
+import { User } from "@/interfaces/users"
 import { QueryResultRow, sql } from "@vercel/postgres"
 import { Heart} from "lucide-react"
 import { getServerSession } from "next-auth"
@@ -33,6 +33,7 @@ export default async function Feed({ searchParams }: { searchParams: { page?: st
     (select count(id) from l_urmariri_utilizatori where id_utilizator=${session?.user.id}) as urmariri,
     (select count(id) from l_retete where id_utilizator=${session?.user.id}) as numar_retete
   FROM l_utilizatori u
+  WHERE id=${session?.user.id}
   GROUP BY u.nume, u.prenume, u.email, u.parola, u.rol, u.id`
   const user=userResponse.rows[0];
 
@@ -71,6 +72,25 @@ export default async function Feed({ searchParams }: { searchParams: { page?: st
   `;
   const recipes:RecipeFeed[] = result?.rows as RecipeFeed[];
 
+  const accountsResults=await sql`
+  SELECT 
+    u.nume,
+    u.id,
+    u.prenume,
+    u.email,
+    COUNT(fu.id) AS urmaritori
+  FROM l_utilizatori u
+  LEFT JOIN l_urmariri_utilizatori fu ON u.id = fu.id_utilizator_urmarit
+  LEFT JOIN l_urmariri_utilizatori fu2 
+      ON u.id = fu2.id_utilizator_urmarit 
+      AND fu2.id_utilizator = 1
+  WHERE fu2.id_utilizator IS NULL 
+  GROUP BY u.id, u.nume, u.prenume, u.email
+  LIMIT 15;
+  `;
+  const suggestedAccounts:User[]=accountsResults?.rows as User[];
+
+
   if (totalCountCache === null) {
       const countResult = await sql`
       SELECT COUNT(*) 
@@ -95,6 +115,25 @@ export default async function Feed({ searchParams }: { searchParams: { page?: st
           {/* Main Feed */}
           <div className="lg:col-span-6">
             <ScrollArea className="">
+              <div className="bg-white flex flex-col rounded-md mb-4 gap-2 p-2 h-52 overflow-auto border lg:hidden">
+                <h3 className="font-semibold col-span-2 pl-4">Conturi sugerate</h3>
+                {suggestedAccounts.map((account) => (
+                  <div key={account.id} className="flex items-center justify-between py-1 rounded-md border px-2">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-8 w-8">
+                        <AvatarFallback>{(account.nume[0]+account.prenume[0]).toUpperCase()}</AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <h4 className="text-sm font-medium">{account.nume+" "+account.prenume}</h4>
+                        <p className="text-xs text-muted-foreground">{account.urmaritori} urmăritori</p>
+                      </div>
+                    </div>
+                    <div className="w-20 h-7 text-sm">
+                      <FollowButton id_user={session?.user.id as string} followed={false} id_followed_user={account.id} />
+                    </div>
+                  </div>
+                ))}
+              </div>
               <div className="space-y-4 pb-20">
                 {recipes.map((recipe) => (
                   <RecipeCardFeed key={recipe.id} recipe={recipe} id_user={session?.user.id as string} />
@@ -106,7 +145,7 @@ export default async function Feed({ searchParams }: { searchParams: { page?: st
 
           {/* Right Sidebar - Only visible on large screens */}
           <div className="hidden lg:block lg:col-span-3">
-            <RightSidebar
+            <RightSidebar suggestedAccounts={suggestedAccounts}
             />
           </div>
         </div>
@@ -145,63 +184,18 @@ function LeftSidebar({user}:{user:QueryResultRow}) {
           </div>
         </CardContent>
       </Card>
-
-
-      {/* Favorite Categories */}
-      
-      {/* <Card>
-        <CardHeader className="pb-2">
-          <h3 className="font-semibold">Favorite Categories</h3>
-        </CardHeader>
-        <CardContent className="p-3 pt-0">
-          <div className="flex flex-wrap gap-2">
-            <Button variant="outline" size="sm" className="rounded-full">
-              Italian
-            </Button>
-            <Button variant="outline" size="sm" className="rounded-full">
-              Desserts
-            </Button>
-            <Button variant="outline" size="sm" className="rounded-full">
-              Vegetarian
-            </Button>
-            <Button variant="outline" size="sm" className="rounded-full">
-              Quick Meals
-            </Button>
-            <Button variant="outline" size="sm" className="rounded-full">
-              Breakfast
-            </Button>
-          </div>
-        </CardContent>
-      </Card> */}
     </div>
   )
 }
 
-async function RightSidebar() {
+async function RightSidebar({suggestedAccounts}:{suggestedAccounts:User[]}) {
   const session=await getServerSession(options);
-
-  const accountsResults=await sql`
-  SELECT 
-    u.nume,
-    u.id,
-    u.prenume,
-    u.email,
-    COUNT(fu.id) AS urmaritori
-  FROM l_utilizatori u
-  LEFT JOIN l_urmariri_utilizatori fu ON u.id = fu.id_utilizator_urmarit
-  LEFT JOIN l_urmariri_utilizatori fu2 
-      ON u.id = fu2.id_utilizator_urmarit 
-      AND fu2.id_utilizator = 1
-  WHERE fu2.id_utilizator IS NULL 
-  GROUP BY u.id, u.nume, u.prenume, u.email;
-  `;
-  const suggestedAccounts=accountsResults.rows;
 
   return (
     <div className="space-y-4 sticky top-20">
       <Card>
         <CardHeader className="pb-2">
-          <h3 className="font-semibold">Suggested Accounts</h3>
+          <h3 className="font-semibold">Conturi sugerate</h3>
         </CardHeader>
         <CardContent className="p-3 pt-0">
           <div className="space-y-3">
@@ -209,7 +203,6 @@ async function RightSidebar() {
               <div key={account.id} className="flex items-center justify-between py-1">
                 <div className="flex items-center gap-2">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={account.avatar} alt={account.name} />
                     <AvatarFallback>{(account.nume[0]+account.prenume[0]).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div>
@@ -245,7 +238,7 @@ function RecipeCardFeed({ recipe ,id_user}: {recipe:RecipeFeed,id_user:string}) 
         </div>
       </CardHeader>
 
-      <CardContent className="pb-3 pt-2">
+      <CardContent className="pb-3 pt-2 ">
         <h2 className="text-lg font-bold mb-2">{recipe.nume}</h2>
         <p className="text-sm text-muted-foreground mb-4">{recipe.descriere}</p>
 
@@ -267,11 +260,11 @@ function RecipeCardFeed({ recipe ,id_user}: {recipe:RecipeFeed,id_user:string}) 
           </div>
         </div>
 
-        <div className="flex justify-between items-center w-full pt-1 gap-2">
+        <div className="flex justify-between items-center w-full pt-1 gap-1">
           <FavouriteButtonBig id_recipe={recipe.id} id_user={id_user} isLiked={recipe.liked}/>
           <SaveButtonBig id_recipe={recipe.id} id_user={id_user} isLiked={recipe.saved}/>
           <a href={`/Discover-recipes/Recipe-page?recipeId=${recipe.id}#review`}>
-            <div className='like-button font-bold px-4 py-2 shadow-xl w-[170px] justify-around text-lg bg-yellow-600 text-gray-100  max-md:w-[100px]'>
+            <div className='like-button font-bold px-4 py-2 shadow-xl w-[170px] justify-around text-lg bg-yellow-600 text-gray-100  max-md:w-[90px]'>
               <span className='max-md:hidden'>Review-uri</span> <FaStar size={25}></FaStar>
             </div>
           </a>

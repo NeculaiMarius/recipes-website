@@ -31,7 +31,7 @@ const FollowButton = ({ id_user, id_followed_user, followed }: { id_user: string
     };
   return (
     <div
-          className={`like-button rounded-sm w-full h-full right-2 top-2 z-10 ${isFollowed ? 'bg-emerald-700' : 'bg-gray-300'}`}
+          className={`like-button rounded-md w-full h-full right-2 top-2 z-10 shadow-sm border ${isFollowed ? 'bg-emerald-700' : 'bg-gray-100'}`}
           onClick={handleClick}
         >
           {isLoading ? 

@@ -4,6 +4,7 @@ import FilterOrderContainer from '@/components/FilterOrderContainer';
 import FiltersSheet from '@/components/FiltersSheet';
 import PaginationComponent from '@/components/PaginationComponent';
 import RecipeDisplayCard from '@/components/RecipeDisplayCard'
+import RecipeHistorySection from '@/components/RecipeHistorySection';
 import { RecipeDisplay } from '@/interfaces/recipe';
 import { sql } from '@vercel/postgres';
 import { getServerSession } from 'next-auth';
@@ -133,6 +134,10 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
       </div>
       
       <PaginationComponent totalPages={totalPages} page={page}/>
+      <div className='bg-gray-100 py-6 mb-10'>
+      <RecipeHistorySection userId={session?.user.id as string}></RecipeHistorySection>
+
+      </div>
     </>
   )
 }
