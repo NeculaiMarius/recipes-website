@@ -109,7 +109,7 @@ const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?
 
 
   return (
-    <div className='p-[1vw] pt-[90px] h-screen w-full max-md:h-fit'>
+    <div className=' pt-[90px] h-screen w-full max-md:h-fit'>
       <div className='w-full h-full grid grid-cols-[35%_65%] rounded-3xl max-md:grid-cols-1 overflow-hidden'>
         <FridgeIngredientsSections />
 
