@@ -110,8 +110,8 @@ const RecipeRecommendationsSection = async ({recipeId,userId,authorId}:{recipeId
 
 
   return (
-    <div>
-      <h1 className='pl-[10vw] text-emerald-700 text-2xl font-bold'>Rețete cu ingrediente similare</h1>
+    <div className=''>
+      <h1 className='pl-[10vw] max-md:pl-4 bg-gray-100 py-2 text-emerald-700 text-2xl max-md:text-xl font-bold'>Rețete cu ingrediente similare</h1>
 
       <Carousel
         opts={{
@@ -129,11 +129,12 @@ const RecipeRecommendationsSection = async ({recipeId,userId,authorId}:{recipeId
         </CarouselContent>
       </Carousel>
       
-      <div className='h-16'></div>
+      
 
       {recipeSugestions_2.length>0 && (
         <>
-          <h1 className='pl-[10vw] text-emerald-700 text-2xl font-bold'>Alte rețete de la acest utilizator</h1><Carousel
+          <div className='h-8'></div>
+          <h1 className='bg-gray-100 py-2 pl-[10vw] max-md:pl-4 text-emerald-700 text-2xl font-bold max-md:text-xl'>Alte rețete de la acest utilizator</h1><Carousel
             opts={{
               align: "start",
               dragFree: true

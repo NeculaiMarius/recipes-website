@@ -8,11 +8,7 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Separator } from '@/components/ui/separator';
 import Rating from '@/components/Rating';
 import FavouriteButtonBig from '@/components/Buttons/FavouriteButtonBig';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover"
+
 import { FaFlag, FaHeart, FaInfoCircle, FaRegUserCircle, FaStar } from 'react-icons/fa';
 import { Label } from '@/components/ui/label';
 import AddReviewForm from '@/components/Forms/AddReviewForm';
@@ -27,6 +23,8 @@ import RecipeSettingsButton from '@/components/Buttons/RecipeSettingsButton';
 import { AlertTriangle } from 'lucide-react';
 import RecipeRecommendationsSection from '@/components/RecipeRecommendationsSection';
 import SaveRecipeLS from '@/components/SaveRecipeLS';
+import { Checkbox } from '@/components/ui/checkbox';
+import IngredientListItem from '@/components/IngredientListItem';
 
 
 
@@ -207,53 +205,8 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
             <div className="overflow-auto h-full">
               {ingredients.map(ingredient => (
                 <>
-                  <div
-                    className='text-xl grid grid-cols-[4fr_3fr_3fr_13fr_2fr] py-2 px-8 w-full items-center
-                              max-md:text-base max-md:py-1 max-md:px-4'
-                    key={ingredient.id}
-                  >
-                    <Image
-                      src={`/svg-icons/${ingredient.categorie}.svg`}
-                      height={40}
-                      width={40}
-                      alt='' 
-                    />
-                    <p>{ingredient.cantitate}</p>
-                    <p>{ingredient.um}</p>
-                    <p>{ingredient.nume}</p>
-                    <Popover>
-                      <PopoverTrigger><FaInfoCircle className='text-gray-500 text-2xl' /></PopoverTrigger>
-                      <PopoverContent className='w-fit'>
-                        <div className="grid gap-4">
-                          <div className="space-y-2">
-                            <h4 className="font-medium leading-none">Valori nutriționale</h4>
-                            <p className="text-sm text-muted-foreground">
-                              {`Valori pentru ${ingredient.cantitate} ${ingredient.um}`}
-                            </p>
-                          </div>
-                          <div className="grid gap-2">
-                            <div className="grid grid-cols-2 items-center gap-4">
-                              <Label htmlFor="width">Kcal</Label>
-                              <div className='nutrition-field text-red-700'>{(ingredient.um=='buc'?ingredient.kcal*ingredient.cantitate:ingredient.kcal*(ingredient.cantitate/100)).toFixed(2)}</div>
-                            </div>
-                            <div className="grid grid-cols-2 items-center gap-4">
-                              <Label htmlFor="maxWidth">Grasimi</Label>
-                              <div className='nutrition-field text-amber-600'>{(ingredient.um=='buc'?ingredient.grasimi*ingredient.cantitate:ingredient.grasimi*(ingredient.cantitate/100)).toFixed(2)} g</div>
-                            </div>
-                            <div className="grid grid-cols-2  items-center gap-4">
-                              <Label htmlFor="height">Carbohidrați</Label>
-                              <div className='nutrition-field text-pink-700'>{(ingredient.um=='buc'?ingredient.carbohidrati*ingredient.cantitate:ingredient.carbohidrati*(ingredient.cantitate/100)).toFixed(2)} g</div>
-                            </div>
-                            <div className="grid grid-cols-2 items-center gap-4">
-                              <Label htmlFor="maxHeight">Proteine</Label>
-                              <div className='nutrition-field text-cyan-700'>{(ingredient.um=='buc'?ingredient.proteine*ingredient.cantitate:ingredient.proteine*(ingredient.cantitate/100)).toFixed(2)} g</div>
-                            </div>
-                          </div>
-                        </div>
-                      </PopoverContent>
-                    </Popover>
-                  </div>
-                  <Separator className='w-[90%] ml-[5%] h-[2.5px] rounded-full'></Separator>
+                  <IngredientListItem ingredient={ingredient}></IngredientListItem>
+                  <div className='bg-gray-200 mx-4 h-[2.5px] rounded-full'></div>
                 </>
               ))}
               <div className='h-10 max-lg:hidden'></div>
@@ -324,8 +277,6 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
         <div className='mx-auto w-fit'>
           <AddReviewForm id_recipe={searchParams.recipeId} currentReview={currentUserReview}></AddReviewForm>
         </div>
-
-
 
 
         <Separator className='my-8'></Separator>

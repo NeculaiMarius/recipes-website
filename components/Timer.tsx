@@ -71,7 +71,6 @@ export function Timer() {
     return `${hrs.toString().padStart(2, "0")}:${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`
   }
 
-  // Timer effect
   React.useEffect(() => {
     let interval: NodeJS.Timeout | null = null
 
@@ -101,17 +100,22 @@ export function Timer() {
   }
 
   return (
-    <Drawer>
+    <Drawer >
       <DrawerTrigger asChild>
         <Button
           variant="outline"
-          className="bg-gray-100 hover:bg-gray-200 text-gray-800 border-gray-800 border-[3px] flex items-center gap-2 px-4 py-2 rounded-md shadow-sm"
+          className="h-12 bg-gray-100 hover:bg-gray-200 text-gray-800 border-gray-800 border-[3px] flex items-center gap-2 px-4 py-2 rounded-md shadow-sm"
         >
-          <Clock size={30} />
-          <span className="font-bold">Cronometru</span>
+          <Clock size={33} />
+          {timeLeft === 0 ? (
+            <span className="font-bold">Cronometru</span>
+          ) : (
+            <span className="text-gray-800 font-bold">{formatTime(timeLeft)}</span>
+          )}
+          
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="bg-white border-t-2 border-gray-300">
+      <DrawerContent className="bg-white border-t-2 border-gray-300 max-lg:w-full lg:w-fit mx-auto lg:px-[10vw]">
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader className="border-b border-gray-200">
             <DrawerTitle className="text-emerald-800">Cronometru</DrawerTitle>
@@ -145,7 +149,7 @@ export function Timer() {
                     max="59"
                     value={minutes}
                     onChange={handleMinutesChange}
-                    className="text-center focus:border-gray-500 focus:ring-gray-500 border-2"
+                    className="text-center focus:border-gray-500 focus:ring-gray-500 border-2 "
                   />
                 </div>
                 <div>

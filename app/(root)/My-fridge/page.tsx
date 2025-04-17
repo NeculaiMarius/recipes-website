@@ -109,11 +109,11 @@ const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?
 
 
   return (
-    <div className=' pt-[90px] h-screen w-full max-md:h-fit'>
+    <div className=' pt-[90px] sm:px-[1vw] h-screen w-full max-md:h-fit'>
       <div className='w-full h-full grid grid-cols-[35%_65%] rounded-3xl max-md:grid-cols-1 overflow-hidden'>
         <FridgeIngredientsSections />
 
-        <div className='md:hidden bg-emerald-700 py-8 my-10'>
+        <div className='md:hidden bg-emerald-700 my-10 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md mt-10 mb-8'>
           Rețete sugerate
         </div>
 

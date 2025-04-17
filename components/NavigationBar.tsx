@@ -14,10 +14,11 @@ import { Timer } from "./Timer"
 
 import UserEditModal from "./Forms/UserEditModal"
 import UserSearchBar from "./UserSearchBar"
+import { Avatar, AvatarFallback } from "./ui/avatar"
 
 const NavigationBar = async () => {
   const session = await getServerSession(options)
-  const username = session?.user.lastName
+  const username = session?.user.lastName +" "+session?.user.firstName;
   console.log(session?.user.lastName)
 
   return (
@@ -44,12 +45,12 @@ const NavigationBar = async () => {
 
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="ghost" className="h-auto p-0 hover:bg-emerald-700/10 hover:text-emerald-700">
-              <div className="flex items-center">
-                <span className="material-symbols-outlined flex justify-center text-[3rem]">account_circle</span>
-                <span className="max-sm:hidden">{username}</span>
-              </div>
-            </Button>
+            <div className="flex items-center h-12 gap-2 px-3 py-2 rounded-lg bg-white shadow-md">
+              <Avatar className="h-8 w-8 text-sm">
+                <AvatarFallback>{(session?.user.lastName[0] as string +session?.user.firstName[0]).toUpperCase()}</AvatarFallback>
+              </Avatar>
+              <span className="max-sm:hidden">{username}</span>
+            </div>
           </SheetTrigger>
           <SheetContent className="w-[300px] border-l-emerald-700 sm:w-[400px]">
             <SheetHeader>
