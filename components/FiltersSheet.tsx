@@ -1,9 +1,11 @@
 "use client"
 import React, { useOptimistic, useTransition } from 'react'
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
+import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from './ui/sheet'
 import { useRouter } from 'next/navigation';
 import { ingredientsFilters, recipeTypes } from '@/constants';
-import { FaFilter } from 'react-icons/fa';
+import { FaFilter, FaQuestion } from 'react-icons/fa';
+import Link from 'next/link';
+import { Button } from './ui/button';
 
 const FiltersSheet = ({ ingredients ,type}: { ingredients: string[] ,type:string}) => {
   const router = useRouter();
@@ -30,13 +32,30 @@ const FiltersSheet = ({ ingredients ,type}: { ingredients: string[] ,type:string
       router.push(`?${newParams}`);
     });
   }
+
+  const fetchRandomRecipeId = async () => {
+    try {
+      const response = await fetch('/api/recipe/get-random-recipe-id');
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
+      const data = await response.json();
+      const recipeId = data.id;
+      if (!recipeId) {
+        throw new Error('No recipe ID received');
+      }
+      router.push(`/Discover-recipes/Recipe-page?recipeId=${recipeId}`);
+    } catch (err) {
+      console.error('Error fetching random recipe ID:', err);
+    }
+  };
   return (
     <div>
       <Sheet>
           <SheetTrigger className='h-12 w-12 flex justify-center items-center p-2 bg-emerald-700 text-white rounded-md'>
             <FaFilter className='text-2xl' />
           </SheetTrigger>
-          <SheetContent side={'left'}>
+          <SheetContent side={'left'} >
             <SheetHeader>
               <SheetTitle>Filtre</SheetTitle>
               <SheetDescription>
@@ -86,6 +105,15 @@ const FiltersSheet = ({ ingredients ,type}: { ingredients: string[] ,type:string
                 </div>
               </div>
             </SheetHeader>
+            <SheetFooter className=''>
+              <div className='w-full flex justify-center absolute bottom-6 left-0'>
+                <Button variant={'outline'} className='text-emerald-700 border-emerald-700 gap-2' onClick={fetchRandomRecipeId}>
+                <FaQuestion /> Surprinde-mă <FaQuestion />
+                </Button>
+              </div>
+              
+            </SheetFooter>
+
           </SheetContent>
         </Sheet>
     </div>

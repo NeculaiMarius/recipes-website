@@ -114,51 +114,58 @@ const FridgeIngredientsSections = () => {
     }
   return (
     <div className='flex flex-col overflow-auto'>
-          <div className='pb-5 bg-blue-300 relative'>
+          <div className='pb-5 bg-blue-300 '>
             <div className='flex justify-between items-center sticky'>
               <div className='w-fit bg-blue-500 rounded-r-3xl p-2 pr-3 my-4 text-white font-bold text-3xl'>
                 Frigiderul meu
               </div>
+              
+            </div>
+            
+            <div className='flex flex-col items-center relative gap-2'>
+              <Input 
+                className='max-w-[400px] z-20 '
+                value={ingredientQuery}
+                onChange={(e)=>setIngredientQuery(e.target.value)}
+                onFocus={() => ingredientQuery.trim() && setIsOpen(true)}
+                onBlur={() => setTimeout(() => setIsOpen(false), 500)}
+              />
+              {isOpen && ingredientSuggestions.length > 0 && (
+                <ul className="w-[400px] max-h-[300px] p-2 rounded-md max-h-50 overflow-y-auto bg-white absolute pt-12 shadow-lg border-2 border-gray-200">
+                  {ingredientSuggestions.map((ingredient) => (
+                    <li
+                      key={ingredient.id}
+                      className="cursor-pointer p-1 hover:bg-gray-200 flex items-center gap-4"
+                      onClick={() => {
+                        handleAddIngredient(ingredient);
+                        toast("Ingredient adaugat", {
+                          description: `${ingredient.name}`,
+                          action: {
+                            label: "Anulează",
+                            onClick: () => handleRemoveIngredient(ingredient.id),
+                          },
+                        })
+                      }}
+                    >
+                      <Image
+                        src={`/svg-icons/${ingredient.category}.svg`}
+                        height={30}
+                        width={30}
+                        alt=''
+                      />
+                      {ingredient.name} ({ingredient.um})
+                    </li>
+                  ))}
+                </ul>
+              )}
+
+
+
               <Button onClick={onClickButton} className='bg-emerald-700'>Salveaza modificarile</Button>
             </div>
             
-            
-            <Input 
-              className='rounded-full max-w-[400px] mx-auto z-20'
-              value={ingredientQuery}
-              onChange={(e)=>setIngredientQuery(e.target.value)}
-              onFocus={() => ingredientQuery.trim() && setIsOpen(true)}
-              onBlur={() => setTimeout(() => setIsOpen(false), 500)}
-            />
 
-            {isOpen && ingredientSuggestions.length > 0 && (
-              <ul className=" p-2 max-h-40 overflow-y-auto bg-white w-[500px] mx-auto absolute">
-                {ingredientSuggestions.map((ingredient) => (
-                  <li
-                    key={ingredient.id}
-                    className="cursor-pointer p-1 hover:bg-gray-200 flex items-center gap-4"
-                    onClick={() => {
-                      handleAddIngredient(ingredient);
-                      toast("Ingredient adaugat", {
-                        description: `${ingredient.name}`,
-                        action: {
-                          label: "Anulează",
-                          onClick: () => handleRemoveIngredient(ingredient.id),
-                        },
-                      })
-                    }}
-                  >
-                    <Image
-                      src={`/svg-icons/${ingredient.category}.svg`}
-                      height={30}
-                      width={30}
-                      alt=''
-                    />
-                    {ingredient.name} ({ingredient.um})
-                  </li>
-                ))}
-              </ul>
-            )}
+            
 
           </div>
 

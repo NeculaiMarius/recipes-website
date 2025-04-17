@@ -135,8 +135,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
       
       <PaginationComponent totalPages={totalPages} page={page}/>
       <div className='bg-gray-100 py-6 mb-10'>
-      <RecipeHistorySection userId={session?.user.id as string}></RecipeHistorySection>
-
+        <RecipeHistorySection userId={session?.user.id as string}></RecipeHistorySection>
       </div>
     </>
   )

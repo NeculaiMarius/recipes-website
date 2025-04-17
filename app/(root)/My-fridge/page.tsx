@@ -9,7 +9,6 @@ import { getServerSession } from 'next-auth';
 import { options } from '@/app/api/auth/[...nextauth]/options';
 import { sql } from '@vercel/postgres';
 import PaginationComponent from '@/components/PaginationComponent';
-import Search from '@/components/Search';
 
 
 let totalCountCache: number | null = null;
@@ -111,7 +110,7 @@ const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?
 
   return (
     <div className='p-[1vw] pt-[90px] h-screen w-full max-md:h-fit'>
-      <div className='w-full h-full grid grid-cols-[30%_70%] rounded-3xl max-md:grid-cols-1 overflow-hidden'>
+      <div className='w-full h-full grid grid-cols-[35%_65%] rounded-3xl max-md:grid-cols-1 overflow-hidden'>
         <FridgeIngredientsSections />
 
         <div className='md:hidden bg-emerald-700 py-8 my-10'>

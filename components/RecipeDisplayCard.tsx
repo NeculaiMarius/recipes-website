@@ -18,7 +18,7 @@ import { FaFlag, FaHeart } from 'react-icons/fa'
 
 const RecipeDisplayCard = ({recipe,id_user}:{recipe:RecipeDisplay,id_user:string}) => {
   return (
-    <Card className=' group flex flex-col hover:shadow-md m-2 w-[300px] h-[450px] max-md:w-[200px] max-md:h-[350px] max-md:text-sm max-sm:w-[170px] max-sm:m-1 overflow-hidden relative'>
+    <Card className='select-none group flex flex-col hover:shadow-md m-2 w-[300px] h-[450px] max-md:w-[200px] max-md:h-[350px] max-md:text-sm max-sm:w-[170px] max-sm:m-1 overflow-hidden relative'>
 
       <LikeButton id_user={id_user} id_recipe={recipe.id} liked={recipe.liked} key={recipe.id}/>
       <div className='hidden group-hover:block'>

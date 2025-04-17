@@ -2,6 +2,7 @@ import { RecipeDisplay } from '@/interfaces/recipe'
 import { sql } from '@vercel/postgres'
 import React from 'react'
 import RecipeDisplayCard from './RecipeDisplayCard'
+import { Carousel, CarouselContent, CarouselItem } from './ui/carousel'
 
 const RecipeRecommendationsSection = async ({recipeId,userId,authorId}:{recipeId:string,userId:string|undefined,authorId:string}) => {
   const recipeSugestionsQuery_1=`
@@ -97,6 +98,8 @@ const RecipeRecommendationsSection = async ({recipeId,userId,authorId}:{recipeId
       l_ingrediente i ON i.id = ri.id_ingredient
     WHERE
       u.id = ${authorId}
+    AND 
+      r.id != ${recipeId}
     GROUP BY 
       r.id, r.nume, u.nume, r.image_url
     ORDER BY (COUNT(DISTINCT a.id) + COUNT(DISTINCT s.id)) DESC
@@ -110,29 +113,43 @@ const RecipeRecommendationsSection = async ({recipeId,userId,authorId}:{recipeId
     <div>
       <h1 className='pl-[10vw] text-emerald-700 text-2xl font-bold'>Rețete cu ingrediente similare</h1>
 
-      <div className="w-[80%] max-sm:w-[95%] mx-auto overflow-x-auto pb-4 hide-scrollbar">
-        <div className="flex flex-nowrap gap-2 md:gap-4 ">
-          {recipeSugestions_1.map((recipe, index) => (
-            <div key={recipe.id || index} className="flex-none">
-              <RecipeDisplayCard recipe={recipe} id_user={userId as string} />
-            </div>
+      <Carousel
+        opts={{
+          align: "start",
+          dragFree:true
+        }}
+        className="w-full lg:px-20 cursor-grab"
+      >
+        <CarouselContent className='max-sm:pl-5'>
+          {recipeSugestions_1.map((recipe) => (
+            <CarouselItem key={recipe.id} className="md:mx-4  flex-[0_0_auto] pl-0 min-w-[170px] max-w-[300px] ">
+              <RecipeDisplayCard recipe={recipe as unknown as RecipeDisplay} id_user={userId as string} key={recipe.id} />
+            </CarouselItem>
           ))}
-        </div>
-      </div>
+        </CarouselContent>
+      </Carousel>
       
       <div className='h-16'></div>
 
-      <h1 className='pl-[10vw] text-emerald-700 text-2xl font-bold'>Alte rețete de la acest utilizator</h1>
-
-      <div className="w-[80%] max-sm:w-[95%] mx-auto overflow-x-auto pb-4 hide-scrollbar">
-        <div className="flex flex-nowrap gap-2 md:gap-4 ">
-          {recipeSugestions_2.map((recipe, index) => (
-            <div key={recipe.id || index} className="flex-none">
-              <RecipeDisplayCard recipe={recipe} id_user={userId as string} />
-            </div>
-          ))}
-        </div>
-      </div>
+      {recipeSugestions_2.length>0 && (
+        <>
+          <h1 className='pl-[10vw] text-emerald-700 text-2xl font-bold'>Alte rețete de la acest utilizator</h1><Carousel
+            opts={{
+              align: "start",
+              dragFree: true
+            }}
+            className="w-full lg:px-20 cursor-grab"
+          >
+            <CarouselContent className='max-sm:pl-5'>
+              {recipeSugestions_2.map((recipe) => (
+                <CarouselItem key={recipe.id} className="md:mx-4  flex-[0_0_auto] pl-0 min-w-[170px] max-w-[300px] ">
+                  <RecipeDisplayCard recipe={recipe as unknown as RecipeDisplay} id_user={userId as string} key={recipe.id} />
+                </CarouselItem>
+              ))}
+            </CarouselContent>
+          </Carousel>
+        </>
+      )}
     </div>
     
   )

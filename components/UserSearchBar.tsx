@@ -35,7 +35,7 @@ const UserSearchBar = ({ placeholder,navbar }: { placeholder: string,navbar:bool
 
 
   if (!["/Discover-recipes/Feed"].includes(pathname) && navbar==true) {
-    return null;
+    return <div className="hidden"></div>;
   }
 
   return (

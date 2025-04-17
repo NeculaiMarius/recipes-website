@@ -1,11 +1,4 @@
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+
 import FeatureSelector from "./Menus/FeatureSelector"
 import Link from "next/link"
 import { getServerSession } from "next-auth"
@@ -17,6 +10,8 @@ import { Separator } from "./ui/separator"
 import { LogOut, Settings, User } from "lucide-react"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "./ui/sheet"
 import { Button } from "./ui/button"
+import { Timer } from "./Timer"
+
 import UserEditModal from "./Forms/UserEditModal"
 import UserSearchBar from "./UserSearchBar"
 
@@ -30,18 +25,19 @@ const NavigationBar = async () => {
       <div className="flex w-full items-center justify-between fixed top-0 left-0 h-[80px] bg-gray-100  p-6 z-50">
 
         <div className="flex items-center">
-        <NavBarLogo />
+          <NavBarLogo />
           <div className="h-12 min-w-12"></div>
           <div className="max-md:hidden pl-4">
             <FeatureSelector />
           </div>
         </div>
+
+                  
         
-        
-        <div className="md:max-w-[500px] w-full mx-4">
+        <div className="md:max-w-[500px] w-full mx-4 flex justify-center">
           <Search placeholder="Caută o rețetă..."></Search>
           <UserSearchBar placeholder="Caută un utilizator..." navbar={true}></UserSearchBar>
-
+          <Timer></Timer>
         </div>
 
         

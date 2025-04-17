@@ -45,7 +45,7 @@ export default function NutritionChart({ data,totalKcal }: {data:NutritionData[]
   }, [data]);
 
   return (
-    <Card className="flex w-fit">
+    <Card className="flex w-fit max-sm:flex-col">
       <div>
       <CardHeader className="items-center pb-0">
         <CardTitle>Compoziție Nutrițională</CardTitle>
@@ -88,7 +88,7 @@ export default function NutritionChart({ data,totalKcal }: {data:NutritionData[]
                         <tspan
                           x={viewBox.cx}
                           y={(viewBox.cy || 0) + 24}
-                          className="fill-muted-foreground"
+                          className="fill-muted-foreground "
                         >
                           Total Macronutrienți
                         </tspan>
@@ -107,9 +107,9 @@ export default function NutritionChart({ data,totalKcal }: {data:NutritionData[]
         </div>
       </CardFooter>
       </div>
-      <div className="flex flex-col items-center justify-center pr-6">
-        <h1 className="text-2xl font-bold">Total kcal rețetă</h1>
-        <p className="text-xl font-extrabold text-red-700">{totalKcal} Kcal</p>
+      <div className="flex flex-col items-center justify-center pr-6 max-sm:p-4">
+        <h1 className="text-2xl max-sm:text-[20px] font-bold">Total kcal rețetă</h1>
+        <p className="text-xl max-sm:text-md font-extrabold text-red-700">{totalKcal} Kcal</p>
       </div>
     </Card>
   )

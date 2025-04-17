@@ -122,15 +122,14 @@ export default  async function Home() {
       </div>
     </div>
 
-    <div className="my-20 bg-amber-300 shadow-2xl px-8 py-12 relative overflow-hidden">
-      <div className="absolute inset-0 bg-[url('/gold-texture.jpg')] opacity-10 mix-blend-overlay pointer-events-none"></div>
-      <h1 className="text-3xl font-extrabold text-center text-yellow-900 drop-shadow-lg tracking-wide uppercase">
+    <div className="my-20 bg-amber-300 shadow-2xl px-8 py-12 relative overflow-hidden max-sm:px-1">
+      <h1 className="px-2 text-3xl font-extrabold text-center text-yellow-900 drop-shadow-lg tracking-wide uppercase">
         Cele mai populare rețete
       </h1>
       <p className="text-center text-lg text-yellow-800 mt-4 font-medium italic">
         Descoperă rețetele care au cucerit inimile tuturor!
       </p>
-      <div className="mt-10 flex flex-wrap justify-evenly gap-4">
+      <div className="mt-10 flex flex-wrap justify-evenly max-sm:gap-1 ">
         {recipes.map((recipe) => {
           return (
             <RecipeDisplayCard

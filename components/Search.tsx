@@ -28,7 +28,7 @@ export default function Search({ placeholder }: { placeholder: string }) {
   }
   
   if (!["/Discover-recipes"].includes(pathname)) {
-    return null;
+    return <div className="hidden"></div>;
   }
 
 

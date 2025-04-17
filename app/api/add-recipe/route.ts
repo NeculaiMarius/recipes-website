@@ -13,8 +13,8 @@ export async function POST(request:Request) {
 
   try {
     const insertRecipeResult= await sql`
-      INSERT INTO l_retete (nume,descriere,tip,numar_portii,pasi_preparare,image_url,id_utilizator,image_public_id)
-      VALUES (${recipeName},${recipeDescription},${recipeType},${portions},${steps.join(";")},${imageUrl},${userId},${imagePublicId})
+      INSERT INTO l_retete (nume,descriere,tip,timp_preparare,numar_portii,pasi_preparare,image_url,id_utilizator,image_public_id)
+      VALUES (${recipeName},${recipeDescription},${recipeType},${preparationTime},${portions},${steps.join(";")},${imageUrl},${userId},${imagePublicId})
       RETURNING id`;
 
     const recipeId=insertRecipeResult.rows[0].id;

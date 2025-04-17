@@ -19,7 +19,7 @@ export default function SaveRecipeLS({recipe }: { recipe: RecipePage }) {
       updated = [recipe, ...existing];
     }
 
-    updated = updated.slice(0, 4);
+    updated = updated.slice(0, 10);
     localStorage.setItem(key, JSON.stringify(updated));
   }, [recipe]);
 
