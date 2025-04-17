@@ -122,7 +122,7 @@ export default  async function Home() {
       </div>
     </div>
 
-    <div className="my-20 bg-amber-300 shadow-2xl px-8 py-12 relative overflow-hidden max-sm:px-1">
+    <div className="my-20 bg-amber-300 shadow-2xl px-8 py-12 relative overflow-hidden max-sm:px-0">
       <h1 className="px-2 text-3xl font-extrabold text-center text-yellow-900 drop-shadow-lg tracking-wide uppercase">
         Cele mai populare rețete
       </h1>
