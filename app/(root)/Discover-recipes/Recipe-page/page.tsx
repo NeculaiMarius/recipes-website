@@ -8,9 +8,7 @@ import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Separator } from '@/components/ui/separator';
 import Rating from '@/components/Rating';
 import FavouriteButtonBig from '@/components/Buttons/FavouriteButtonBig';
-
 import { FaFlag, FaHeart, FaInfoCircle, FaRegUserCircle, FaStar } from 'react-icons/fa';
-import { Label } from '@/components/ui/label';
 import AddReviewForm from '@/components/Forms/AddReviewForm';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import NutritionChart from '@/components/Charts/NutririonChart';
@@ -18,13 +16,11 @@ import Link from 'next/link';
 import { RecipePage } from '@/interfaces/recipe';
 import { IngredientRecipePage } from '@/interfaces/ingredient';
 import { ReviewRecipePage } from '@/interfaces/review';
-import { IoMdSettings } from "react-icons/io";
 import RecipeSettingsButton from '@/components/Buttons/RecipeSettingsButton';
 import { AlertTriangle } from 'lucide-react';
 import RecipeRecommendationsSection from '@/components/RecipeRecommendationsSection';
 import SaveRecipeLS from '@/components/SaveRecipeLS';
-import { Checkbox } from '@/components/ui/checkbox';
-import IngredientListItem from '@/components/IngredientListItem';
+import RecipeIngredientsSection from '@/components/RecipeIngredientsSection';
 
 
 
@@ -195,27 +191,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
           </div>
         </div>
         {/* COL 2 */}
-        <div className='flex flex-col justify-evenly'>
-          <div className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md'>
-            Lista de ingrediente
-          </div>
-
-          <div className='relative w-[80%] mx-auto bg-gray-50 shadow-md py-4 lg:h-[70vh]
-                          max-md:w-full'>
-            <div className="overflow-auto h-full">
-              {ingredients.map(ingredient => (
-                <>
-                  <IngredientListItem ingredient={ingredient}></IngredientListItem>
-                  <div className='bg-gray-200 mx-4 h-[2.5px] rounded-full'></div>
-                </>
-              ))}
-              <div className='h-10 max-lg:hidden'></div>
-            </div>
-
-            <div className="absolute bottom-0 left-0 w-full h-24 bg-gradient-to-t from-gray-50 to-transparent pointer-events-none max-lg:hidden"></div>
-          </div>
-
-        </div>
+        <RecipeIngredientsSection ingredients={ingredients} recipePortions={recipe.numar_portii}></RecipeIngredientsSection>
       </div>
 
       <Separator className='mt-8'></Separator>

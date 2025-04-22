@@ -37,6 +37,7 @@ export interface RecipePage{
   descriere: string;
   tip:string;
   pasi_preparare:string;
+  numar_portii:number;
   image_url: string;
   utilizator: string;
   id_utilizator:string;

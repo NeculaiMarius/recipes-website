@@ -30,18 +30,21 @@ export function Timer() {
 
   // Handle input changes with validation
   const handleHoursChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number.parseInt(e.target.value) || 0
-    setHours(Math.max(0, Math.min(23, value)))
+    const value = e.target.value.replace(/[^0-9]/g, "")
+    const numValue = value === "" ? 0 : Number.parseInt(value)
+    setHours(Math.max(0, Math.min(23, numValue)))
   }
 
   const handleMinutesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number.parseInt(e.target.value) || 0
-    setMinutes(Math.max(0, Math.min(59, value)))
+    const value = e.target.value.replace(/[^0-9]/g, "")
+    const numValue = value === "" ? 0 : Number.parseInt(value)
+    setMinutes(Math.max(0, Math.min(59, numValue)))
   }
 
   const handleSecondsChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number.parseInt(e.target.value) || 0
-    setSeconds(Math.max(0, Math.min(59, value)))
+    const value = e.target.value.replace(/[^0-9]/g, "")
+    const numValue = value === "" ? 0 : Number.parseInt(value)
+    setSeconds(Math.max(0, Math.min(59, numValue)))
   }
 
   // Start or pause the timer
@@ -100,7 +103,7 @@ export function Timer() {
   }
 
   return (
-    <Drawer >
+    <Drawer>
       <DrawerTrigger asChild>
         <Button
           variant="outline"
@@ -112,7 +115,6 @@ export function Timer() {
           ) : (
             <span className="text-gray-800 font-bold">{formatTime(timeLeft)}</span>
           )}
-          
         </Button>
       </DrawerTrigger>
       <DrawerContent className="bg-white border-t-2 border-gray-300 max-lg:w-full lg:w-fit mx-auto lg:px-[10vw]">
@@ -124,47 +126,101 @@ export function Timer() {
           <div className="p-4">
             {timeLeft === 0 ? (
               <div className="grid grid-cols-3 gap-4">
-                <div>
-                  <Label htmlFor="hours" className="text-gray-700 font-bold">
+                <div className="flex flex-col items-center">
+                  <Label htmlFor="hours" className="text-gray-700 font-bold mb-4">
                     Ore
                   </Label>
-                  <Input
-                    id="hours"
-                    type="number"
-                    min="0"
-                    max="23"
-                    value={hours}
-                    onChange={handleHoursChange}
-                    className="text-center focus:border-gray-500 focus:ring-gray-500 border-2"
-                  />
+                  <div className="flex flex-col items-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full rounded-b-none border-b-0"
+                      onClick={() => setHours((prev) => Math.min(23, prev + 1))}
+                    >
+                      +
+                    </Button>
+                    <Input
+                      id="hours"
+                      type="text"
+                      inputMode="numeric"
+                      value={hours}
+                      onChange={handleHoursChange}
+                      className="text-center focus:border-gray-500 focus:ring-gray-500 border-2 rounded-none h-10"
+                      onFocus={(e) => e.target.select()}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full rounded-t-none border-t-0"
+                      onClick={() => setHours((prev) => Math.max(0, prev - 1))}
+                    >
+                      -
+                    </Button>
+                  </div>
                 </div>
-                <div>
-                  <Label htmlFor="minutes" className="text-gray-700 font-bold">
+                <div className="flex flex-col items-center">
+                  <Label htmlFor="minutes" className="text-gray-700 font-bold mb-4">
                     Minute
                   </Label>
-                  <Input
-                    id="minutes"
-                    type="number"
-                    min="0"
-                    max="59"
-                    value={minutes}
-                    onChange={handleMinutesChange}
-                    className="text-center focus:border-gray-500 focus:ring-gray-500 border-2 "
-                  />
+                  <div className="flex flex-col items-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full rounded-b-none border-b-0"
+                      onClick={() => setMinutes((prev) => Math.min(59, prev + 1))}
+                    >
+                      +
+                    </Button>
+                    <Input
+                      id="minutes"
+                      type="text"
+                      inputMode="numeric"
+                      value={minutes}
+                      onChange={handleMinutesChange}
+                      className="text-center focus:border-gray-500 focus:ring-gray-500 border-2 rounded-none h-10"
+                      onFocus={(e) => e.target.select()}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full rounded-t-none border-t-0"
+                      onClick={() => setMinutes((prev) => Math.max(0, prev - 1))}
+                    >
+                      -
+                    </Button>
+                  </div>
                 </div>
-                <div>
-                  <Label htmlFor="seconds" className="text-gray-700 font-bold">
+                <div className="flex flex-col items-center">
+                  <Label htmlFor="seconds" className="text-gray-700 font-bold mb-4">
                     Secunde
                   </Label>
-                  <Input
-                    id="seconds"
-                    type="number"
-                    min="0"
-                    max="59"
-                    value={seconds}
-                    onChange={handleSecondsChange}
-                    className="text-center focus:border-gray-500 focus:ring-gray-500 border-2"
-                  />
+                  <div className="flex flex-col items-center">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full rounded-b-none border-b-0"
+                      onClick={() => setSeconds((prev) => Math.min(59, prev + 1))}
+                    >
+                      +
+                    </Button>
+                    <Input
+                      id="seconds"
+                      type="text"
+                      inputMode="numeric"
+                      value={seconds}
+                      onChange={handleSecondsChange}
+                      className="text-center focus:border-gray-500 focus:ring-gray-500 border-2 rounded-none h-10"
+                      onFocus={(e) => e.target.select()}
+                    />
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="w-full rounded-t-none border-t-0"
+                      onClick={() => setSeconds((prev) => Math.max(0, prev - 1))}
+                    >
+                      -
+                    </Button>
+                  </div>
                 </div>
               </div>
             ) : (
@@ -175,11 +231,47 @@ export function Timer() {
               </div>
             )}
 
-            <div className="mt-6 flex justify-center space-x-4">
+            <div className="mt-4 grid grid-cols-3 gap-2">
               <Button
-                onClick={toggleTimer}
-                className="w-30 bg-emerald-700 hover:bg-emerald-800 text-white gap-2"
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setHours(0)
+                  setMinutes(1)
+                  setSeconds(0)
+                }}
+                className="text-xs"
               >
+                1 min
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setHours(0)
+                  setMinutes(5)
+                  setSeconds(0)
+                }}
+                className="text-xs"
+              >
+                5 min
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => {
+                  setHours(0)
+                  setMinutes(10)
+                  setSeconds(0)
+                }}
+                className="text-xs"
+              >
+                10 min
+              </Button>
+            </div>
+
+            <div className="mt-6 flex justify-center space-x-4">
+              <Button onClick={toggleTimer} className="w-30 bg-emerald-700 hover:bg-emerald-800 text-white gap-2">
                 {isRunning ? <Pause size={20} /> : <Play size={20} />}
                 {isRunning ? "Pauză" : "Start"}
               </Button>
@@ -195,7 +287,10 @@ export function Timer() {
           </div>
           <DrawerFooter className="border-t border-gray-200">
             <DrawerClose asChild>
-              <Button variant="outline" className="border-emerald-700 border-[3px] text-emerald-700 font-bold hover:bg-gray-100">
+              <Button
+                variant="outline"
+                className="border-emerald-700 border-[3px] text-emerald-700 font-bold hover:bg-gray-100"
+              >
                 Ascunde
               </Button>
             </DrawerClose>
