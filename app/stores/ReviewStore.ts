@@ -15,3 +15,13 @@ export const addReview=async(id_recipe:string,content:string,rating:number)=>{
   }
   return true
 }
+
+export const deleteReview=async(reviewId:number)=>{
+  const response = await fetch(`/api/reviews/delete-review/${reviewId}`,{
+    method:"DELETE",
+  })
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return true;
+}

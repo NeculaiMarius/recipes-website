@@ -3,9 +3,10 @@ import React, { useState } from 'react'
 import { Drawer, DrawerContent, DrawerFooter, DrawerHeader, DrawerTitle, DrawerTrigger } from '../ui/drawer'
 import { Button } from '../ui/button'
 import { Textarea } from '../ui/textarea'
-import { addReview } from '@/app/stores/ReviewStore'
+import { addReview, deleteReview } from '@/app/stores/ReviewStore'
 import { FaStar } from 'react-icons/fa'
 import { ReviewRecipePage } from '@/interfaces/review'
+import { MdDeleteForever } from 'react-icons/md'
 
 const AddReviewForm = ({id_recipe,currentReview}:{id_recipe:string,currentReview:ReviewRecipePage}) => {
   const [content,setContent]=useState(currentReview?.continut);
@@ -25,7 +26,7 @@ const AddReviewForm = ({id_recipe,currentReview}:{id_recipe:string,currentReview
     try {
       const response=await addReview(id_recipe,content,rating)
       if(response){
-        console.log('REview adaugat');
+        console.log('Review adaugat');
       }
     } catch (error) {
       console.error('Error adding review: ', error);
@@ -34,8 +35,19 @@ const AddReviewForm = ({id_recipe,currentReview}:{id_recipe:string,currentReview
       setIsLoading(false);
       setIsOpen(false);
     }
-
   }
+
+  const handleDelete=async ()=>{
+    try {
+      const response= await deleteReview(currentReview.id)
+      if(response){
+        location.reload();
+      }
+    } catch (error) {
+      console.error("Error deleteng review",error);
+    }
+  }
+
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger>
@@ -43,10 +55,18 @@ const AddReviewForm = ({id_recipe,currentReview}:{id_recipe:string,currentReview
           {currentReview?"Modifică review-ul tău":"Lasă un review"}
         </div>
       </DrawerTrigger>
-      <DrawerContent className='lg:w-[70%] px-12 mx-auto  '>
-        <DrawerHeader>
+      <DrawerContent className='lg:w-[70%] px-12 mx-auto max-md:px-2 '>
+        <DrawerHeader className='flex justify-between h-fit'>
           <DrawerTitle className='mb-8'>Scrie un review pentru această rețetă</DrawerTitle>
-          {/* <DrawerDescription>This action cannot be undone.</DrawerDescription> */}
+          {
+            currentReview &&(
+<div className=' bg-red-700 h-fit p-2 rounded-md hover:bg-red-800 cursor-pointer'
+                onClick={handleDelete}>
+            <MdDeleteForever size={25} className='text-white' />
+          </div>
+            )
+          }
+          
         </DrawerHeader>
         <div className='px-4 flex flex-col items-center'>
           <span className='text-red-700 my-2'>
@@ -69,7 +89,7 @@ const AddReviewForm = ({id_recipe,currentReview}:{id_recipe:string,currentReview
           <Button className='w-[50%] mx-auto font-semibold bg-emerald-800 text-md' onClick={handleClick}>
             {isLoading?<div className="spinner"></div>:"Postează review"}
           </Button>
-          <Button className='w-[50%] mx-auto bg-red-700 font-semibold text-md' onClick={()=>setIsOpen(false)}>
+          <Button className='w-[50%] mx-auto bg-gray-200 text-emerald-700 font-semibold text-md' onClick={()=>setIsOpen(false)}>
             Anulare
           </Button>
         </DrawerFooter>

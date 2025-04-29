@@ -15,6 +15,7 @@ import FollowButton from '@/components/Buttons/FollowButton';
 import { GiCookingPot } from "react-icons/gi";
 import { FaFlag, FaHeart } from 'react-icons/fa';
 import { RiUserFollowFill, RiUserFollowLine } from 'react-icons/ri';
+import FollowersList from '@/components/Dialogs/FollowersList';
 
 
 const page = async ({ params}:{params:{user:string}}) => {
@@ -139,7 +140,8 @@ const page = async ({ params}:{params:{user:string}}) => {
           </div>
           <div className='h-32 m-2 flex flex-col justify-center'>
             <div className='bg-gray-100 p-4 grid grid-cols-2 grid-rows-2 rounded-lg gap-2 max-md:grid-cols-1 max-md:gap-0'>
-              <p className='font-bold text-right max-md:text-center'> Urmăritori </p>
+              {/* <p className='font-bold text-right max-md:text-center hover:bg-white px-1 hover:text-emerald-800 rounded-md cursor-pointer'> Urmăritori </p> */}
+              <FollowersList sessionId={session?.user.id as string} userId={params.user} noFollowers={user.followers_count}></FollowersList>
               <p className='text-center text-emerald-800 font-bold'>{user.followers_count}</p>
               <p className='font-bold text-right max-md:text-center '> Retete </p>
               <p className='text-center text-emerald-800 font-bold'>{rows.length}</p>

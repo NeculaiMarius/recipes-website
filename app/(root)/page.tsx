@@ -13,6 +13,7 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import FollowButton from "@/components/Buttons/FollowButton";
 import UserSearchBar from "@/components/UserSearchBar";
+import { use } from "react";
 
 export const revalidate= 1
 
@@ -73,7 +74,14 @@ export default  async function Home() {
     u.id,
     u.prenume,
     u.email,
-    COUNT(fu.id) AS urmaritori
+    COUNT(fu.id) AS urmaritori,
+    CASE 
+      WHEN EXISTS (
+          SELECT 1 FROM l_urmariri_utilizatori fu 
+          WHERE fu.id_utilizator_urmarit = u.id AND fu.id_utilizator = ${session?.user.id}
+      ) THEN TRUE 
+      ELSE FALSE 
+    END AS followed
   FROM l_utilizatori u
   LEFT JOIN l_urmariri_utilizatori fu ON u.id = fu.id_utilizator_urmarit
   GROUP BY u.id, u.nume, u.prenume, u.email
@@ -192,7 +200,7 @@ export default  async function Home() {
               </div>
             </CardContent>
             <div className="h-8 px-10 my-2"> 
-              <FollowButton id_user={session?.user.id as string} id_followed_user={user.id} followed={false}></FollowButton>
+              <FollowButton id_user={session?.user.id as string} id_followed_user={user.id} followed={user.followed}></FollowButton>
             </div>
           </Card>
         ))}

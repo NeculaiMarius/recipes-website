@@ -4,4 +4,5 @@ export interface User {
   prenume: string;
   email: string;
   urmaritori: number;
+  followed: boolean;
 }

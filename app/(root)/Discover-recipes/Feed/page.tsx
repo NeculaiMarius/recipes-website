@@ -7,12 +7,14 @@ import Rating from "@/components/Rating"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card"
 import { ScrollArea } from "@/components/ui/scroll-area"
+import UserCard from "@/components/UserCard"
 import { RecipeFeed } from "@/interfaces/recipe"
 import { User } from "@/interfaces/users"
 import { QueryResultRow, sql } from "@vercel/postgres"
 import { Heart} from "lucide-react"
 import { getServerSession } from "next-auth"
 import Image from "next/image"
+import Link from "next/link"
 import { FaStar } from "react-icons/fa"
 
 
@@ -43,6 +45,7 @@ export default async function Feed({ searchParams }: { searchParams: { page?: st
       r.id,
       r.descriere,
       r.nume, 
+      u.id as id_utilizator,
       u.nume AS nume_utilizator, 
       u.prenume as prenume_utilizator,
       r.image_url, 
@@ -78,7 +81,14 @@ export default async function Feed({ searchParams }: { searchParams: { page?: st
     u.id,
     u.prenume,
     u.email,
-    COUNT(fu.id) AS urmaritori
+    COUNT(fu.id) AS urmaritori,
+    CASE 
+          WHEN EXISTS (
+              SELECT 1 FROM l_urmariri_utilizatori fu 
+              WHERE fu.id_utilizator_urmarit = u.id AND fu.id_utilizator = ${session?.user.id}
+          ) THEN TRUE 
+          ELSE FALSE 
+      END AS followed
   FROM l_utilizatori u
   LEFT JOIN l_urmariri_utilizatori fu ON u.id = fu.id_utilizator_urmarit
   LEFT JOIN l_urmariri_utilizatori fu2 
@@ -118,20 +128,7 @@ export default async function Feed({ searchParams }: { searchParams: { page?: st
               <div className="bg-white flex flex-col rounded-md mb-4 gap-2 p-2 h-52 overflow-auto border lg:hidden">
                 <h3 className="font-semibold col-span-2 pl-4">Conturi sugerate</h3>
                 {suggestedAccounts.map((account) => (
-                  <div key={account.id} className="flex items-center justify-between py-1 rounded-md border px-2">
-                    <div className="flex items-center gap-2">
-                      <Avatar className="h-8 w-8">
-                        <AvatarFallback>{(account.nume[0]+account.prenume[0]).toUpperCase()}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <h4 className="text-sm font-medium">{account.nume+" "+account.prenume}</h4>
-                        <p className="text-xs text-muted-foreground">{account.urmaritori} urmăritori</p>
-                      </div>
-                    </div>
-                    <div className="w-20 h-7 text-sm">
-                      <FollowButton id_user={session?.user.id as string} followed={false} id_followed_user={account.id} />
-                    </div>
-                  </div>
+                  <UserCard account={account} userId={session?.user.id as string} key={account.id}></UserCard>
                 ))}
               </div>
               <div className="space-y-4 pb-20">
@@ -200,20 +197,7 @@ async function RightSidebar({suggestedAccounts}:{suggestedAccounts:User[]}) {
         <CardContent className="p-3 pt-0">
           <div className="space-y-3">
             {suggestedAccounts.map((account) => (
-              <div key={account.id} className="flex items-center justify-between py-1">
-                <div className="flex items-center gap-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarFallback>{(account.nume[0]+account.prenume[0]).toUpperCase()}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <h4 className="text-sm font-medium">{account.nume+" "+account.prenume}</h4>
-                    <p className="text-xs text-muted-foreground">{account.urmaritori} urmăritori</p>
-                  </div>
-                </div>
-                <div className="w-20 h-7 text-sm">
-                  <FollowButton id_user={session?.user.id as string} followed={false} id_followed_user={account.id} />
-                </div>
-              </div>
+              <UserCard account={account} userId={session?.user.id as string} key={account.id}></UserCard>
             ))}
           </div>
         </CardContent>
@@ -228,12 +212,16 @@ function RecipeCardFeed({ recipe ,id_user}: {recipe:RecipeFeed,id_user:string}) 
     <Card className="w-full shadow-sm">
       <CardHeader className="pb-2">
         <div className="flex items-center">
-          <Avatar className="h-10 w-10 border">
-            <AvatarFallback>{(recipe.nume_utilizator[0]+recipe.prenume_utilizator[0]).toUpperCase()}</AvatarFallback>
-          </Avatar>
+          <Link href={`/Account/${recipe.id_utilizator}`}>
+            <Avatar className="h-10 w-10 border">
+              <AvatarFallback>{(recipe.nume_utilizator[0]+recipe.prenume_utilizator[0]).toUpperCase()}</AvatarFallback>
+            </Avatar>
+          </Link>
           <div className="ml-3">
-            <div className="font-semibold">{recipe.nume_utilizator+ " " + recipe.prenume_utilizator}</div>
-            <div className="text-xs text-muted-foreground">Today</div>
+            <Link href={`/Account/${recipe.id_utilizator}`}>
+              <div className="font-semibold">{recipe.nume_utilizator+ " " + recipe.prenume_utilizator}</div>
+            </Link>
+            {/* <div className="text-xs text-muted-foreground">Today</div> */}
           </div>
         </div>
       </CardHeader>

@@ -17,6 +17,7 @@ export interface RecipeFeed {
   id: number;
   nume: string;
   descriere:string;
+  id_utilizator:string;
   nume_utilizator: string;
   prenume_utilizator:string;
   image_url: string;

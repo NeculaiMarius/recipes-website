@@ -21,6 +21,8 @@ import { AlertTriangle } from 'lucide-react';
 import RecipeRecommendationsSection from '@/components/RecipeRecommendationsSection';
 import SaveRecipeLS from '@/components/SaveRecipeLS';
 import RecipeIngredientsSection from '@/components/RecipeIngredientsSection';
+import LikesList from '@/components/Dialogs/LikesList';
+import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
 
 
@@ -133,6 +135,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
 
   return (
     <div className='pt-[80px] '>
+    
       <SaveRecipeLS recipe={recipe}/>
 
       {
@@ -161,15 +164,12 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
             </AspectRatio>
           </div>
 
-          <div className='flex justify-between bg-gray-100 p-2 rounded-md'>
+          <div className='flex justify-between items-center bg-gray-100 p-2 rounded-md'>
             <span className='flex items-center'>
               <span className="material-symbols-outlined text-[3rem] flex justify-center">account_circle</span>
               <span>{recipe?.utilizator}</span>
             </span>
-            <span className='flex gap-2 items-center'>
-              <FaHeart size={20} className='text-red-600'/>
-              {recipe.numar_aprecieri}
-            </span>
+            <LikesList recipeId={searchParams.recipeId} noLikes={recipe.numar_aprecieri} userId={session?.user.id as string} ></LikesList>
             <span className='flex gap-2 items-center'>
               <FaFlag size={20} className='text-blue-700'/>
               {recipe.numar_salvari}
@@ -261,8 +261,11 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
           {reviews?.map(review=>{
             return(
             <div className="flex items-center gap-3 p-4 bg-gray-50 shadow-md rounded-lg" key={review.id}>
-              <FaRegUserCircle className="text-4xl text-gray-500" />
-              
+              <Link href={`/Account/${review.id_utilizator}`}>
+                <Avatar className="h-12 w-12 border">
+                  <AvatarFallback>{(review.nume[0]+review.prenume[0]).toUpperCase()}</AvatarFallback>
+                </Avatar>
+              </Link> 
               <div>
                 <Link href={`/Account/${review.id_utilizator}`}>
                 <span 
