@@ -5,5 +5,7 @@ export interface ReviewRecipePage{
   rating:number,
   continut:string,
   nume:string,
-  prenume:string
+  prenume:string,
+  numar_aprecieri:number,
+  liked:boolean
 }

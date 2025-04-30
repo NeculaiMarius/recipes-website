@@ -23,6 +23,7 @@ import SaveRecipeLS from '@/components/SaveRecipeLS';
 import RecipeIngredientsSection from '@/components/RecipeIngredientsSection';
 import LikesList from '@/components/Dialogs/LikesList';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import ReviewCard from '@/components/ReviewCard';
 
 
 
@@ -99,10 +100,28 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
   const pasi_preparare=recipe.pasi_preparare.split(';')
 
   const reviewsResult=await sql`
-    SELECT u.nume, u.prenume, r.* 
-    FROM l_reviews r, l_utilizatori u 
-    WHERE r.id_utilizator=u.id
-    AND  id_reteta=${searchParams.recipeId}
+    SELECT 
+      u.nume, 
+      u.prenume, 
+      r.*, 
+      COUNT(ra.id_utilizator) AS numar_aprecieri,
+      CASE 
+          WHEN EXISTS (
+              SELECT 1 FROM l_reviews_apreciate a 
+              WHERE a.id_review = r.id AND a.id_utilizator = ${session?.user.id}
+          ) THEN TRUE 
+          ELSE FALSE 
+      END AS liked
+    FROM 
+      l_reviews r
+    JOIN 
+      l_utilizatori u ON r.id_utilizator = u.id
+    LEFT JOIN 
+      l_reviews_apreciate ra ON ra.id_review = r.id
+    WHERE 
+      r.id_reteta = 44
+    GROUP BY 
+      r.id, u.nume, u.prenume
   `
   const reviews:ReviewRecipePage[]=reviewsResult?.rows as ReviewRecipePage[];
 
@@ -260,24 +279,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
                         max-md:w-full max-md:grid-cols-1'>
           {reviews?.map(review=>{
             return(
-            <div className="flex items-center gap-3 p-4 bg-gray-50 shadow-md rounded-lg" key={review.id}>
-              <Link href={`/Account/${review.id_utilizator}`}>
-                <Avatar className="h-12 w-12 border">
-                  <AvatarFallback>{(review.nume[0]+review.prenume[0]).toUpperCase()}</AvatarFallback>
-                </Avatar>
-              </Link> 
-              <div>
-                <Link href={`/Account/${review.id_utilizator}`}>
-                <span 
-                  className="block font-semibold text-gray-900 hover:text-emerald-700 hover:underline"
-                >
-                  {review.nume+" "+review.prenume}
-                </span>
-                </Link>
-                <Rating rating={review.rating} />
-                <p className="text-gray-700">{review.continut}</p>
-              </div>
-            </div>
+              <ReviewCard review={review} key={review.id}></ReviewCard>
             )
           })}
         </div>

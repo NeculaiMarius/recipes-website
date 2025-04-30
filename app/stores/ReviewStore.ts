@@ -25,3 +25,40 @@ export const deleteReview=async(reviewId:number)=>{
   }
   return true;
 }
+
+export const likeReview=async(reviewId:number)=>{
+  const response = await fetch(`/api/reviews/like/${reviewId}`,{
+    method: "POST"
+  })
+  if(!response.ok){
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return true;
+}
+
+export const unlikeReview=async(reviewId:number)=>{
+  const response = await fetch(`/api/reviews/like/${reviewId}`,{
+    method: "DELETE"
+  })
+  if(!response.ok){
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return true;
+}
+
+export const reportReview=async(reviewId:number,category:string,details:string)=>{
+  const response =await fetch(`/api/reviews/report/${reviewId}`,{
+    method:"POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      category: category,
+      details: details,
+    }),
+  })
+  if(!response.ok){
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return true;
+}

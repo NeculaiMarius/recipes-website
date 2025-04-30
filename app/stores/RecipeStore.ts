@@ -78,3 +78,20 @@ export const deleteRecipe=async(recipeId:number)=>{
   }
 }
 
+export const reportRecipe=async(recipeId:number,category:string,details:string)=>{
+  const response =await fetch(`/api/recipe/report/${recipeId}`,{
+    method:"POST",
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      category: category,
+      details: details,
+    }),
+  })
+  if(!response.ok){
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return true;
+}
+
