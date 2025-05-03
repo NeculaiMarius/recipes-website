@@ -24,6 +24,11 @@ export const mainFeatures=[
     label:"Descoperă rețete",
     route: "/Discover-recipes",
     image:"/svg-icons/food.svg",
+  },
+  {
+    label:"ADMINISTRARE",
+    route: "/Administration",
+    image:"/svg-icons/admin.svg",
   }
 ]
 

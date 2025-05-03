@@ -17,10 +17,11 @@ const UserCard = ({account,userId}:{account:User,userId:string}) => {
           <Link href={`/Account/${account.id}`}>
             <h4 className="text-sm font-medium">{account.nume+" "+account.prenume}</h4>
           </Link>
+          <p className='text-xs text-muted-foreground'>{account.email}</p>
           <p className="text-xs text-muted-foreground">{account.urmaritori} urmăritori</p>
         </div>
       </div>
-      <div className="w-20 h-7 text-sm">
+      <div className="w-20 h-8 text-sm">
         <FollowButton id_user={userId as string} followed={account.followed} id_followed_user={account.id} />
       </div>
     </div>

@@ -22,7 +22,6 @@ import RecipeRecommendationsSection from '@/components/RecipeRecommendationsSect
 import SaveRecipeLS from '@/components/SaveRecipeLS';
 import RecipeIngredientsSection from '@/components/RecipeIngredientsSection';
 import LikesList from '@/components/Dialogs/LikesList';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import ReviewCard from '@/components/ReviewCard';
 
 
@@ -119,7 +118,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
     LEFT JOIN 
       l_reviews_apreciate ra ON ra.id_review = r.id
     WHERE 
-      r.id_reteta = 44
+      r.id_reteta = ${recipe.id}
     GROUP BY 
       r.id, u.nume, u.prenume
   `

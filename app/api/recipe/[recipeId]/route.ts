@@ -22,7 +22,10 @@ export async function DELETE(request: Request, { params }: { params: { recipeId:
             return new Response("Recipe not found", { status: 404 });
         }
 
-        if(!session?.user || session.user.id!=id_utilizator){
+        if (
+            !session?.user || 
+            (session.user.id !== id_utilizator && session.user.role !== "admin")
+        ) {
             return new Response("Unauthorized", { status: 401 });
         }
 

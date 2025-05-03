@@ -7,9 +7,6 @@ export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url);
     const searchQuery = searchParams.get("query") || "";
-
-    console.log("AICI AR TREBUi sa fIE sEARCH QUERY")
-    console.log(searchQuery)
     
     const session=await getServerSession(options);  
 

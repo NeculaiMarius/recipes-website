@@ -9,7 +9,7 @@ import { mainFeatures } from "@/constants"
 import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 
-export default function MobileNavigation() {
+export default function MobileNavigation({userRole}:{userRole:string}) {
   const [isOpen, setIsOpen] = useState(false)
   const pathname = usePathname()
 
@@ -56,7 +56,11 @@ export default function MobileNavigation() {
               </div>
 
               <div className="relative">
-                {mainFeatures.map((item, index) => (
+                {mainFeatures.map((item, index) =>{ 
+                  if (item.label === "ADMINISTRARE" && userRole !== "admin") {
+                    return null; 
+                  } 
+                return(
                   <motion.div
                     key={item.route}
                     initial={{ x: -20, opacity: 0 }}
@@ -103,7 +107,7 @@ export default function MobileNavigation() {
                       />
                     </Link>
                   </motion.div>
-                ))}
+                )})}
               </div>
             </nav>
 

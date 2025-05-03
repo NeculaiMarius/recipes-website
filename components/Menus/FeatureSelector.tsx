@@ -7,7 +7,7 @@ import { ArrowRight, Home, Menu } from "lucide-react"
 import { cn } from "@/lib/utils"
 import Image from "next/image"
 
-const FeatureSelector = () => {
+const FeatureSelector = ({userRole}:{userRole:string}) => {
   const pathname = usePathname()
   const curFeature = mainFeatures.find((feature) => feature.route === pathname)
 
@@ -20,21 +20,22 @@ const FeatureSelector = () => {
         </div>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-64 p-0 overflow-hidden rounded-xl border-none shadow-lg" align="start">
-        {/* Decorative header */}
         <div className="bg-gradient-to-r from-emerald-700 via-emerald-600 to-emerald-500 p-3">
           <h3 className="text-base font-bold text-white">Navigare</h3>
           <div className="mt-1 h-0.5 w-10 rounded-full bg-white/30"></div>
         </div>
 
-        {/* Navigation items */}
         <div className="relative p-2 bg-white">
-          {/* Background pattern */}
           <div className="absolute inset-0 opacity-5">
             <div className="h-full w-full bg-[radial-gradient(#10b981_1px,transparent_1px)] [background-size:16px_16px]"></div>
           </div>
 
           <div className="relative">
-            {mainFeatures.map((feature) => (
+            {mainFeatures.map((feature) => {
+              if (feature.label === "ADMINISTRARE" && userRole !== "admin") {
+                return null; 
+              }            
+              return(
               <Link key={feature.label} href={feature.route} className="block">
                 <DropdownMenuItem
                   className={cn(
@@ -74,11 +75,10 @@ const FeatureSelector = () => {
                   />
                 </DropdownMenuItem>
               </Link>
-            ))}
+            )})}
           </div>
         </div>
 
-        {/* Decorative footer */}
         <div className="flex items-center justify-center bg-emerald-50 p-2">
           <div className="h-1.5 w-1.5 rounded-full bg-emerald-300 mx-0.5"></div>
           <div className="h-1.5 w-1.5 rounded-full bg-emerald-400 mx-0.5"></div>

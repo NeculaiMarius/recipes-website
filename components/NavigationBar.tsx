@@ -19,7 +19,6 @@ import { Avatar, AvatarFallback } from "./ui/avatar"
 const NavigationBar = async () => {
   const session = await getServerSession(options)
   const username = session?.user.lastName +" "+session?.user.firstName;
-  console.log(session?.user.lastName)
 
   return (
     <>
@@ -29,7 +28,7 @@ const NavigationBar = async () => {
           <NavBarLogo />
           <div className="h-12 min-w-12"></div>
           <div className="max-md:hidden pl-4">
-            <FeatureSelector />
+            <FeatureSelector userRole={session?.user.role as string}/>
           </div>
         </div>
 
@@ -97,7 +96,7 @@ const NavigationBar = async () => {
       </div>
 
       {/* Mobile Navigation - only visible on small screens */}
-      <MobileNavigation />
+      <MobileNavigation userRole={session?.user.role as string}/>
     </>
   )
 }

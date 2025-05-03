@@ -1,3 +1,5 @@
+import exp from "constants";
+
 export const likeRecipe=async(id_recipe:number,id_user:string)=>{
   const response = await fetch('/api/like-recipe/like', {
     method: 'POST',
@@ -95,3 +97,12 @@ export const reportRecipe=async(recipeId:number,category:string,details:string)=
   return true;
 }
 
+
+export const getRecipeReports=async(recipeId:number)=>{
+  const response=await fetch(`/api/recipe/report/${recipeId}`)
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  const reports=await response.json();
+  return reports;
+}

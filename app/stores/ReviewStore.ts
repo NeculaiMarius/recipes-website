@@ -62,3 +62,21 @@ export const reportReview=async(reviewId:number,category:string,details:string)=
   }
   return true;
 }
+
+export const getReviewReports=async(reviewId:number)=>{
+  const response=await fetch(`/api/reviews/report/${reviewId}`)
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  const reports=await response.json();
+  return reports;
+}
+
+export const getReview=async(reviewId:number)=>{
+  const response=await fetch(`/api/reviews/get-review/${reviewId}`)
+  if(!response.ok){
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  const review=await response.json();
+  return review;
+}

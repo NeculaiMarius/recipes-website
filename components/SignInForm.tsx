@@ -43,7 +43,6 @@ const SignInForm = () => {
         redirect:true,
         callbackUrl: "/",
       });
-      console.log(res)
     }
     catch(error){
       console.log("Error on sign in: "+error);

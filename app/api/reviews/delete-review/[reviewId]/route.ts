@@ -17,8 +17,11 @@ export async function DELETE(request: Request, { params }: { params: { reviewId:
 
     const session=await getServerSession(options)
 
-    if(!session?.user || session.user.id!=review.id_utilizator){
-      return new Response("Unauthorized", { status: 401 });
+    if (
+      !session?.user ||
+      (session.user.id !== review.id_utilizator && session.user.role !== "admin")
+    ) {
+        return new Response("Unauthorized", { status: 401 });
     }
 
     await sql`DELETE FROM l_reviews WHERE id=${reviewId}`;
@@ -26,6 +29,7 @@ export async function DELETE(request: Request, { params }: { params: { reviewId:
     return new NextResponse("Review deleted successfully!", { status: 201 });
 
   } catch (error) {
+    console.error(error)
     return new NextResponse("Failed to delete review", { status: 500 });
   }
 }

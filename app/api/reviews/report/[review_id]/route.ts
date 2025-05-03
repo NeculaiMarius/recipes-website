@@ -29,3 +29,25 @@ export async function POST(request:NextRequest,{ params }: { params: { review_id
     return new NextResponse("Failed to report review", { status: 500 });
   }
 }
+
+export async function GET(request:NextRequest,{ params }: { params: { review_id: string } }) {
+  try {
+    const reportsResult=await sql`
+      SELECT 
+        rr.*,
+        u.email ,
+        u.nume,
+        u.prenume,
+        u.id
+      FROM l_reviews_raportate rr
+      INNER JOIN l_utilizatori u ON u.id=rr.id_utilizator 
+      WHERE id_review=${params.review_id}
+    `
+    const reports=reportsResult.rows
+    return NextResponse.json(reports);
+    
+  } catch (error) {
+    console.error(error);
+    return new NextResponse("Failed to get review reports", { status: 500 });
+  }
+}
