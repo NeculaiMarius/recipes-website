@@ -15,6 +15,7 @@ import { Timer } from "./Timer"
 import UserEditModal from "./Forms/UserEditModal"
 import UserSearchBar from "./UserSearchBar"
 import { Avatar, AvatarFallback } from "./ui/avatar"
+import { PremiumRequestDialog } from "./Dialogs/PremiumRequestDialog"
 
 const NavigationBar = async () => {
   const session = await getServerSession(options)
@@ -79,6 +80,10 @@ const NavigationBar = async () => {
                 </Link>
 
                 <UserEditModal id={session?.user.id as string} currentEmail={session?.user.email as string} currentFirstName={session?.user.firstName as string} currentLastName={session?.user.lastName as string}/>
+
+                <div className="flex">
+                <PremiumRequestDialog userId={session?.user.id as string}></PremiumRequestDialog>
+                </div>
 
                 <Separator className="my-4" />
 

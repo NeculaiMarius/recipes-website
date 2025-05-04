@@ -11,6 +11,7 @@ const config: Config = {
   	extend: {
   		backgroundImage: {
   			'verified-gradient': 'linear-gradient( 0deg,  rgba(39,103,187,1) 10.4%, rgba(16,72,144,1) 87.7% );',
+				'inverted-verified-gradient': 'linear-gradient(0deg, rgba(16,72,144,1) 10.4%, rgba(39,103,187,1) 87.7% );',
   			'welcome-gradient-hor': 'linear-gradient(to right, #EAB308 50%, #d1d5db 60%)',
   			'welcome-gradient-ver': 'linear-gradient(#EAB308 40%, #d1d5db 50%)'
   		},

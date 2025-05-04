@@ -50,3 +50,12 @@ export const getFollowersUsers=async(userId:string)=>{
   const users = await response.json();
   return users;
 }
+
+export const getUserDetails=async(userId:string)=>{
+  const response=await fetch(`api/user/${userId}`)
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  const user = await response.json();
+  return user;
+}

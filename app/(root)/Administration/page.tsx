@@ -11,18 +11,20 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import RecipeReportsDialog from '@/components/RecipeReportsDialog'
-import DeleteRecipeAlert from '@/components/DeleteRecipeAlert'
+import DeleteRecipeAlert from '@/components/AlertDialogs/DeleteRecipeAlert'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { ArrowDown, ArrowUp } from 'lucide-react'
 import Link from 'next/link'
 import PaginationComponent from '@/components/PaginationComponent'
 import ReviewReportsDialog from '@/components/ReviewReportsDialog'
-import DeleteReviewAlert from '@/components/DeleteReviewAlert'
+import DeleteReviewAlert from '@/components/AlertDialogs/DeleteReviewAlert'
 import UserHoverCard from '@/components/UserHoverCard'
 import { getServerSession } from 'next-auth'
 import { options } from '@/app/api/auth/[...nextauth]/options'
 import { redirect } from "next/navigation"
+import ApproveRequestAlert from '@/components/AlertDialogs/ApproveRequestAlert'
+import RefuseRequestAlert from '@/components/AlertDialogs/RefuseRequestAlert'
 
 export const revalidate = 1
 
@@ -414,6 +416,7 @@ const page = async ({ searchParams }: PageProps) => {
                     { label: 'Urmăritori', key: 'urmaritori' },
                     { label: 'Rețete', key: 'numar_retete' },
                     { label: 'Recenzii', key: 'numar_recenzii' },
+                    { label: 'Acțiuni', key: 'actiuni' },
                   ].map((col) => (
                     <TableHead key={col.key} className="font-bold text-emerald-700 hover:bg-emerald-500 hover:text-white">
                       <Link
@@ -445,6 +448,12 @@ const page = async ({ searchParams }: PageProps) => {
                     <TableCell>{req.urmaritori}</TableCell>
                     <TableCell>{req.numar_retete}</TableCell>
                     <TableCell>{req.numar_recenzii}</TableCell>
+                    <TableCell className=''>
+                      <div className='w-full flex justify-around'>
+                        <ApproveRequestAlert requestId={req.id} user={req.nume+" "+req.prenume} ></ApproveRequestAlert>
+                        <RefuseRequestAlert requestId={req.id} user={req.nume+" "+req.prenume} ></RefuseRequestAlert>
+                      </div>
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>

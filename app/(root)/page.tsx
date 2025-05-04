@@ -14,6 +14,7 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import FollowButton from "@/components/Buttons/FollowButton";
 import UserSearchBar from "@/components/UserSearchBar";
 import { use } from "react";
+import { PremiumRequestDialog } from "@/components/Dialogs/PremiumRequestDialog";
 
 export const revalidate= 1
 
@@ -151,7 +152,7 @@ export default  async function Home() {
     </div>
 
     
-    <div className="h-fit my-16 bg-verified-gradient grid grid-cols-[1fr_1fr] max-md:grid-cols-1 max-md:grid-rows-[1fr_1fr]">
+    <div className="h-fit py-8 my-16 bg-verified-gradient grid grid-cols-[1fr_1fr] max-md:grid-cols-1 max-md:grid-rows-[1fr_1fr]">
       <div className="flex flex-col items-center justify-center text-gray-200">
         <h1 className="text-3xl font-bold px-8 text-center">Poti deveni bucatar verificat</h1>
         <div className="gradient-background">
@@ -159,14 +160,16 @@ export default  async function Home() {
         </div>
       </div>
       <div className="flex flex-col justify-center items-center text-gray-200">
-        <h1 className="text-2xl font-semibold my-4">Indeplineste cerintele si aplica:</h1>
-        <div className="items-start">
-          <p><span className="material-symbols-outlined">done</span> Peste 10 retete publicate</p>
-          <p><span className="material-symbols-outlined">done</span>Minim 100 urmaritori</p>
-          <p><span className="material-symbols-outlined">done</span>Cel putin 10 review-uri acordate</p>
-        </div>
+        <div className="w-fit bg-gray-100 flex flex-col items-center gap-4 p-4 rounded-lg text-black">
+          <h1 className="text-2xl font-semibold">Indeplineste cerintele si aplica:</h1>
+          <div className="items-start">
+            <p className="flex items-center"><span className="material-symbols-outlined">done</span> Peste 10 retete publicate</p>
+            <p className="flex items-center"><span className="material-symbols-outlined">done</span>Minim 100 urmaritori</p>
+            <p className="flex items-center"><span className="material-symbols-outlined">done</span>Cel putin 10 review-uri acordate</p>
+          </div>
 
-        <Button className="my-4 bg-white text-blue-900">Aplica acum</Button>
+          <PremiumRequestDialog userId={session?.user.id as string}></PremiumRequestDialog>
+        </div>
       </div>
     </div>
 
