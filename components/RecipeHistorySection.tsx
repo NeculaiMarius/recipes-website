@@ -1,6 +1,5 @@
 "use client"
 import { RecipeDisplay, RecipePage } from '@/interfaces/recipe';
-import Link from 'next/link';
 import React, { useEffect, useState } from 'react'
 import RecipeDisplayCard from './RecipeDisplayCard';
 import { FaClock } from 'react-icons/fa6';

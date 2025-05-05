@@ -16,6 +16,8 @@ import UserEditModal from "./Forms/UserEditModal"
 import UserSearchBar from "./UserSearchBar"
 import { Avatar, AvatarFallback } from "./ui/avatar"
 import { PremiumRequestDialog } from "./Dialogs/PremiumRequestDialog"
+import { cn } from "@/lib/utils"
+import { MdWorkspacePremium } from "react-icons/md"
 
 const NavigationBar = async () => {
   const session = await getServerSession(options)
@@ -46,7 +48,7 @@ const NavigationBar = async () => {
         <Sheet>
           <SheetTrigger asChild>
             <div className="flex items-center h-12 gap-2 px-3 py-2 rounded-lg bg-white shadow-md">
-              <Avatar className="h-8 w-8 text-sm">
+              <Avatar className={cn("h-9 w-9 text-sm",session?.user.role=='premium'?"outline outline-2 outline-blue-600 ":"")} >
                 <AvatarFallback>{(session?.user.lastName[0] as string +session?.user.firstName[0]).toUpperCase()}</AvatarFallback>
               </Avatar>
               <span className="max-sm:hidden">{username}</span>
@@ -59,11 +61,18 @@ const NavigationBar = async () => {
 
             <div className="py-6">
               <div className="flex items-center gap-4 pb-6">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-700/10 text-emerald-700">
-                  <User className="h-8 w-8" />
+                <div className="flex h-16 w-16 items-center justify-center rounded-full ">
+                  {/* <User className="h-8 w-8" /> */}
+
+                  <Avatar className={cn("h-full w-full text-2xl",session?.user.role=='premium'?"outline outline-2 outline-blue-600 ":"")} >
+                    <AvatarFallback>{(session?.user.lastName[0] as string +session?.user.firstName[0]).toUpperCase()}</AvatarFallback>
+                  </Avatar>
                 </div>
                 <div>
-                  <h3 className="font-medium text-emerald-700">{username}</h3>
+                  <h3 className="flex items-center font-medium ">
+                    {username}
+                    {session?.user.role =='premium' && <MdWorkspacePremium size={20} className="text-blue-600"/>}
+                  </h3>
                   <p className="text-sm text-muted-foreground">{session?.user.email}</p>
                 </div>
               </div>
@@ -82,7 +91,7 @@ const NavigationBar = async () => {
                 <UserEditModal id={session?.user.id as string} currentEmail={session?.user.email as string} currentFirstName={session?.user.firstName as string} currentLastName={session?.user.lastName as string}/>
 
                 <div className="flex">
-                <PremiumRequestDialog userId={session?.user.id as string}></PremiumRequestDialog>
+                  <PremiumRequestDialog userId={session?.user.id as string}></PremiumRequestDialog>
                 </div>
 
                 <Separator className="my-4" />

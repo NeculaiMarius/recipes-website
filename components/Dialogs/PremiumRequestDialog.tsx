@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog"
 import { getUserDetails } from "@/app/stores/UserStore"
 import { sendRequest } from "@/app/stores/PremiumRequestStore"
+import { MdWorkspacePremium } from "react-icons/md"
 
 // Define the type for user details
 interface UserDetails {
@@ -90,22 +91,7 @@ export function PremiumRequestDialog({ userId }: { userId: string }) {
           </DialogHeader>
           <div className="flex justify-center my-4">
             <div className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="48"
-                height="48"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="text-white"
-              >
-                <path d="M8 5.8a4 4 0 1 0 8 0 4 4 0 1 0-8 0Z" />
-                <path d="M10.2 12 9 17l3 3 3-3-1.2-5" />
-                <path d="M9.5 5.5c0 .5-.16 1.43.5 2C10.8 8.1 12 8.1 12 8.1s1.2 0 2-.6c.66-.57.5-1.5.5-2a2.5 2.5 0 0 0-5 0Z" />
-              </svg>
+              <MdWorkspacePremium size={60} className="text-white"/>
             </div>
           </div>
         </div>

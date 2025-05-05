@@ -9,7 +9,9 @@ const RecipeRecommendationsSection = async ({recipeId,userId,authorId}:{recipeId
   SELECT 
     r.id, 
     r.nume, 
-    u.nume AS utilizator, 
+    u.nume AS nume_utilizator,
+    u.prenume AS prenume_utilizator,
+    u.rol,
     r.image_url, 
     COALESCE(AVG(v.rating), 0) AS rating,
     COUNT(DISTINCT a.id) AS numar_aprecieri,
@@ -51,7 +53,7 @@ const RecipeRecommendationsSection = async ({recipeId,userId,authorId}:{recipeId
   WHERE 
       r.id != ${recipeId}  
   GROUP BY 
-      r.id, r.nume, u.nume, r.image_url
+      r.id, r.nume, u.nume, r.image_url, u.prenume, u.rol
   ORDER BY 
       numar_ingrediente_comune DESC
   LIMIT 10;
@@ -63,7 +65,9 @@ const RecipeRecommendationsSection = async ({recipeId,userId,authorId}:{recipeId
     SELECT 
       r.id, 
       r.nume, 
-      u.nume AS utilizator, 
+      u.nume AS nume_utilizator,
+      u.prenume AS prenume_utilizator,
+      u.rol,
       r.image_url, 
       COALESCE(AVG(v.rating), 0) AS rating,
       COUNT(DISTINCT a.id) AS numar_aprecieri,
@@ -101,7 +105,7 @@ const RecipeRecommendationsSection = async ({recipeId,userId,authorId}:{recipeId
     AND 
       r.id != ${recipeId}
     GROUP BY 
-      r.id, r.nume, u.nume, r.image_url
+      r.id, r.nume, u.nume, r.image_url, u.prenume, u.rol
     ORDER BY (COUNT(DISTINCT a.id) + COUNT(DISTINCT s.id)) DESC
     LIMIT 10;
   `

@@ -1,7 +1,9 @@
 export interface RecipeDisplay {
   id: number;
   nume: string;
-  utilizator: string;
+  nume_utilizator: string;
+  prenume_utilizator:string;
+  rol:string;
   image_url: string;
   rating: number;
   numar_aprecieri: number;
@@ -19,6 +21,7 @@ export interface RecipeFeed {
   descriere:string;
   id_utilizator:string;
   nume_utilizator: string;
+  rol_utilizator:string;
   prenume_utilizator:string;
   image_url: string;
   rating: number;
@@ -40,7 +43,9 @@ export interface RecipePage{
   pasi_preparare:string;
   numar_portii:number;
   image_url: string;
-  utilizator: string;
+  nume_utilizator: string;
+  prenume_utilizator:string;
+  rol:string;
   id_utilizator:string;
   rating_reteta: number;
   numar_aprecieri: number;

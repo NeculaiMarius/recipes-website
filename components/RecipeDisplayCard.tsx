@@ -12,6 +12,9 @@ import Link from 'next/link'
 import SaveButton from './Buttons/SaveButton'
 import { RecipeDisplay } from '@/interfaces/recipe'
 import { FaFlag, FaHeart } from 'react-icons/fa'
+import { Avatar, AvatarFallback } from './ui/avatar'
+import { cn } from '@/lib/utils'
+import { MdWorkspacePremium } from 'react-icons/md'
 
 
 
@@ -54,9 +57,16 @@ const RecipeDisplayCard = ({recipe,id_user}:{recipe:RecipeDisplay,id_user:string
           </div>
         </CardContent>
 
-        <CardFooter className="p-1 max-md:text-xs relative bottom-0">
-          <span className="material-symbols-outlined text-[30px]">account_circle</span>
-          <p>	&nbsp;{recipe.utilizator}</p>
+        <CardFooter className="p-1 pb-2 max-md:text-xs relative bottom-0 flex gap-2">
+          <Avatar className={cn("h-8 w-8 ",recipe.rol=='premium'?"outline outline-2 outline-blue-600 ":"")} >
+            <AvatarFallback className='text-sm'> 
+              {((recipe?.nume_utilizator?.[0] ?? '?') + (recipe?.prenume_utilizator?.[0] ?? '?')).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <p className='flex items-center gap-1'>
+            {recipe?.nume_utilizator + " " +recipe?.prenume_utilizator}
+            {recipe.rol=='premium' && <MdWorkspacePremium size={20} className="text-blue-600"/>}
+          </p>
         </CardFooter>
       </div>
     </Card>

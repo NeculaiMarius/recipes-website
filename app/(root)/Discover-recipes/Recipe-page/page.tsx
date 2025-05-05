@@ -32,7 +32,9 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
   const recipeResult = await sql`
       SELECT 
         r.*,
-        u.nume AS utilizator, 
+        u.nume AS nume_utilizator,
+        u.prenume AS prenume_utilizator,
+        u.rol, 
         COALESCE(AVG(v.rating), 0) AS rating_reteta,
         COUNT(DISTINCT a.id) AS numar_aprecieri,
         COUNT(DISTINCT s.id) AS numar_salvari,
@@ -63,7 +65,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       WHERE 
         r.id = ${searchParams.recipeId}
       GROUP BY 
-        r.id, u.nume
+        r.id, u.nume, u.prenume, u.rol
     `;
   const recipe: RecipePage = recipeResult?.rows[0] as RecipePage;
 
@@ -185,7 +187,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
           <div className='flex justify-between items-center bg-gray-100 p-2 rounded-md'>
             <span className='flex items-center'>
               <span className="material-symbols-outlined text-[3rem] flex justify-center">account_circle</span>
-              <span>{recipe?.utilizator}</span>
+              <span>{recipe?.nume_utilizator}</span>
             </span>
             <LikesList recipeId={searchParams.recipeId} noLikes={recipe.numar_aprecieri} userId={session?.user.id as string} ></LikesList>
             <span className='flex gap-2 items-center'>

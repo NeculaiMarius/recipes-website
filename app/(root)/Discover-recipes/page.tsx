@@ -46,7 +46,9 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
     SELECT 
       r.id, 
       r.nume, 
-      u.nume AS utilizator, 
+      u.nume AS nume_utilizator, 
+      u.prenume AS prenume_utilizator,
+      u.rol,
       r.image_url, 
       COALESCE(AVG(v.rating), 0) AS rating,
       COUNT(DISTINCT a.id) AS numar_aprecieri,
@@ -85,7 +87,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
       lower(r.nume) LIKE lower('%${searchQuery}%')
     ${ingredients.length > 0 ? `AND i.id IN (${ingredientsQuery})` : ''}
     GROUP BY 
-      r.id, r.nume, u.nume, r.image_url
+      r.id, r.nume, u.nume, r.image_url, u.prenume, u.rol
     ${ingredients.length > 0 ? `HAVING COUNT(DISTINCT i.id) = ${ingredients.length}` : ''}
     ORDER BY (${order?order:'r.id'}) DESC
     LIMIT ${limit} OFFSET ${offset};

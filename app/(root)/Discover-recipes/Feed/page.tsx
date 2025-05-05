@@ -10,12 +10,14 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import UserCard from "@/components/UserCard"
 import { RecipeFeed } from "@/interfaces/recipe"
 import { User } from "@/interfaces/users"
+import { cn } from "@/lib/utils"
 import { QueryResultRow, sql } from "@vercel/postgres"
 import { Heart} from "lucide-react"
 import { getServerSession } from "next-auth"
 import Image from "next/image"
 import Link from "next/link"
 import { FaStar } from "react-icons/fa"
+import { MdWorkspacePremium } from "react-icons/md"
 
 
 export default async function Feed({ searchParams }: { searchParams: { page?: string}}) {
@@ -46,6 +48,7 @@ export default async function Feed({ searchParams }: { searchParams: { page?: st
       r.descriere,
       r.nume, 
       u.id as id_utilizator,
+      u.rol as rol_utilizator,
       u.nume AS nume_utilizator, 
       u.prenume as prenume_utilizator,
       r.image_url, 
@@ -76,7 +79,8 @@ export default async function Feed({ searchParams }: { searchParams: { page?: st
   const recipes:RecipeFeed[] = result?.rows as RecipeFeed[];
 
   const accountsResults=await sql`
-  SELECT 
+  SELECT
+    u.rol, 
     u.nume,
     u.id,
     u.prenume,
@@ -213,15 +217,17 @@ function RecipeCardFeed({ recipe ,id_user}: {recipe:RecipeFeed,id_user:string}) 
       <CardHeader className="pb-2">
         <div className="flex items-center">
           <Link href={`/Account/${recipe.id_utilizator}`}>
-            <Avatar className="h-10 w-10 border">
+            <Avatar className={cn("h-8 w-8 ",recipe.rol_utilizator=='premium'?"outline outline-2 outline-blue-600 ":"")} >
               <AvatarFallback>{(recipe.nume_utilizator[0]+recipe.prenume_utilizator[0]).toUpperCase()}</AvatarFallback>
             </Avatar>
           </Link>
           <div className="ml-3">
             <Link href={`/Account/${recipe.id_utilizator}`}>
-              <div className="font-semibold">{recipe.nume_utilizator+ " " + recipe.prenume_utilizator}</div>
+              <div className="font-semibold flex items-center gap-1">
+                {recipe.nume_utilizator+ " " + recipe.prenume_utilizator} 
+                {recipe.rol_utilizator=='premium' && <MdWorkspacePremium size={20} className="text-blue-700"/>}
+              </div>
             </Link>
-            {/* <div className="text-xs text-muted-foreground">Today</div> */}
           </div>
         </div>
       </CardHeader>

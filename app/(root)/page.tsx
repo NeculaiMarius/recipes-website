@@ -15,6 +15,8 @@ import FollowButton from "@/components/Buttons/FollowButton";
 import UserSearchBar from "@/components/UserSearchBar";
 import { use } from "react";
 import { PremiumRequestDialog } from "@/components/Dialogs/PremiumRequestDialog";
+import { MdWorkspacePremium } from "react-icons/md";
+import { cn } from "@/lib/utils";
 
 export const revalidate= 1
 
@@ -27,7 +29,9 @@ export default  async function Home() {
   SELECT 
       r.id, 
       r.nume, 
-      u.nume AS utilizator, 
+      u.nume AS nume_utilizator, 
+      u.prenume AS prenume_utilizator,
+      u.rol,
       r.image_url, 
       COALESCE(AVG(v.rating), 0) AS rating,
       COUNT(DISTINCT a.id) AS numar_aprecieri,
@@ -61,7 +65,7 @@ export default  async function Home() {
     LEFT JOIN 
       l_ingrediente i ON i.id = ri.id_ingredient
     GROUP BY 
-      r.id, r.nume, u.nume, r.image_url
+      r.id, r.nume, u.nume, r.image_url, u.prenume, u.rol
     ORDER BY 
       (COUNT(DISTINCT a.id) + COUNT(DISTINCT s.id)) DESC
     LIMIT 8;
@@ -75,6 +79,7 @@ export default  async function Home() {
     u.id,
     u.prenume,
     u.email,
+    u.rol,
     COUNT(fu.id) AS urmaritori,
     CASE 
       WHEN EXISTS (
@@ -154,9 +159,9 @@ export default  async function Home() {
     
     <div className="h-fit py-8 my-16 bg-verified-gradient grid grid-cols-[1fr_1fr] max-md:grid-cols-1 max-md:grid-rows-[1fr_1fr]">
       <div className="flex flex-col items-center justify-center text-gray-200">
-        <h1 className="text-3xl font-bold px-8 text-center">Poti deveni bucatar verificat</h1>
+        <h1 className="text-3xl font-bold px-8 text-center">Poți deveni bucatar verificat</h1>
         <div className="gradient-background">
-          <span className="material-symbols-outlined skillet-symbol text-8xl text-white ">skillet</span>
+          <MdWorkspacePremium size={90} />
         </div>
       </div>
       <div className="flex flex-col justify-center items-center text-gray-200">
@@ -167,6 +172,8 @@ export default  async function Home() {
             <p className="flex items-center"><span className="material-symbols-outlined">done</span>Minim 100 urmaritori</p>
             <p className="flex items-center"><span className="material-symbols-outlined">done</span>Cel putin 10 review-uri acordate</p>
           </div>
+
+          
 
           <PremiumRequestDialog userId={session?.user.id as string}></PremiumRequestDialog>
         </div>
@@ -189,11 +196,14 @@ export default  async function Home() {
           <Card key={user.id} className="overflow-hidden">
             <CardContent className="p-3">
               <div className="flex items-center gap-4">
-                <Avatar className="h-12 w-12 border">
+                <Avatar className={cn("h-8 w-8 ",user.rol=='premium'?"outline outline-2 outline-blue-600 ":"")} >
                   <AvatarFallback>{(user.nume[0]+user.prenume[0]).toUpperCase()}</AvatarFallback>
                 </Avatar>
                 <div className="grid gap-1">
-                  <h3 className="font-semibold">{user.nume} {user.prenume}</h3>
+                  <h3 className="font-semibold flex items-center gap-1">
+                    {user.nume} {user.prenume}
+                    {user.rol=='premium' && <MdWorkspacePremium size={20} className="text-blue-600"></MdWorkspacePremium>}
+                  </h3>
                   <p className="text-sm text-muted-foreground">{user.email}</p>
                   <p className="text-sm">
                     <span className="font-medium">{user.urmaritori}</span>{" "}

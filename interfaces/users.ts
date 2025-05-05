@@ -3,6 +3,7 @@ export interface User {
   nume: string;
   prenume: string;
   email: string;
+  rol:string;
   urmaritori: number;
   followed: boolean;
 }
