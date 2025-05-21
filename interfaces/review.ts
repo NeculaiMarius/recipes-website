@@ -8,4 +8,7 @@ export interface ReviewRecipePage{
   prenume:string,
   numar_aprecieri:number,
   liked:boolean
+  scor_sentiment:number,
+  scor_toxicitate:number
 }
+

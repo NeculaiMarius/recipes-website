@@ -89,7 +89,10 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
     GROUP BY 
       r.id, r.nume, u.nume, r.image_url, u.prenume, u.rol
     ${ingredients.length > 0 ? `HAVING COUNT(DISTINCT i.id) = ${ingredients.length}` : ''}
-    ORDER BY (${order?order:'r.id'}) DESC
+    ORDER BY 
+      ${order 
+    ? `${order} DESC` 
+    : `array_position(ARRAY['premium', 'admin', 'regular'], u.rol), r.id DESC`}
     LIMIT ${limit} OFFSET ${offset};
   `;
 

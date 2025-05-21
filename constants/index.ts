@@ -81,9 +81,11 @@ export const recipeTypes = [
   { label: "Aperitiv", value: "aperitiv" },
   { label: "Fel principal", value: "fel_principal" },
   { label: "Desert", value: "desert" },
-  { label: "Supă", value: "supa" },
+  { label: "Supe/Ciorbe", value: "supa" },
   { label: "Salată", value: "salata" },
   { label: "Băutură", value: "bautura" },
+  { label: "Paste", value: "paste" },
+  { label: "Pizza", value: "pizza" },
 ]
 
 export const ingredientsCategories=[

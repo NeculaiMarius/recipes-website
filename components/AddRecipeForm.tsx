@@ -525,8 +525,9 @@ const RecipeForm = ({ userId }: { userId: string | undefined }) => {
                               value={ingredient.quantity}
                               onChange={(e) => handleQuantityChange(ingredient.id, Number.parseFloat(e.target.value))}
                               className="w-20 text-center border-emerald-200"
-                              min={ingredient.um === "g" || ingredient.um === "ml" ? 10 : 1}
-                              step={ingredient.um === "g" || ingredient.um === "ml" ? 10 : 1}
+                              // min={ingredient.um === "g" || ingredient.um === "ml" ? 10 : 1}
+                              min={0}
+                              // step={ingredient.um === "g" || ingredient.um === "ml" ? 10 : 1}
                             />
                             <span className="text-sm text-emerald-600 w-8">{ingredient.um}</span>
                             <Button

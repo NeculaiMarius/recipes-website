@@ -5,6 +5,7 @@ import React, { useEffect, useState } from 'react'
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '../ui/dialog';
 import UserCard from '../UserCard';
 import { FaHeart } from 'react-icons/fa';
+import { formatCount } from '@/lib/utils';
 
 const LikesList = ({recipeId,noLikes,userId}:{recipeId:string,userId:string,noLikes:number}) => {
   const [users,setUsers]=useState<User[]>([]);
@@ -27,12 +28,12 @@ const LikesList = ({recipeId,noLikes,userId}:{recipeId:string,userId:string,noLi
             <DialogTrigger asChild>
             <span className='flex gap-2 items-center hover:bg-white rounded-md px-2 py-1 cursor-pointer'>
                 <FaHeart size={20} className='text-red-600'/>
-                {noLikes}
+                {formatCount(noLikes)}
               </span>
             </DialogTrigger>
             <DialogContent className="sm:max-w-md">
               <DialogHeader>
-                <DialogTitle>Apreciat de {noLikes} utilizatori</DialogTitle>
+                <DialogTitle>Apreciat de {formatCount(noLikes)} utilizatori</DialogTitle>
                 <DialogDescription>Persoanele care au apreciat</DialogDescription>
               </DialogHeader>
               <div className="max-h-[60vh] overflow-y-auto pr-1">

@@ -237,9 +237,11 @@ function RecipeCardFeed({ recipe ,id_user}: {recipe:RecipeFeed,id_user:string}) 
         <p className="text-sm text-muted-foreground mb-4">{recipe.descriere}</p>
 
         <div className="relative w-full rounded-md overflow-hidden">
+          <Link href={`/Discover-recipes/Recipe-page?recipeId=${recipe.id}`}>
           <div className="aspect-[4/3]">
             <Image src={recipe.image_url || "/placeholder.svg"} alt={recipe.nume} fill className="object-cover" />
           </div>
+          </Link>
         </div>
       </CardContent>
 

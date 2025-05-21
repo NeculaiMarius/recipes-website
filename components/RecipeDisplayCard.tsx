@@ -13,7 +13,7 @@ import SaveButton from './Buttons/SaveButton'
 import { RecipeDisplay } from '@/interfaces/recipe'
 import { FaFlag, FaHeart } from 'react-icons/fa'
 import { Avatar, AvatarFallback } from './ui/avatar'
-import { cn } from '@/lib/utils'
+import { cn, formatCount } from '@/lib/utils'
 import { MdWorkspacePremium } from 'react-icons/md'
 
 
@@ -51,9 +51,9 @@ const RecipeDisplayCard = ({recipe,id_user}:{recipe:RecipeDisplay,id_user:string
             <Rating rating={recipe.rating} /> <span className='font-semibold ml-2'>{recipe.rating}</span>
           </div>
           <div className='flex items-center'>
-            <FaHeart className='text-red-600' /><span>{recipe.numar_aprecieri}</span>
+            <FaHeart className='text-red-600' /><span>{formatCount(recipe.numar_aprecieri)}</span>
             <div className='w-4'></div>
-            <FaFlag className='text-blue-600'/><span>{recipe.numar_salvari  }</span>
+            <FaFlag className='text-blue-600'/><span>{formatCount(recipe.numar_salvari)  }</span>
           </div>
         </CardContent>
 

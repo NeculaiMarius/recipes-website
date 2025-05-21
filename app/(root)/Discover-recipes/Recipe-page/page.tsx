@@ -23,6 +23,7 @@ import SaveRecipeLS from '@/components/SaveRecipeLS';
 import RecipeIngredientsSection from '@/components/RecipeIngredientsSection';
 import LikesList from '@/components/Dialogs/LikesList';
 import ReviewCard from '@/components/ReviewCard';
+import { formatCount } from '@/lib/utils';
 
 
 
@@ -133,16 +134,16 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
   let kcal=0;
   for(const ingredient of ingredients){
     if(ingredient.um==='buc'){
-      kcal+=ingredient.kcal*ingredient.cantitate
-      carbs+=ingredient.carbohidrati*ingredient.cantitate;
-      fats+=ingredient.grasimi*ingredient.cantitate;
-      proteins+=ingredient.proteine*ingredient.cantitate;
+      kcal+=ingredient.kcal*ingredient.cantitate / recipe.numar_portii
+      carbs+=ingredient.carbohidrati*ingredient.cantitate / recipe.numar_portii;
+      fats+=ingredient.grasimi*ingredient.cantitate / recipe.numar_portii;
+      proteins+=ingredient.proteine*ingredient.cantitate / recipe.numar_portii;
     }
     else{
-      kcal+=parseFloat((ingredient.kcal*(ingredient.cantitate/100)).toFixed(2))
-      fats+=parseFloat((ingredient.grasimi*(ingredient.cantitate/100)).toFixed(2))
-      proteins+=parseFloat((ingredient.proteine*(ingredient.cantitate/100)).toFixed(2))
-      carbs+=parseFloat((ingredient.carbohidrati*(ingredient.cantitate/100)).toFixed(2))
+      kcal+=parseFloat((ingredient.kcal*(ingredient.cantitate/100)/ recipe.numar_portii).toFixed(2))
+      fats+=parseFloat((ingredient.grasimi*(ingredient.cantitate/100)/ recipe.numar_portii).toFixed(2))
+      proteins+=parseFloat((ingredient.proteine*(ingredient.cantitate/100)/ recipe.numar_portii).toFixed(2))
+      carbs+=parseFloat((ingredient.carbohidrati*(ingredient.cantitate/100)/ recipe.numar_portii).toFixed(2))
     }
   }
   const totalKcal=kcal.toFixed(2)
@@ -153,18 +154,19 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
   `
   const currentUserReview:ReviewRecipePage=await currentUserReviewResponse.rows[0] as ReviewRecipePage;
 
+  const isAuthor=(recipe.id_utilizator==session?.user.id?true:false) || (session?.user.role=='admin'?true:false);
+
   return (
     <div className='pt-[80px] '>
     
       <SaveRecipeLS recipe={recipe}/>
 
-      {
-        recipe.id_utilizator==session?.user.id?
+      
+        
         <div className='fixed top-4 left-6 z-50 '>
-          <RecipeSettingsButton recipeId={recipe.id}/>
+          <RecipeSettingsButton recipeId={recipe.id} isAuthor={isAuthor} />
         </div>
-        :null
-      }
+      
       
 
       <div className='grid grid-cols-2 h-[calc(100vh-80px)] 
@@ -172,7 +174,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
         {/* COL 1 */}
         <div className='px-10 flex flex-col justify-evenly
                         max-md:px-2'>
-          <h1 className='text-2xl font-bold'>{recipe?.nume}</h1>
+          <h1 className='text-2xl font-bold max-md:py-4 max-md:text-xl max-md:pl-2'>{recipe?.nume}</h1>
           <div className='px-24 bg-gray-100 max-sm:px-2'>
             <AspectRatio ratio={4/3} className=''>
               <Image
@@ -192,7 +194,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
             <LikesList recipeId={searchParams.recipeId} noLikes={recipe.numar_aprecieri} userId={session?.user.id as string} ></LikesList>
             <span className='flex gap-2 items-center'>
               <FaFlag size={20} className='text-blue-700'/>
-              {recipe.numar_salvari}
+              {formatCount(recipe.numar_salvari)}
             </span>
             <span className='flex items-center gap-2'>
               <span className='font-semibold ml-2'>{recipe.rating_reteta}</span>
@@ -219,7 +221,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       <Accordion type="single" className='mb-8' collapsible>
         <AccordionItem value="item-1 flex items-center ">
           <AccordionTrigger className='flex flex-1'>
-          <div className='bg-red-400 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md'>
+          <div className='bg-red-400 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md max-md:text-xl'>
             Valori nutriționale
           </div>
           </AccordionTrigger>
@@ -237,7 +239,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       </Accordion>
       
       <div>
-        <div className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md'>
+        <div className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md max-md:text-xl'>
           Pașii de preparare a rețetei
         </div>
 
@@ -266,7 +268,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       <Separator className='my-8'></Separator>
 
       <div>
-        <div id='review' className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md'>
+        <div id='review' className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md max-md:text-xl'>
           Review-urile utilizatorilor noștri
         </div>
 
@@ -280,7 +282,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
                         max-md:w-full max-md:grid-cols-1'>
           {reviews?.map(review=>{
             return(
-              <ReviewCard review={review} key={review.id}></ReviewCard>
+              <ReviewCard review={review} isAdmin={session?.user.role=='admin'} key={review.id}></ReviewCard>
             )
           })}
         </div>

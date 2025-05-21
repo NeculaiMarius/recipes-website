@@ -35,9 +35,9 @@ const RecipeIngredientsSection = ({
   const portionMultiplier = noPortions / recipePortions;
 
   return (
-    <div className='flex flex-col justify-evenly'>
+    <div className='flex flex-col justify-evenly max-md:py-4'>
       <div className='mx-auto flex gap-4 items-center font-bold'>
-        <h1 className='bg-emerald-700 text-white text-2xl w-fit px-4 py-2 rounded-md shadow-md'>
+        <h1 className='bg-emerald-700 text-white text-2xl w-fit px-4 py-2 rounded-md shadow-md max-md:text-xl'>
           Lista de ingrediente
         </h1>
         <DropdownMenu>

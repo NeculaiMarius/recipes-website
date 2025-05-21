@@ -25,6 +25,8 @@ import { options } from '@/app/api/auth/[...nextauth]/options'
 import { redirect } from "next/navigation"
 import ApproveRequestAlert from '@/components/AlertDialogs/ApproveRequestAlert'
 import RefuseRequestAlert from '@/components/AlertDialogs/RefuseRequestAlert'
+import ReviewCard from '@/components/ReviewCard'
+import { ReviewRecipePage } from '@/interfaces/review'
 
 export const revalidate = 1
 
@@ -198,16 +200,54 @@ const page = async ({ searchParams }: PageProps) => {
     return 'asc'
   }
 
+
+  const reviewsOffset = (reviewPage - 1) * limit
+
+  const reviewsResult=await sql`
+    SELECT 
+      u.nume, 
+      u.prenume, 
+      r.*, 
+      COUNT(ra.id_utilizator) AS numar_aprecieri,
+      CASE 
+          WHEN EXISTS (
+              SELECT 1 FROM l_reviews_apreciate a 
+              WHERE a.id_review = r.id AND a.id_utilizator = ${session?.user.id}
+          ) THEN TRUE 
+          ELSE FALSE 
+      END AS liked
+    FROM 
+      l_reviews r
+    JOIN 
+      l_utilizatori u ON r.id_utilizator = u.id
+    LEFT JOIN 
+      l_reviews_apreciate ra ON ra.id_review = r.id
+    GROUP BY 
+      r.id, u.nume, u.prenume
+    ORDER BY scor_toxicitate asc
+    LIMIT ${limit} OFFSET ${reviewsOffset}
+  `
+  const reviews:ReviewRecipePage[]=reviewsResult?.rows as ReviewRecipePage[];
+
+  const allReviewsCount= await sql`
+    SELECT COUNT(r.id) as total FROM l_reviews r
+    JOIN 
+      l_utilizatori u ON r.id_utilizator = u.id
+  `
+  const totalReviews = parseInt(allReviewsCount.rows[0].total)
+  const totalPagesForReviews = Math.ceil(totalReviews / limit)
+
   return (
     <div className="pt-[80px] px-4 max-w-7xl mx-auto">
-      <h1 className="text-3xl font-bold my-8">Admin Dashboard</h1>
+      <h1 className="text-3xl font-bold my-8">Panou pentru administrare </h1>
       <Tabs defaultValue={searchParams?.tab || 'reported-recipes'} className="w-full">
-      <TabsList className="grid grid-cols-3 w-full">
+      <TabsList className="grid grid-cols-4 w-full">
           <TabsTrigger value="reported-recipes">
             Rețete raportate
           </TabsTrigger>
           <TabsTrigger value="reported-reviews">Recenzii raportate</TabsTrigger>
           <TabsTrigger value="premium">Solicitări premium</TabsTrigger>
+          <TabsTrigger value="ai-moderation">Automat</TabsTrigger>
         </TabsList>
 
         <TabsContent value="reported-recipes" className="mt-6">
@@ -371,7 +411,7 @@ const page = async ({ searchParams }: PageProps) => {
                       <ReviewReportsDialog reviewId={review.id} reportsNumber={review.numar_rapoarte} />
                     </TableCell>
                     <TableCell className="text-center">
-                      <DeleteReviewAlert reviewId={review.id} author={review.nume_utilizator + " " +review.prenume_utilizator} recipe={review.nume} />
+                      <DeleteReviewAlert reviewId={review.id} author={review.nume_utilizator + " " +review.prenume_utilizator} />
                     </TableCell>
                   </TableRow>
                 ))}
@@ -473,10 +513,31 @@ const page = async ({ searchParams }: PageProps) => {
             </div>
           </div>
         </TabsContent>
-
-
-
+        <TabsContent value="ai-moderation" className="my-6">
+          <div className='grid grid-cols-2 w-[80%] mx-auto gap-x-4 gap-y-4
+                        max-md:w-full max-md:grid-cols-1'>
+            {reviews?.map(review=>{
+              return(
+                <ReviewCard review={review} isAdmin={true} key={review.id}></ReviewCard>
+              )
+            })}
+          </div>
+          <div className="flex w-full justify-center gap-4 my-8">
+              <Link
+                href={`?reviewPage=${Math.max(1, reviewPage - 1)}`}
+              >
+                <Button variant="outline" disabled={reviewPage <= 1}>Înapoi</Button>
+              </Link>
+              <Link
+                href={`?&reviewPage=${Math.min(reviewPage + 1, totalPagesForReviews)}`}
+              >
+                <Button variant="outline" disabled={reviewPage >= totalPagesForReviews}>Următoarea</Button>
+              </Link>
+            </div>
+        </TabsContent>
       </Tabs>
+
+      
     </div>
   )
 }

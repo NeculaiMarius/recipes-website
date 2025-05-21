@@ -9,7 +9,7 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { RecipeReportDialog } from '../Forms/RecipeReportDialog'
 
-const RecipeSettingsButton = ({ recipeId }: { recipeId: number }) => {
+const RecipeSettingsButton = ({ recipeId,isAuthor }: { recipeId: number,isAuthor:boolean }) => {
   const router = useRouter()
   const [showReportDialog, setShowReportDialog] = useState(false)
 
@@ -55,19 +55,25 @@ const RecipeSettingsButton = ({ recipeId }: { recipeId: number }) => {
             <h3 className="text-base font-bold text-white">Setări</h3>
             <div className="mt-1 h-0.5 w-10 rounded-full bg-white/30"></div>
           </div>
-
-          <DropdownMenuItem className="flex cursor-pointer items-center gap-2 text-emerald-700 hover:bg-emerald-700/10">
-            <Pencil className="h-4 w-4" />
-            Editează rețeta
-          </DropdownMenuItem>
-
-          <DropdownMenuItem
-            className="flex cursor-pointer items-center gap-2 text-red-600 hover:bg-red-50"
-            onClick={deleteRecipeEvent}
-          >
-            <Trash2 className="h-4 w-4" />
-            Șterge rețeta
-          </DropdownMenuItem>
+          {
+            isAuthor &&
+            <DropdownMenuItem className="flex cursor-pointer items-center gap-2 text-emerald-700 hover:bg-emerald-700/10">
+              <Pencil className="h-4 w-4" />
+              Editează rețeta
+            </DropdownMenuItem>
+          }
+          
+          {
+            isAuthor &&
+            <DropdownMenuItem
+              className="flex cursor-pointer items-center gap-2 text-red-600 hover:bg-red-50"
+              onClick={deleteRecipeEvent}
+            >
+              <Trash2 className="h-4 w-4" />
+              Șterge rețeta
+            </DropdownMenuItem>
+          }
+          
 
           <DropdownMenuItem
             className="flex cursor-pointer items-center gap-2 text-red-600 hover:bg-red-50"

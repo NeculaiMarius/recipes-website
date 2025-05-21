@@ -7,7 +7,7 @@ import { toast } from 'sonner'
 import { deleteReview } from '@/app/stores/ReviewStore'
 
 
-const DeleteReviewAlert = ({reviewId, author, recipe}:{reviewId:number,author:string, recipe:string}) => {
+const DeleteReviewAlert = ({reviewId, author}:{reviewId:number,author:string}) => {
   const deleteReviewEvent = async () => {
       try {
         await deleteReview(reviewId)
@@ -44,7 +44,6 @@ const DeleteReviewAlert = ({reviewId, author, recipe}:{reviewId:number,author:st
               </p>
               <span>
                 <p>Autor recenzie: {author}</p>
-                <p>Pentru rețeta: {recipe}</p>
               </span>
             </div>
           </AlertDialogDescription>

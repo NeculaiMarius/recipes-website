@@ -49,7 +49,7 @@ export default function NutritionChart({ data,totalKcal }: {data:NutritionData[]
       <div>
       <CardHeader className="items-center pb-0">
         <CardTitle>Compoziție Nutrițională</CardTitle>
-        <CardDescription>Macronutrienți per rețetă</CardDescription>
+        <CardDescription>Macronutrienți per porție</CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
         <ChartContainer
@@ -101,14 +101,10 @@ export default function NutritionChart({ data,totalKcal }: {data:NutritionData[]
           </PieChart>
         </ChartContainer>
       </CardContent>
-      <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Date nutriționale pe bază de rețetă
-        </div>
-      </CardFooter>
+
       </div>
       <div className="flex flex-col items-center justify-center pr-6 max-sm:p-4">
-        <h1 className="text-2xl max-sm:text-[20px] font-bold">Total kcal rețetă</h1>
+        <h1 className="text-2xl max-sm:text-[20px] font-bold">Total kcal porție</h1>
         <p className="text-xl max-sm:text-md font-extrabold text-red-700">{totalKcal} Kcal</p>
       </div>
     </Card>

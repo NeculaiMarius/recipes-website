@@ -48,7 +48,9 @@ const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?
     SELECT 
       r.id, 
       r.nume, 
-      u.nume AS utilizator, 
+      u.nume AS nume_utilizator,
+      u.prenume AS prenume_utilizator,
+      u.rol,
       r.image_url, 
       COALESCE(AVG(v.rating), 0) AS rating,
       COUNT(DISTINCT a.id) AS numar_aprecieri,
@@ -98,7 +100,7 @@ const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?
         AND f.id_utilizator = 1
     WHERE
       lower(r.nume) LIKE lower('%${searchQuery}%')
-    GROUP BY r.id, r.nume, u.nume, r.image_url
+    GROUP BY r.id, r.nume, u.nume, r.image_url, u.prenume, u.rol
     ORDER BY procent_ingrediente DESC, (${order?order:'r.id'}) DESC
     LIMIT ${limit} OFFSET ${offset};
     `;
