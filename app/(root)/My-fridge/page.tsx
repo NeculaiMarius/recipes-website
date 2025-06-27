@@ -97,7 +97,7 @@ const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?
     JOIN l_retete_ingrediente ri ON r.id = ri.id_reteta
     LEFT JOIN l_ingrediente_frigider f 
         ON ri.id_ingredient = f.id_ingredient 
-        AND f.id_utilizator = 1
+        AND f.id_utilizator = ${session?.user.id}
     WHERE
       lower(r.nume) LIKE lower('%${searchQuery}%')
     GROUP BY r.id, r.nume, u.nume, r.image_url, u.prenume, u.rol

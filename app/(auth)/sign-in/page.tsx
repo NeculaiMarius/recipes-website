@@ -10,20 +10,20 @@ const SignIn = () => {
       <div className="flex items-center justify-center py-12">
         <div className="mx-auto grid w-[350px] gap-6">
           <div className="grid gap-2 text-center">
-            <h1 className="text-3xl font-bold">Login</h1>
+            <h1 className="text-3xl font-bold ">Autentificare</h1>
             <p className="text-balance text-muted-foreground">
-              Enter your email below to login to your account
+              Introdu datele de indentificare pentru a putea intra în cont
             </p>
           </div>
             <SignInForm />
         </div>
       </div>
-      <div className="hidden bg-muted lg:block">
+      <div className="h-full hidden bg-muted lg:block">
         <Image
-          src=''
+          src='/images/image.png'
           alt="Image"
-          width="1920"
-          height="1080"
+          width="1024"
+          height="1024"
           className="h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
         />
       </div>

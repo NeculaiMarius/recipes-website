@@ -132,9 +132,9 @@ const page = async ({ params}:{params:{user:string}}) => {
         <div className='grid grid-cols-2  grid-rows-[auto_auto]'>
           <div className="p-2 flex items-center justify-center">
             <Avatar className="w-32 h-32 border-4 border-white shadow-lg">
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback className="text-4xl font-bold bg-gradient-to-r from-purple-400 to-pink-500 text-white">
-                CN
+              {/* <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" /> */}
+              <AvatarFallback className="text-5xl font-bold ">
+                {(user.nume[0]+user.prenume[0]).toUpperCase()}
               </AvatarFallback>
             </Avatar>
           </div>

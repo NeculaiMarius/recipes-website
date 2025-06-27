@@ -1,14 +1,13 @@
 import exp from "constants";
 
-export const likeRecipe=async(id_recipe:number,id_user:string)=>{
-  const response = await fetch('/api/like-recipe/like', {
+export const likeRecipe=async(id_recipe:number)=>{
+  const response = await fetch('/api/recipe/like', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       id_recipe: id_recipe,
-      id_user: id_user,
     }),
   });
   if (!response.ok) {
@@ -17,15 +16,14 @@ export const likeRecipe=async(id_recipe:number,id_user:string)=>{
   return true
 }
 
-export const unlikeRecipe=async(id_recipe:number,id_user:string)=>{
-  const response = await fetch('/api/like-recipe/unlike', {
+export const unlikeRecipe=async(id_recipe:number)=>{
+  const response = await fetch('/api/recipe/like', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       id_recipe: id_recipe,
-      id_user: id_user,
     }),
   });
   if (!response.ok) {
@@ -34,15 +32,14 @@ export const unlikeRecipe=async(id_recipe:number,id_user:string)=>{
   return true
 }
 
-export const saveRecipe=async(id_recipe:number,id_user:string)=>{
-  const response = await fetch('/api/save-recipe', {
+export const saveRecipe=async(id_recipe:number)=>{
+  const response = await fetch('/api/recipe/save', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       id_recipe: id_recipe,
-      id_user: id_user,
     }),
   });
   if (!response.ok) {
@@ -51,15 +48,14 @@ export const saveRecipe=async(id_recipe:number,id_user:string)=>{
   return true
 }
 
-export const unSaveRecipe=async(id_recipe:number,id_user:string)=>{
-  const response = await fetch('/api/save-recipe', {
+export const unSaveRecipe=async(id_recipe:number)=>{
+  const response = await fetch('/api/recipe/save', {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({
       id_recipe: id_recipe,
-      id_user: id_user,
     }),
   });
   if (!response.ok) {

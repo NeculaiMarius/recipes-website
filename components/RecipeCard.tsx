@@ -10,13 +10,13 @@ import Image from 'next/image'
 import Rating from './Rating'
 
 
-const RecipeCard = ({name,rating,author,route}:{name:string,rating:number,author:string,route:string}) => {
+const RecipeCard = ({name,rating,author,imageURL}:{name:string,rating:number,author:string,imageURL:string}) => {
   return (
     <Card className=" w-[300px] h-fit max-md:flex max-md:w-full">
       <div className="relative w-full md:h-[60%] max-md:h-[150px] max-md:w-[150px] max-md:aspect-[1/1]">
         <div className='w-full aspect-[1/1]'>
         <Image
-          src={route}
+          src={imageURL}
           alt="Card image"
           layout="fill"
           objectFit="cover"

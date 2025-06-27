@@ -1,10 +1,10 @@
 'use client';
 
 import { likeRecipe, unlikeRecipe } from '@/app/stores/RecipeStore';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { FaHeart } from 'react-icons/fa';
 
-const LikeButton = ({ id_user, id_recipe, liked }: { id_user: string; id_recipe: number; liked: boolean }) => {
+const LikeButton = ({ id_recipe, liked }: { id_recipe: number; liked: boolean }) => {
   const [isLiked, setIsLiked] = useState(liked);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -13,12 +13,12 @@ const LikeButton = ({ id_user, id_recipe, liked }: { id_user: string; id_recipe:
     setIsLoading(true);
     try {
       if (!isLiked) {
-        const success=await likeRecipe(id_recipe,id_user)
+        const success=await likeRecipe(id_recipe)
         if(success){
           setIsLiked(true);
         }
       } else {
-        const success=await unlikeRecipe(id_recipe,id_user)
+        const success=await unlikeRecipe(id_recipe)
         if(success){
           setIsLiked(false);
         }
@@ -41,3 +41,4 @@ const LikeButton = ({ id_user, id_recipe, liked }: { id_user: string; id_recipe:
 };
 
 export default LikeButton;
+

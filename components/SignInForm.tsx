@@ -62,7 +62,7 @@ const SignInForm = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your email" {...field} />
+                <Input placeholder="Introdu email-ul " {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -73,22 +73,22 @@ const SignInForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='flex justify-between'><span>Password</span><span className='underline'>Forgot your password?</span></FormLabel>
+              <FormLabel className='flex justify-between'><span>Parolă</span></FormLabel>
               <FormControl>
-                <Input placeholder="Enter your password" type='password' {...field} />
+                <Input placeholder="Introdu parola" type='password' {...field} />
               </FormControl>
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
+        <Button type="submit" className="w-full bg-emerald-700 text-white" disabled={isLoading}>
           Login
         </Button>
       </form>
       <div className="mt-4 text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <Link href={'/sign-up'} className="underline">
-              Sign up
+          Nu ai un cont?{" "}
+            <Link href={'/sign-up'} className="underline text-emerald-700">
+              Înregistrează-te
             </Link>
           </div>
     </Form>

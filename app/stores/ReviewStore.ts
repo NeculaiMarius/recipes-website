@@ -1,5 +1,5 @@
 export const addReview=async(id_recipe:string,content:string,rating:number)=>{
-  const response = await fetch('/api/reviews/add-review', {
+  const response = await fetch('/api/reviews', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
@@ -17,7 +17,7 @@ export const addReview=async(id_recipe:string,content:string,rating:number)=>{
 }
 
 export const deleteReview=async(reviewId:number)=>{
-  const response = await fetch(`/api/reviews/delete-review/${reviewId}`,{
+  const response = await fetch(`/api/reviews/${reviewId}`,{
     method:"DELETE",
   })
   if (!response.ok) {
@@ -73,7 +73,7 @@ export const getReviewReports=async(reviewId:number)=>{
 }
 
 export const getReview=async(reviewId:number)=>{
-  const response=await fetch(`/api/reviews/get-review/${reviewId}`)
+  const response=await fetch(`/api/reviews/${reviewId}`)
   if(!response.ok){
     throw new Error(`HTTP error! Status: ${response.status}`);
   }

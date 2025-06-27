@@ -81,10 +81,10 @@ const RecipeForm = ({ userId }: { userId: string | undefined }) => {
 
   const [ingredientQuery, setIngredientQuery] = useState("")
   const [ingredientSuggestions, setIngredientSuggestions] = useState<
-    { id: string; name: string; um: string; category: string }[]
+    { id: string; nume: string; um: string; categorie: string }[]
   >([])
   const [selectedIngredients, setSelectedIngredients] = useState<
-    { id: string; name: string; um: string; quantity: number }[]
+    { id: string; nume: string; um: string; cantitate: number }[]
   >([])
 
   const [selectedImage, setSelectedImage] = useState<string | null>(null)
@@ -121,12 +121,12 @@ const RecipeForm = ({ userId }: { userId: string | undefined }) => {
     fetchIngredients()
   }, [ingredientQuery])
 
-  const handleAddIngredient = (ingredient: { id: string; name: string; um: string }) => {
+  const handleAddIngredient = (ingredient: { id: string; nume: string; um: string }) => {
     const isIngredientAlreadySelected = selectedIngredients.some((item) => item.id === ingredient.id)
     if (!isIngredientAlreadySelected) {
       setSelectedIngredients((prev) => [
         ...prev,
-        { ...ingredient, quantity: ingredient.um === "g" || ingredient.um === "ml" ? 10 : 1 },
+        { ...ingredient, cantitate: ingredient.um === "g" || ingredient.um === "ml" ? 10 : 1 },
       ])
     }
     setIngredientQuery("")
@@ -137,9 +137,9 @@ const RecipeForm = ({ userId }: { userId: string | undefined }) => {
     setSelectedIngredients((prev) => prev.filter((ingredient) => ingredient.id !== id))
   }
 
-  const handleQuantityChange = (id: string, quantity: number) => {
+  const handleQuantityChange = (id: string, cantitate: number) => {
     setSelectedIngredients((prev) =>
-      prev.map((ingredient) => (ingredient.id === id ? { ...ingredient, quantity } : ingredient)),
+      prev.map((ingredient) => (ingredient.id === id ? { ...ingredient, cantitate } : ingredient)),
     )
   }
 
@@ -148,7 +148,7 @@ const RecipeForm = ({ userId }: { userId: string | undefined }) => {
 
     const ingredientsWithQuantities = selectedIngredients.map((ingredient) => ({
       id: ingredient.id,
-      quantity: ingredient.quantity,
+      quantity: ingredient.cantitate,
     }))
 
     //IMAGE UPLOAD IN CLOUDINARY
@@ -166,7 +166,7 @@ const RecipeForm = ({ userId }: { userId: string | undefined }) => {
 
     // INSERT RECIPE IN DATABASE
     try {
-      const response = await fetch("/api/add-recipe", {
+      const response = await fetch("/api/recipe", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -500,7 +500,7 @@ const RecipeForm = ({ userId }: { userId: string | undefined }) => {
                           className="cursor-pointer p-2 hover:bg-emerald-50 rounded-md transition-colors"
                           onClick={() => handleAddIngredient(ingredient)}
                         >
-                          {ingredient.name} ({ingredient.um})
+                          {ingredient.nume} ({ingredient.um})
                         </li>
                       ))}
                     </ul>
@@ -517,12 +517,12 @@ const RecipeForm = ({ userId }: { userId: string | undefined }) => {
                           className="flex items-center bg-white rounded-lg p-3 border border-emerald-200 shadow-sm"
                         >
                           <div className="flex-grow">
-                            <p className="font-medium text-emerald-800">{ingredient.name}</p>
+                            <p className="font-medium text-emerald-800">{ingredient.nume}</p>
                           </div>
                           <div className="flex items-center gap-2">
                             <Input
                               type="number"
-                              value={ingredient.quantity}
+                              value={ingredient.cantitate}
                               onChange={(e) => handleQuantityChange(ingredient.id, Number.parseFloat(e.target.value))}
                               className="w-20 text-center border-emerald-200"
                               // min={ingredient.um === "g" || ingredient.um === "ml" ? 10 : 1}

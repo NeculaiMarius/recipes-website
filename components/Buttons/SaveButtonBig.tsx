@@ -14,12 +14,12 @@ const SaveButtonBig = ({ id_user, id_recipe, isLiked }: { id_user: string; id_re
       setIsLoading(true);
       try {
         if (!isLikedState) {
-          const success=await saveRecipe(id_recipe,id_user)
+          const success=await saveRecipe(id_recipe)
           if(success){
             setIsLikedState(true);
           }
         } else {
-          const success=await unSaveRecipe(id_recipe,id_user)
+          const success=await unSaveRecipe(id_recipe)
           if(success){
             setIsLikedState(false);
           }

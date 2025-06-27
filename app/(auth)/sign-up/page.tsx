@@ -20,7 +20,7 @@ const SignUp = () => {
       </div>
       <div className="hidden bg-muted lg:block">
         <Image
-          src=''
+          src='/images/image.png'
           alt="Image"
           width="1920"
           height="1080"

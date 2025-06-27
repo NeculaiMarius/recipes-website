@@ -13,25 +13,27 @@ const FiltersSheet = ({ ingredients ,type}: { ingredients: string[] ,type:string
   const [optimisticType,setOptimisticType]=useOptimistic(type);
   const [pending, startTransition] = useTransition();
 
-  function updateFilters(newIngredients?: string[], newType?: string) {
-    const newParams = new URLSearchParams();
-  
-    (newIngredients || optimisticIngredients).forEach((ingredient) => {
-      newParams.append("ingredient", ingredient);
-    });
-  
-    if (newType !== undefined) {
-      newParams.set("type", newType);
-    } else if (optimisticType) {
-      newParams.set("type", optimisticType);
-    }
-  
-    startTransition(() => {
-      if (newIngredients !== undefined) setOptimsticIngredients(newIngredients);
-      if (newType !== undefined) setOptimisticType(newType);
-      router.push(`?${newParams}`);
-    });
+function updateFilters(newIngredients?: string[], newType?: string) {
+  const nextIngredients = newIngredients ?? optimisticIngredients;
+  const nextType = newType ?? optimisticType;
+
+  const newParams = new URLSearchParams();
+
+  nextIngredients.forEach((ingredient) => {
+    newParams.append("ingredient", ingredient);
+  });
+
+  if (nextType) {
+    newParams.set("type", nextType);
   }
+
+  startTransition(() => {
+    setOptimsticIngredients(nextIngredients);
+    setOptimisticType(nextType);
+    router.push(`?${newParams.toString()}`);
+  });
+}
+
 
   const fetchRandomRecipeId = async () => {
     try {
@@ -71,10 +73,10 @@ const FiltersSheet = ({ ingredients ,type}: { ingredients: string[] ,type:string
                       className={`cursor-pointer px-3 py-1 rounded-full transition-colors duration-200 
                         ${isSelected ? "bg-emerald-700 text-white" : "bg-gray-200 text-gray-800"}`}
                       onClick={() => {
-                        const newGenres = isSelected
+                        const newIngredients = isSelected
                           ? optimisticIngredients.filter((i) => i !== ingredient.id)
                           : [...optimisticIngredients, ingredient.id];
-                        updateFilters(newGenres,optimisticType);
+                        updateFilters(newIngredients,optimisticType);
                       }}
                     >
                       {ingredient.name}

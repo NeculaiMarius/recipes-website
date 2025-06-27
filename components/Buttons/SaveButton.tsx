@@ -4,7 +4,7 @@ import { saveRecipe, unSaveRecipe } from '@/app/stores/RecipeStore';
 import React, { useEffect, useState } from 'react';
 import { FaFlag } from 'react-icons/fa';
 
-const SaveButton = ({ id_user, id_recipe, saved }: { id_user: string; id_recipe: number; saved: boolean }) => {
+const SaveButton = ({ id_recipe, saved }: { id_recipe: number; saved: boolean }) => {
   const [isSaved, setIsSaved] = useState(saved);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -13,12 +13,12 @@ const SaveButton = ({ id_user, id_recipe, saved }: { id_user: string; id_recipe:
     setIsLoading(true);
     try {
       if (!isSaved) {
-        const success=await saveRecipe(id_recipe,id_user)
+        const success=await saveRecipe(id_recipe)
         if(success){
           setIsSaved(true);
         }
       } else {
-        const success=await unSaveRecipe(id_recipe,id_user)
+        const success=await unSaveRecipe(id_recipe)
         if(success){
           setIsSaved(false);
         }

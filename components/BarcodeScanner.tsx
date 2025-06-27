@@ -23,7 +23,8 @@ const BarcodeScanner = ({ onScan, onError, active }: BarcodeScannerProps) => {
       formatsToSupport: [
         Html5QrcodeSupportedFormats.EAN_13,
         Html5QrcodeSupportedFormats.UPC_A,
-        Html5QrcodeSupportedFormats.CODE_128
+        Html5QrcodeSupportedFormats.CODE_128,
+        Html5QrcodeSupportedFormats.ITF
       ],
       fps: 10,
       qrbox: {width:200, height:100}

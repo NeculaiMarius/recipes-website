@@ -12,9 +12,7 @@ cloudinary.v2.config({
 export async function POST(request: Request) {
   const { image } = await request.json(); 
 
-  if (!image) {
-    return NextResponse.json({ error: 'No file provided' }, { status: 400 });
-  }
+  if (!image) { return NextResponse.json({ error: 'No file provided' }, { status: 400 });}
 
   try {
     const result = await cloudinary.v2.uploader.upload(image, {

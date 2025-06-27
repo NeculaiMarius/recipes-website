@@ -255,6 +255,8 @@ const page = async ({ searchParams }: PageProps) => {
             <Input
               type="text"
               name="search"
+              pattern="^[a-zA-ZăîâșțĂÎÂȘȚ0-9\s@.,]+$"
+              title="Sunt permise doar litere, cifre, spații, @, . și ,"
               placeholder="Caută rețetă sau autor..."
               defaultValue={search}
               className="w-full max-w-sm"
@@ -361,6 +363,8 @@ const page = async ({ searchParams }: PageProps) => {
             <Input
               type="text"
               name="reviewSearch"
+              pattern="^[a-zA-ZăîâșțĂÎÂȘȚ0-9\s@.,]+$"
+              title="Sunt permise doar litere, cifre, spații, @, . și ,"
               placeholder="Caută rețetă sau utilizator..."
               defaultValue={reviewSearch}
               className="w-full max-w-sm"
@@ -437,6 +441,8 @@ const page = async ({ searchParams }: PageProps) => {
           <form className="mb-4 flex gap-2" method="GET">
             <Input
               type="text"
+              pattern="^[a-zA-ZăîâșțĂÎÂȘȚ0-9\s@.,]+$"
+              title="Sunt permise doar litere, cifre, spații, @, . și ,"
               name="premiumSearch"
               placeholder="Caută utilizator..."
               defaultValue={premiumSearch}

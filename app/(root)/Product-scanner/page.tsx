@@ -158,7 +158,7 @@ const ProductScanner = () => {
         <div className="flex flex-col items-center py-8 px-4 md:px-8">
           <h2 className="text-2xl font-bold mb-2 text-center text-emerald-700 flex items-center gap-2">
             <Sparkles className="h-5 w-5" />
-            Găsește Produse Sănătoase și Sustenabile
+            Găsește Produsele alimentare repede și ușor
             <Sparkles className="h-5 w-5" />
           </h2>
           <p className="text-gray-500 mb-6 text-center max-w-2xl">

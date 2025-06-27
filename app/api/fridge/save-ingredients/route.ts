@@ -23,7 +23,7 @@ export async function POST(req:Request) {
       const query = `
       INSERT INTO l_ingrediente_frigider (id_ingredient,id_utilizator,cantitate)
       VALUES 
-      ${ingredients.map(ingredient => `('${ingredient.id}', '${session?.user.id}', '${ingredient.quantity}')`).join(', ')}
+      ${ingredients.map(ingredient => `('${ingredient.id}', '${session?.user.id}', '${ingredient.cantitate}')`).join(', ')}
       ;
     `;
 
@@ -43,7 +43,7 @@ interface SelectedIngredient {
   id: string;
   nume: string;
   um: string;
-  quantity: number;
-  category: string;
+  cantitate: number;
+  categorie: string;
 }
 

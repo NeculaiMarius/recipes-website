@@ -1,14 +1,14 @@
 import SaveButtonBig from '@/components/Buttons/SaveButtonBig';
 import { sql } from '@vercel/postgres'
 import Image from 'next/image'
-import React from 'react'
+import React, { Suspense } from 'react'
 import { getServerSession } from 'next-auth';
 import { options } from '@/app/api/auth/[...nextauth]/options';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Separator } from '@/components/ui/separator';
 import Rating from '@/components/Rating';
 import FavouriteButtonBig from '@/components/Buttons/FavouriteButtonBig';
-import { FaFlag, FaHeart, FaInfoCircle, FaRegUserCircle, FaStar } from 'react-icons/fa';
+import { FaFlag, FaStar } from 'react-icons/fa';
 import AddReviewForm from '@/components/Forms/AddReviewForm';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import NutritionChart from '@/components/Charts/NutririonChart';
@@ -18,12 +18,13 @@ import { IngredientRecipePage } from '@/interfaces/ingredient';
 import { ReviewRecipePage } from '@/interfaces/review';
 import RecipeSettingsButton from '@/components/Buttons/RecipeSettingsButton';
 import { AlertTriangle } from 'lucide-react';
-import RecipeRecommendationsSection from '@/components/RecipeRecommendationsSection';
+import RecipeRecommendationsSection from '@/components/Recipe-recommendations/RecipeFromUser';
 import SaveRecipeLS from '@/components/SaveRecipeLS';
 import RecipeIngredientsSection from '@/components/RecipeIngredientsSection';
 import LikesList from '@/components/Dialogs/LikesList';
 import ReviewCard from '@/components/ReviewCard';
 import { formatCount } from '@/lib/utils';
+import SimilarRecipes from '@/components/Recipe-recommendations/SimilarRecipes';
 
 
 
@@ -156,6 +157,7 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
 
   const isAuthor=(recipe.id_utilizator==session?.user.id?true:false) || (session?.user.role=='admin'?true:false);
 
+
   return (
     <div className='pt-[80px] '>
     
@@ -205,11 +207,11 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
           <div className='max-md:my-4 flex justify-evenly'>
             <SaveButtonBig id_user={session?.user.id||""} id_recipe={recipe.id} isLiked={recipe.saved} />
             <FavouriteButtonBig id_user={session?.user.id||""} id_recipe={recipe.id} isLiked={recipe.liked}/>
-            <a href='#review'>
+            <Link href='#review'>
               <div className='like-button font-bold px-4 py-2 shadow-xl w-[170px] justify-around text-lg bg-yellow-600 text-gray-100  max-md:w-[90px]'>
                 <span className='max-md:hidden'>Review-uri</span> <FaStar size={25}></FaStar>
               </div>
-            </a>
+            </Link>
           </div>
         </div>
         {/* COL 2 */}
@@ -289,7 +291,14 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
       </div>
       <Separator className='my-8'></Separator>
 
-      <RecipeRecommendationsSection recipeId={searchParams.recipeId} userId={session?.user.id} authorId={recipe.id_utilizator}/>
+      
+      <Suspense>
+        <SimilarRecipes recipeId={recipe.id} userId={session?.user.id as string} ></SimilarRecipes>
+      </Suspense>
+
+      <Suspense>
+        <RecipeRecommendationsSection recipeId={searchParams.recipeId} userId={session?.user.id} authorId={recipe.id_utilizator}/>
+      </Suspense>
 
       <Separator className='my-8'></Separator>
     </div>

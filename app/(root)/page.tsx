@@ -213,7 +213,11 @@ export default  async function Home() {
               </div>
             </CardContent>
             <div className="h-8 px-10 my-2"> 
-              <FollowButton id_user={session?.user.id as string} id_followed_user={user.id} followed={user.followed}></FollowButton>
+              {
+                user.id!=session?.user.id && (
+                  <FollowButton id_user={session?.user.id as string} id_followed_user={user.id} followed={user.followed}></FollowButton>
+                )
+              }
             </div>
           </Card>
         ))}

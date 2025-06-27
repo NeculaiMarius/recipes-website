@@ -2,6 +2,7 @@ import { options } from "@/app/api/auth/[...nextauth]/options"
 import FavouriteButtonBig from "@/components/Buttons/FavouriteButtonBig"
 import FollowButton from "@/components/Buttons/FollowButton"
 import SaveButtonBig from "@/components/Buttons/SaveButtonBig"
+import NoFollowsCard from "@/components/NoFollowsCard"
 import PaginationComponent from "@/components/PaginationComponent"
 import Rating from "@/components/Rating"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -129,16 +130,20 @@ export default async function Feed({ searchParams }: { searchParams: { page?: st
           {/* Main Feed */}
           <div className="lg:col-span-6">
             <ScrollArea className="">
-              <div className="bg-white flex flex-col rounded-md mb-4 gap-2 p-2 h-52 overflow-auto border lg:hidden">
+              <div className="bg-white flex flex-col rounded-md mb-4 gap-2 p-2 h-60 overflow-auto border lg:hidden">
                 <h3 className="font-semibold col-span-2 pl-4">Conturi sugerate</h3>
                 {suggestedAccounts.map((account) => (
                   <UserCard account={account} userId={session?.user.id as string} key={account.id}></UserCard>
                 ))}
               </div>
               <div className="space-y-4 pb-20">
-                {recipes.map((recipe) => (
+                {recipes.length>0? recipes.map((recipe) => (
                   <RecipeCardFeed key={recipe.id} recipe={recipe} id_user={session?.user.id as string} />
-                ))}
+                )):
+                  <div className="w-full">
+                    <NoFollowsCard></NoFollowsCard>
+                  </div>
+                }
                 <PaginationComponent totalPages={totalPages} page={page}></PaginationComponent>
               </div>
             </ScrollArea>
@@ -259,11 +264,11 @@ function RecipeCardFeed({ recipe ,id_user}: {recipe:RecipeFeed,id_user:string}) 
         <div className="flex justify-between items-center w-full pt-1 gap-1">
           <FavouriteButtonBig id_recipe={recipe.id} id_user={id_user} isLiked={recipe.liked}/>
           <SaveButtonBig id_recipe={recipe.id} id_user={id_user} isLiked={recipe.saved}/>
-          <a href={`/Discover-recipes/Recipe-page?recipeId=${recipe.id}#review`}>
+          <Link href={`/Discover-recipes/Recipe-page?recipeId=${recipe.id}#review`}>
             <div className='like-button font-bold px-4 py-2 shadow-xl w-[170px] justify-around text-lg bg-yellow-600 text-gray-100  max-md:w-[90px]'>
               <span className='max-md:hidden'>Review-uri</span> <FaStar size={25}></FaStar>
             </div>
-          </a>
+          </Link>
         </div>
       </CardFooter>
     </Card>

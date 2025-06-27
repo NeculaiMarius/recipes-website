@@ -12,18 +12,14 @@ import Image from 'next/image';
 import { ingredientsCategories } from '@/constants';
 import { toast } from 'sonner';
 import { MdDeleteForever } from "react-icons/md";
-import { RecipeDisplay } from '@/interfaces/recipe';
-import RecipeDisplayCard from '@/components/RecipeDisplayCard';
-import FilterOrderContainer from '@/components/FilterOrderContainer';
-import Search from '@/components/Search';
-import { useSearchParams } from 'next/navigation';
+
 
 const FridgeIngredientsSections = () => {
   const [isOpen, setIsOpen] = useState(false)
   const [selectedIngredients, setSelectedIngredients] = useState<SelectedIngredient[]>([]);
   const [categories,setCategories]=useState(ingredientsCategories);
   const [ingredientQuery, setIngredientQuery] = useState("");
-  const [ingredientSuggestions, setIngredientSuggestions] = useState<{ id: string; name: string; um: string; category:string }[]>([]);
+  const [ingredientSuggestions, setIngredientSuggestions] = useState<{ id: string; nume: string; um: string; categorie:string }[]>([]);
 
   useEffect(()=>{
       const fetchSelectedIngredients=async()=>{
@@ -34,14 +30,7 @@ const FridgeIngredientsSections = () => {
         const data=await response.json();
   
         if (data && data.rows) {
-          const ingredients = data.rows.map((item: IngredientResponse) => ({
-            id: item.id,
-            name: item.nume,
-            um: item.um,
-            quantity: parseFloat(item.cantitate), 
-            category: item.categorie,
-          }));
-    
+          const ingredients = data.rows
           setSelectedIngredients(ingredients);
         }
       }
@@ -68,10 +57,10 @@ const FridgeIngredientsSections = () => {
         fetchIngredients();
       }, [ingredientQuery]);
 
-    const handleAddIngredient = (ingredient: { id: string; name: string; um: string; category:string }) => {
+    const handleAddIngredient = (ingredient: { id: string; nume: string; um: string; categorie:string }) => {
       const isIngredientAlreadySelected = selectedIngredients.some(item => item.id === ingredient.id);
       if (!isIngredientAlreadySelected) {
-        setSelectedIngredients((prev) => [...prev, { ...ingredient, quantity: (ingredient.um==="g"||ingredient.um==="ml")?10:1 }]);
+        setSelectedIngredients((prev) => [...prev, { ...ingredient, cantitate: (ingredient.um==="g"||ingredient.um==="ml")?10:1 }]);
       }
       setIngredientQuery("");
       setIngredientSuggestions([]);
@@ -83,10 +72,10 @@ const FridgeIngredientsSections = () => {
     };
     
   
-    const handleQuantityChange = (id: string, quantity: number) => {
+    const handleQuantityChange = (id: string, cantitate: number) => {
       setSelectedIngredients((prev) =>
         prev.map(ingredient =>
-          ingredient.id === id ? { ...ingredient, quantity } : ingredient
+          ingredient.id === id ? { ...ingredient, cantitate } : ingredient
         )
       );
     };
@@ -139,7 +128,7 @@ const FridgeIngredientsSections = () => {
                       onClick={() => {
                         handleAddIngredient(ingredient);
                         toast("Ingredient adaugat", {
-                          description: `${ingredient.name}`,
+                          description: `${ingredient.nume}`,
                           action: {
                             label: "Anulează",
                             onClick: () => handleRemoveIngredient(ingredient.id),
@@ -148,12 +137,12 @@ const FridgeIngredientsSections = () => {
                       }}
                     >
                       <Image
-                        src={`/svg-icons/${ingredient.category}.svg`}
+                        src={`/svg-icons/${ingredient.categorie}.svg`}
                         height={30}
                         width={30}
                         alt=''
                       />
-                      {ingredient.name} ({ingredient.um})
+                      {ingredient.nume} ({ingredient.um})
                     </li>
                   ))}
                 </ul>
@@ -161,7 +150,7 @@ const FridgeIngredientsSections = () => {
 
 
 
-              <Button onClick={onClickButton} className='bg-emerald-700'>Salveaza modificarile</Button>
+              <Button onClick={onClickButton} className='bg-blue-600 font-bold '>Salveaza modificarile</Button>
             </div>
             
 
@@ -172,7 +161,7 @@ const FridgeIngredientsSections = () => {
           <div className=' flex-grow'>
             <Accordion type="multiple">
               {categories?.map(category=>{
-                const filteredIngredients=selectedIngredients.filter(ingredient=> ingredient.category === category);
+                const filteredIngredients=selectedIngredients.filter(ingredient=> ingredient.categorie === category);
                 const noIngredients=filteredIngredients.length;
               return (
                 <AccordionItem value={category} className='' key={category}>
@@ -197,13 +186,13 @@ const FridgeIngredientsSections = () => {
                   .map(filteredIngredient => (
                     <AccordionContent key={filteredIngredient.id} className='flex justify-between px-8 py-1 items-center'>
                       <div>
-                      {filteredIngredient.name}
+                      {filteredIngredient.nume}
                       </div>
                       <div className='flex gap-2 items-center'>
                         <span>Cantitate</span>
                         <Input
                           type="number"
-                          value={filteredIngredient.quantity}
+                          value={filteredIngredient.cantitate}
                           onChange={(e) => handleQuantityChange(filteredIngredient.id, parseFloat(e.target.value))}
                           className="w-16 px-2 h-9"
                           min={(filteredIngredient.um==="g"||filteredIngredient.um==="ml")?10:1}
@@ -236,10 +225,10 @@ export default FridgeIngredientsSections
 
 interface SelectedIngredient {
   id: string;
-  name: string;
+  nume: string;
   um: string;
-  quantity: number;
-  category: string;
+  cantitate: number;
+  categorie: string;
 }
 
 interface IngredientResponse {

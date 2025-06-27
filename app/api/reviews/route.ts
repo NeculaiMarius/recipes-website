@@ -1,7 +1,7 @@
 import { sql } from '@vercel/postgres';
 import { getServerSession } from 'next-auth';
 import { NextResponse } from 'next/server';
-import { options } from '../../auth/[...nextauth]/options';
+import { options } from '../auth/[...nextauth]/options';
 
 export async function POST(req:Request) {
   try {
@@ -24,8 +24,7 @@ export async function POST(req:Request) {
         {
           method: 'POST',
           headers: {
-            Authorization: `Bearer ${process.env.HFTOKEN}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${process.env.HFTOKEN}`,'Content-Type': 'application/json',
           },
           body: JSON.stringify({ inputs: content }),
         }
@@ -41,8 +40,6 @@ export async function POST(req:Request) {
     } catch (hfError) {
       console.error('Hugging Face API error:', hfError);
     }
-
-
 
     try {
       const hfToxicityResponse = await fetch(
@@ -60,8 +57,6 @@ export async function POST(req:Request) {
       if (hfToxicityResponse.ok) {
         const toxicityData = await hfToxicityResponse.json();
         if (Array.isArray(toxicityData) && toxicityData[0]) {
-          // Modelul returnează un array de scoruri pentru categorii: toxic, obscene, etc.
-          // Luăm scorul maxim ca indicator general de toxicitate.
           toxicityScore = Math.max(...toxicityData[0].map((item: { score: number }) => item.score));
         }
       }
@@ -100,3 +95,4 @@ export async function POST(req:Request) {
     return NextResponse.json({error:"Failed to save review"},{status:500})
   }
 }
+

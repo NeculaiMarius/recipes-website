@@ -67,9 +67,9 @@ const SignInForm = () => {
             name="lastName"
             render={({ field }) => (
               <FormItem className='w-[47%]'>
-                <FormLabel>Last name</FormLabel>
+                <FormLabel>Nume de familie</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your last name" {...field} />
+                  <Input placeholder="Introdu nume" {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -80,9 +80,9 @@ const SignInForm = () => {
             name="firstName"
             render={({ field }) => (
               <FormItem className='w-[47%]'>
-                <FormLabel>First name</FormLabel>
+                <FormLabel>Prenume</FormLabel>
                 <FormControl>
-                  <Input placeholder="Your last name" {...field} />
+                  <Input placeholder="Introdu prenumele" {...field} />
                 </FormControl>
               </FormItem>
             )}
@@ -97,7 +97,7 @@ const SignInForm = () => {
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your email" {...field} />
+                <Input placeholder="Introdu email-ul tău" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -108,9 +108,9 @@ const SignInForm = () => {
           name="password"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className='flex justify-between'><span>Password</span></FormLabel>
+              <FormLabel className='flex justify-between'><span>Parolă</span></FormLabel>
               <FormControl>
-                <Input placeholder="Enter your password" {...field} />
+                <Input placeholder="Creează o parolă" {...field} />
               </FormControl>
             </FormItem>
           )}
@@ -121,20 +121,20 @@ const SignInForm = () => {
           render={({ field }) => (
             <FormItem >
               <FormControl>
-                <Input placeholder="Re enter your password" {...field} />
+                <Input placeholder="Introdu din nou parola" {...field} />
               </FormControl>
             </FormItem>
           )}
         />
 
-        <Button type="submit" className="w-full" disabled={isLoading}>
-          Sign up
+        <Button type="submit" className="w-full bg-emerald-700 text-white" disabled={isLoading}>
+          Înregistrare
         </Button>
       </form>
       <div className="mt-4 text-center text-sm">
-            Already have an account?{" "}
-            <Link href={'/sign-in'} className="underline">
-              Sign in
+            Ai deja u cont?{" "}
+            <Link href={'/sign-in'} className="underline text-emerald-700">
+              Autentificare
             </Link>
           </div>
     </Form>
