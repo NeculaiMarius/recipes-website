@@ -20,6 +20,7 @@ const FridgeIngredientsSections = () => {
   const [categories,setCategories]=useState(ingredientsCategories);
   const [ingredientQuery, setIngredientQuery] = useState("");
   const [ingredientSuggestions, setIngredientSuggestions] = useState<{ id: string; nume: string; um: string; categorie:string }[]>([]);
+  const [isLoading,setIsLoading]=useState(false);
 
   useEffect(()=>{
       const fetchSelectedIngredients=async()=>{
@@ -82,6 +83,7 @@ const FridgeIngredientsSections = () => {
   
   
     const onClickButton=async ()=>{
+      setIsLoading(true);
       try{
         const response=await fetch('/api/fridge/save-ingredients',{
           method:'POST',
@@ -95,10 +97,13 @@ const FridgeIngredientsSections = () => {
           throw new Error(`HTTP error! Status: ${response.status}`);
         }
         const data = await response.json();
-        console.log('Response from API:', data);
+        location.reload();
       }
       catch(error){
         console.error('Error saving ingredients:', error);
+      }
+      finally{
+        setIsLoading(false)
       }
     }
   return (
@@ -150,7 +155,9 @@ const FridgeIngredientsSections = () => {
 
 
 
-              <Button onClick={onClickButton} className='bg-blue-600 font-bold '>Salveaza modificarile</Button>
+              <Button onClick={onClickButton} className='bg-blue-600 font-bold '>
+                {isLoading?"Se incarca...": "Salveaza modificarile"}
+              </Button>
             </div>
             
 

@@ -9,6 +9,7 @@ import { getServerSession } from 'next-auth';
 import { options } from '@/app/api/auth/[...nextauth]/options';
 import { sql } from '@vercel/postgres';
 import PaginationComponent from '@/components/PaginationComponent';
+import CompatibilityIndicator from '@/components/CompatibilityIndicator';
 
 
 let totalCountCache: number | null = null;
@@ -45,65 +46,65 @@ const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?
   const totalPages = Math.ceil(totalCountCache / limit);
 
   const query =`
-    SELECT 
-      r.id, 
-      r.nume, 
-      u.nume AS nume_utilizator,
-      u.prenume AS prenume_utilizator,
-      u.rol,
-      r.image_url, 
-      COALESCE(AVG(v.rating), 0) AS rating,
-      COUNT(DISTINCT a.id) AS numar_aprecieri,
-      COUNT(DISTINCT s.id) AS numar_salvari,
-      CASE 
-          WHEN EXISTS (
-              SELECT 1 FROM l_retete_apreciate a 
-              WHERE a.id_reteta = r.id AND a.id_utilizator = ${session?.user.id}
-          ) THEN TRUE 
-          ELSE FALSE 
-      END AS liked,
-      CASE 
-          WHEN EXISTS (
-              SELECT 1 FROM l_retete_salvate s 
-              WHERE s.id_reteta = r.id AND s.id_utilizator = ${session?.user.id}
-          ) THEN TRUE 
-          ELSE FALSE 
-      END AS saved,
-      SUM(
-          CASE 
-              WHEN f.cantitate IS NOT NULL THEN LEAST(f.cantitate / NULLIF(ri.cantitate, 0), 1)
-              ELSE 0
-          END
-      ) AS ingrediente_gasite,
-      COUNT(ri.id_ingredient) AS ingrediente_totale,
-      COALESCE(
-          SUM(
-              CASE 
-                  WHEN f.cantitate IS NOT NULL THEN LEAST(f.cantitate / NULLIF(ri.cantitate, 0), 1)
-                  ELSE 0
-              END
-          ) / NULLIF(COUNT(ri.id_ingredient), 0),
-          0
-      ) AS procent_ingrediente
-    FROM l_retete r
-    JOIN 
-      l_utilizatori u ON r.id_utilizator = u.id
-    LEFT JOIN 
-      l_reviews v ON v.id_reteta = r.id
-    LEFT JOIN 
-      l_retete_apreciate a ON a.id_reteta = r.id
-    LEFT JOIN 
-      l_retete_salvate s ON s.id_reteta = r.id
-    JOIN l_retete_ingrediente ri ON r.id = ri.id_reteta
-    LEFT JOIN l_ingrediente_frigider f 
-        ON ri.id_ingredient = f.id_ingredient 
-        AND f.id_utilizator = ${session?.user.id}
-    WHERE
-      lower(r.nume) LIKE lower('%${searchQuery}%')
-    GROUP BY r.id, r.nume, u.nume, r.image_url, u.prenume, u.rol
-    ORDER BY procent_ingrediente DESC, (${order?order:'r.id'}) DESC
-    LIMIT ${limit} OFFSET ${offset};
-    `;
+      SELECT 
+        r.id, 
+        r.nume, 
+        u.nume AS nume_utilizator,
+        u.prenume AS prenume_utilizator,
+        u.rol,
+        r.image_url, 
+        COALESCE(AVG(v.rating), 0) AS rating,
+        COUNT(DISTINCT a.id) AS numar_aprecieri,
+        COUNT(DISTINCT s.id) AS numar_salvari,
+        CASE 
+            WHEN EXISTS (
+                SELECT 1 FROM l_retete_apreciate a 
+                WHERE a.id_reteta = r.id AND a.id_utilizator = ${session?.user.id}
+            ) THEN TRUE 
+            ELSE FALSE 
+        END AS liked,
+        CASE 
+            WHEN EXISTS (
+                SELECT 1 FROM l_retete_salvate s 
+                WHERE s.id_reteta = r.id AND s.id_utilizator = ${session?.user.id}
+            ) THEN TRUE 
+            ELSE FALSE 
+        END AS saved,
+        SUM(
+            CASE 
+                WHEN f.cantitate IS NOT NULL THEN LEAST(f.cantitate / NULLIF(ri.cantitate, 0), 1)
+                ELSE 0
+            END
+        ) AS ingrediente_gasite,
+        COUNT(ri.id_ingredient) AS ingrediente_totale,
+        COALESCE(
+            SUM(
+                CASE 
+                    WHEN f.cantitate IS NOT NULL THEN LEAST(f.cantitate / NULLIF(ri.cantitate, 0), 1)
+                    ELSE 0
+                END
+            ) / NULLIF(COUNT(ri.id_ingredient), 0),
+            0
+        ) AS procent_potrivire
+      FROM l_retete r
+      JOIN 
+        l_utilizatori u ON r.id_utilizator = u.id
+      LEFT JOIN 
+        l_reviews v ON v.id_reteta = r.id
+      LEFT JOIN 
+        l_retete_apreciate a ON a.id_reteta = r.id
+      LEFT JOIN 
+        l_retete_salvate s ON s.id_reteta = r.id
+      JOIN l_retete_ingrediente ri ON r.id = ri.id_reteta
+      LEFT JOIN l_ingrediente_frigider f 
+          ON ri.id_ingredient = f.id_ingredient 
+          AND f.id_utilizator = ${session?.user.id}
+      WHERE
+        lower(r.nume) LIKE lower('%${searchQuery}%')
+      GROUP BY r.id, r.nume, u.nume, r.image_url, u.prenume, u.rol
+      ORDER BY procent_potrivire DESC, (${order?order:'r.id'}) DESC
+      LIMIT ${limit} OFFSET ${offset};
+      `;
 
     const result=await sql.query(query)
     const recipes:RecipeDisplay[]=result?.rows 
@@ -124,7 +125,10 @@ const MyFridge = async ({ searchParams }: { searchParams: { page?: string,query?
           <div className='justify-evenly flex flex-wrap pt-4 w-full'>
             {recipes.map((recipe)=>{
               return(
-                <RecipeDisplayCard recipe={recipe} id_user={session?.user.id||''} key={recipe.id} />
+                <div key={recipe.id}>
+                  <CompatibilityIndicator percentage={recipe.procent_potrivire}></CompatibilityIndicator>
+                  <RecipeDisplayCard recipe={recipe} id_user={session?.user.id||''}  />
+                </div>
               )
             })}
           </div>

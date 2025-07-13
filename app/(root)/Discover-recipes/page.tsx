@@ -36,6 +36,8 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
   const searchQuery = searchParams?.query || '';
   const order = searchParams?.order || ''; 
 
+  const prepTime = searchParams.prepTime? parseInt(searchParams.prepTime as string):null;
+
   const page = parseInt(searchParams.page || '1', 10); 
   const limit=20;
   const offset = (page - 1) * limit;
@@ -86,6 +88,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
     AND
       lower(r.nume) LIKE lower('%${searchQuery}%')
     ${ingredients.length > 0 ? `AND i.id IN (${ingredientsQuery})` : ''}
+    ${prepTime?`AND timp_preparare <= ${prepTime}`:``}
     GROUP BY 
       r.id, r.nume, u.nume, r.image_url, u.prenume, u.rol
     ${ingredients.length > 0 ? `HAVING COUNT(DISTINCT i.id) = ${ingredients.length}` : ''}
@@ -110,6 +113,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
     LEFT JOIN l_ingrediente i ON i.id = ri.id_ingredient
     WHERE r.tip LIKE '%${type}%'
     AND lower(r.nume) LIKE lower('%${searchQuery}%')
+    AND timp_preparare <= ${prepTime}
     ${ingredients.length > 0 ? `AND i.id IN (${ingredientsQuery})` : ''}
     ${ingredients.length > 0 ? `GROUP BY r.id HAVING COUNT(DISTINCT i.id) = ${ingredients.length}` : ''}
   `;
@@ -124,7 +128,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
     <>
       <div className='flex flex-col mt-[80px] w-full'>
         <div className='fixed  h-12 w-12 top-4  z-50 left-6'>
-          <FiltersSheet ingredients={ingredients} type={type} />
+          <FiltersSheet ingredients={ingredients} type={type} prepTime={prepTime as number}/>
         </div>
         <div className='pt-4 text-xs px-4'>
           <FilterOrderContainer />
