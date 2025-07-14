@@ -86,7 +86,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
     WHERE
       r.tip LIKE '%${type}%'
     AND
-      lower(r.nume) LIKE lower('%${searchQuery}%')
+      unaccent(lower(r.nume)) LIKE unaccent(lower('%${searchQuery}%'))
     ${ingredients.length > 0 ? `AND i.id IN (${ingredientsQuery})` : ''}
     ${prepTime?`AND timp_preparare <= ${prepTime}`:``}
     GROUP BY 

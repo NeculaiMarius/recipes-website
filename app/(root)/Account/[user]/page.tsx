@@ -88,7 +88,7 @@ const page = async ({ params}:{params:{user:string}}) => {
     JOIN 
       l_retete_apreciate a ON a.id_reteta = r.id  -- Se alătură doar rețetele apreciate
     WHERE 
-      a.id_utilizator = ${session?.user.id}  -- Filtrăm doar pentru utilizatorul curent
+      a.id_utilizator = ${params.user}  -- Filtrăm doar pentru utilizatorul curent
     ORDER BY 
       r.id DESC;
   `;
@@ -116,7 +116,7 @@ const page = async ({ params}:{params:{user:string}}) => {
     JOIN 
       l_retete_salvate s ON s.id_reteta = r.id
     WHERE 
-      s.id_utilizator = ${session?.user.id}
+      s.id_utilizator = ${params.user}
     ORDER BY 
       r.id DESC;
   `;

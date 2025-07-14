@@ -605,7 +605,7 @@ const RecipeForm = ({ userId }: { userId: string | undefined }) => {
                   ))}
                 </div>
 
-                {fields.length < 10 && (
+                {fields.length < 100 && (
                   <Button
                     type="button"
                     onClick={() => append({ description: "" })}
