@@ -45,7 +45,7 @@ const formSchema = z.object({
   steps: z
     .array(
       z.object({
-        description: z.string().min(1, "Introduceti descrierea pasului").max(199, "Maxim 200 caractere"),
+        description: z.string().min(1, "Introduceti descrierea pasului").max(400, "Maxim 400 caractere"),
       }),
     )
     .nonempty({ message: "Este necesar cel putin un pas de preparare" }),

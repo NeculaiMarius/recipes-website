@@ -1,3 +1,4 @@
+import { Label } from "recharts"
 
 export const mainFeatures=[
   {
@@ -86,6 +87,7 @@ export const recipeTypes = [
   { label: "Băutură", value: "bautura" },
   { label: "Paste", value: "paste" },
   { label: "Pizza", value: "pizza" },
+  { label: "Patiserie", value: "patiserie"},
 ]
 
 export const ingredientsCategories=[
