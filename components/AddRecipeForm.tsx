@@ -580,7 +580,7 @@ const RecipeForm = ({ userId }: { userId: string | undefined }) => {
                             <FormControl>
                               <Textarea
                                 placeholder="Descrie pasul de pregătire"
-                                maxLength={199}
+                                maxLength={400}
                                 {...field}
                                 className="min-h-[80px] border-emerald-200 focus-visible:ring-emerald-500"
                               />
