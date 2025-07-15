@@ -8,9 +8,10 @@ import {
 } from "@/components/ui/card"
 import Image from 'next/image'
 import Rating from './Rating'
+import Link from 'next/link'
 
 
-const RecipeCard = ({name,rating,author,imageURL}:{name:string,rating:number,author:string,imageURL:string}) => {
+const RecipeCard = ({name,rating,author,imageURL,authorId}:{name:string,rating:number,author:string,imageURL:string,authorId:string}) => {
   return (
     <Card className=" w-[300px] h-fit max-md:flex max-md:w-full">
       <div className="relative w-full md:h-[60%] max-md:h-[150px] max-md:w-[150px] max-md:aspect-[1/1]">
@@ -33,9 +34,11 @@ const RecipeCard = ({name,rating,author,imageURL}:{name:string,rating:number,aut
           <Rating rating={rating} /> <span className='font-semibold ml-2'>{rating}</span>
         </CardContent>
         
-        <CardFooter className="py-0 max-md:text-xs">
+        <CardFooter className="py-0 max-md:text-xs ">
+          <Link href={`/Account/${authorId}`}>
           <span className="material-symbols-outlined text-[30px]">account_circle</span>
           <p>	&nbsp;{author}</p>
+          </Link>
         </CardFooter>
       </div>
       

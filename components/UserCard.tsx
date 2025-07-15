@@ -7,7 +7,6 @@ import { cn } from '@/lib/utils'
 import { MdWorkspacePremium } from 'react-icons/md'
 
 const UserCard = ({account,userId}:{account:User,userId:string}) => {
-  console.log(account.rol)
   return (
     <div key={account.id} className="flex items-center justify-between py-1">
       <div className="flex items-center gap-2">

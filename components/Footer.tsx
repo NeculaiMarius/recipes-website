@@ -39,14 +39,18 @@ export default function Footer() {
             <h3 className="text-lg font-semibold">Navigare</h3>
             <ul className="flex flex-col space-y-2">
               {mainFeatures.map((item) => (
-                <li key={item.route}>
+                
+                  (item.label!='ADMINISTRARE') &&
+                    (<li key={item.route}>
                   <Link
                     href={item.route}
                     className="text-emerald-100 transition-colors hover:text-white hover:underline"
                   >
                     {item.label}
                   </Link>
-                </li>
+                </li>)
+                
+                
               ))}
             </ul>
           </div>

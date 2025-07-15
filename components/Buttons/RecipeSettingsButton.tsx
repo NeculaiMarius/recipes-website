@@ -8,6 +8,7 @@ import { deleteRecipe } from '@/app/stores/RecipeStore'
 import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { RecipeReportDialog } from '../Forms/RecipeReportDialog'
+import Link from 'next/link'
 
 const RecipeSettingsButton = ({ recipeId,isAuthor }: { recipeId: number,isAuthor:boolean }) => {
   const router = useRouter()
@@ -58,8 +59,10 @@ const RecipeSettingsButton = ({ recipeId,isAuthor }: { recipeId: number,isAuthor
           {
             isAuthor &&
             <DropdownMenuItem className="flex cursor-pointer items-center gap-2 text-emerald-700 hover:bg-emerald-700/10">
-              <Pencil className="h-4 w-4" />
-              Editează rețeta
+              <Link href={`/Edit-recipe/${recipeId}`} className='flex gap-2'>
+                <Pencil className="h-4 w-4" />
+                Editează rețeta
+              </Link>
             </DropdownMenuItem>
           }
           

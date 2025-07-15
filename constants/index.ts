@@ -1,3 +1,4 @@
+import { idf } from "@/lib/cosine-similarity-functions"
 import { Label } from "recharts"
 
 export const mainFeatures=[
@@ -107,23 +108,114 @@ export const ingredientsCategories=[
 export const ingredientsFilters=[
   {
     id: '117',
-    name: 'Piept de pui'
-  },
-  {
-    id: '55',
-    name: 'Ou'
+    name: 'Piept de pui',
+    category:"Carne"
   },
   {
     id: '15',
-    name: 'Carne de vita'
+    name: 'Carne de vita',
+    category:"Carne"
+  },
+  {
+    id:'245',
+    name: 'Carne de porc',
+    category:"Carne"
+  },
+  
+  {
+    id: '55',
+    name: 'Ou',
+    category:"Lactate"
   },
   {
     id: '34',
-    name: 'Lapte'
+    name: 'Lapte',
+    category:"Lactate"
   },
   {
-    id: '2',
-    name: 'Mar'
+    id:'35',
+    name: 'Lapte integral',
+    category:"Lactate"
+  },
+  {
+    id:'24',
+    name: 'Cașcaval',
+    category:"Lactate"
+  },
+  {
+    id:'243',
+    name: 'Telemea',
+    category:"Lactate"
+  },
+  {
+    id:'9',
+    name: 'Faină de grâu',
+    category:"Panificație"
+  },
+  {
+    id:'254',
+    name: 'Făină neagră',
+    category:"Panificație"
+  },
+  {
+    id:'43',
+    name: 'Zahăr',
+    category:"Dulciuri"
+  },
+  {
+    id:'44',
+    name: 'Ciocolată neagră',
+    category:"Dulciuri"
+  },
+  {
+    id:'121',
+    name: 'Miere',
+    category:"Dulciuri"
+  },
+  {
+    id:'261',
+    name: 'Zahăr vanilinat',
+    category:"Dulciuri"
+  },
+  {
+    id:'1',
+    name: 'Cartofi',
+    category:"Legume"
+  },
+  {
+    id:'6',
+    name: 'Ceapă',
+    category:"Legume"
+  },
+  {
+    id:'27',
+    name: 'Roșii  ',
+    category:"Legume"
+  },
+  {
+    id:'4',
+    name: 'Castraveți',
+    category:"Legume"
+  },
+  {
+    id:'2',
+    name: 'Măr',
+    category:"Fructe"
+  },
+  {
+    id:'10',
+    name: 'Banană',
+    category:"Fructe"
+  },
+  {
+    id:'90',
+    name: 'Zmeură',
+    category:"Fructe"
+  },
+  {
+    id:'239',
+    name: 'Căpșuni',
+    category:"Fructe"
   },
 ]
 

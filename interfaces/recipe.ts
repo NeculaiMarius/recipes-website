@@ -42,6 +42,7 @@ export interface RecipePage{
   tip:string;
   pasi_preparare:string;
   numar_portii:number;
+  timp_preparare:number;
   image_url: string;
   nume_utilizator: string;
   prenume_utilizator:string;
@@ -76,4 +77,6 @@ export interface RecipeForCS{
   ingrediente_reteta:number;
   procent_potrivire:number;
 }
+
+
 

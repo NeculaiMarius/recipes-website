@@ -1,4 +1,3 @@
-import Rating from '@/components/Rating';
 import { Card, CardContent, CardFooter, CardHeader } from '@/components/ui/card';
 import { Skeleton } from '@/components/ui/skeleton';
 import React from 'react'

@@ -189,10 +189,12 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
           </div>
 
           <div className='flex justify-between items-center bg-gray-100 p-2 rounded-md'>
+            <Link href={`/Account/${recipe.id_utilizator}`}>
             <span className='flex items-center'>
               <span className="material-symbols-outlined text-[3rem] flex justify-center">account_circle</span>
-              <span>{recipe?.nume_utilizator}</span>
+              <span>{recipe?.nume_utilizator+ " "+recipe?.prenume_utilizator}</span>
             </span>
+            </Link>
             <LikesList recipeId={searchParams.recipeId} noLikes={recipe.numar_aprecieri} userId={session?.user.id as string} ></LikesList>
             <span className='flex gap-2 items-center'>
               <FaFlag size={20} className='text-blue-700'/>
@@ -215,30 +217,25 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
           </div>
         </div>
         {/* COL 2 */}
-        <RecipeIngredientsSection ingredients={ingredients} recipePortions={recipe.numar_portii}></RecipeIngredientsSection>
+        <RecipeIngredientsSection ingredients={ingredients} recipePortions={recipe.numar_portii} prepTime={recipe.timp_preparare}></RecipeIngredientsSection>
       </div>
 
       <Separator className='mt-8'></Separator>
+        <div className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md max-md:text-xl mt-8'>
+          Descrierea rețetei
+        </div>
 
-      <Accordion type="single" className='mb-8' collapsible>
-        <AccordionItem value="item-1 flex items-center ">
-          <AccordionTrigger className='flex flex-1'>
-          <div className='bg-red-400 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md max-md:text-xl'>
-            Valori nutriționale
+        <div className="w-[80%] mx-auto mb-8 mt-4 max-md:w-full max-md:px-4">
+          <div className="bg-gray-50 rounded-lg p-6 shadow-md border border-gray-100">
+            <p className="text-lg leading-relaxed max-md:text-base">
+              {recipe.descriere || "Nu există o descriere disponibilă pentru această rețetă."}
+            </p>
           </div>
-          </AccordionTrigger>
-          <AccordionContent className='flex justify-center'>
-            <NutritionChart
-              totalKcal={totalKcal}
-              data={[
-                { name: "Carbohidrați", value: carbs, fill: "hsl(37.7 92.1% 50.2%)" },
-                { name: "Proteine", value: proteins, fill: "hsl(173.4 80.4% 40%)" },
-                { name: "Grăsimi", value: fats, fill: "hsl(333.3 71.4% 50.6%)" },
-              ]}
-            />
-          </AccordionContent>
-        </AccordionItem>
-      </Accordion>
+        </div>
+      <Separator className='mt-8 mb-8'></Separator>
+
+
+      
       
       <div>
         <div className='bg-emerald-700 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md max-md:text-xl'>
@@ -266,6 +263,29 @@ const page = async ({ searchParams }: { searchParams: { recipeId: string} }) => 
           })}
         </div>
       </div>
+
+      <Separator className='mt-8'></Separator>
+
+
+      <Accordion type="single" className='mb-8' collapsible>
+        <AccordionItem value="item-1 flex items-center ">
+          <AccordionTrigger className='flex flex-1'>
+          <div className='bg-red-400 text-white font-bold text-2xl w-fit px-4 py-2 rounded-md mx-auto shadow-md max-md:text-xl'>
+            Valori nutriționale
+          </div>
+          </AccordionTrigger>
+          <AccordionContent className='flex justify-center'>
+            <NutritionChart
+              totalKcal={totalKcal}
+              data={[
+                { name: "Carbohidrați", value: carbs, fill: "hsl(37.7 92.1% 50.2%)" },
+                { name: "Proteine", value: proteins, fill: "hsl(173.4 80.4% 40%)" },
+                { name: "Grăsimi", value: fats, fill: "hsl(333.3 71.4% 50.6%)" },
+              ]}
+            />
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
       <Separator className='my-8'></Separator>
 

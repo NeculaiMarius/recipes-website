@@ -14,13 +14,16 @@ import { CheckedState } from '@radix-ui/react-checkbox'
 import { cn } from '@/lib/utils'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from './ui/dropdown-menu'
 import { ImSpoonKnife } from 'react-icons/im'
+import { FaRegClock } from 'react-icons/fa6'
 
 const RecipeIngredientsSection = ({
   ingredients,
-  recipePortions
+  recipePortions,
+  prepTime
 }: {
   ingredients: IngredientRecipePage[],
-  recipePortions: number
+  recipePortions: number,
+  prepTime:number
 }) => {
   const [noPortions, setNoPortions] = useState(recipePortions);
   const [checkedItems, setCheckedItems] = useState<{ [key: number]: CheckedState }>({});
@@ -53,7 +56,7 @@ const RecipeIngredientsSection = ({
             </DropdownMenuLabel>
             <DropdownMenuSeparator className="bg-emerald-100" />
             <div className="grid grid-cols-2 gap-1 p-1">
-              {[1, 2, 3, 4, 5, 8].map((number) => (
+              {[1, 2, 3, 4, 5, 8,12,16].map((number) => (
                 <DropdownMenuItem
                   key={number}
                   className="flex items-center justify-center rounded-md px-3 py-2 text-center font-medium transition-colors"
@@ -65,6 +68,10 @@ const RecipeIngredientsSection = ({
             </div>
           </DropdownMenuContent>
         </DropdownMenu>
+
+        <div className='flex items-center bg-gray-100 h-full px-4 py-2 rounded-full shadow-sm gap-2  '>
+            <FaRegClock size={25} /> {prepTime} min
+        </div>
       </div>
 
       <div className='relative w-[80%] mx-auto bg-gray-50 shadow-md py-4 lg:h-[70vh] max-md:w-full'>
@@ -95,7 +102,7 @@ const RecipeIngredientsSection = ({
                     width={40}
                     alt=''
                   />
-                  <p>{scaledQuantity}</p>
+                  <p>{Math.round(scaledQuantity*100)/100}</p>
                   <p>{ingredient.um}</p>
                   <p>{ingredient.nume}</p>
                   <Popover>

@@ -39,7 +39,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
   const prepTime = searchParams.prepTime? parseInt(searchParams.prepTime as string):null;
 
   const page = parseInt(searchParams.page || '1', 10); 
-  const limit=20;
+  const limit=16;
   const offset = (page - 1) * limit;
 
   

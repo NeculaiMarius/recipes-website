@@ -41,7 +41,8 @@ const page = async ({ params}:{params:{user:string}}) => {
     SELECT 
       r.id, 
       r.nume, 
-      u.nume AS utilizator, 
+      u.nume AS nume_utilizator,
+      u.prenume AS prenume_utilizator, 
       r.image_url, 
       (SELECT COALESCE(AVG(v.rating), 0) FROM l_reviews v WHERE v.id_reteta = r.id) AS rating,
       (SELECT COUNT(*) FROM l_retete_apreciate a WHERE a.id_reteta = r.id) AS numar_aprecieri,
@@ -71,7 +72,8 @@ const page = async ({ params}:{params:{user:string}}) => {
     SELECT 
       r.id, 
       r.nume, 
-      u.nume AS utilizator, 
+      u.nume AS nume_utilizator,
+      u.prenume AS prenume_utilizator,
       r.image_url, 
       (SELECT COALESCE(AVG(v.rating), 0) FROM l_reviews v WHERE v.id_reteta = r.id) AS rating,
       (SELECT COUNT(*) FROM l_retete_apreciate a WHERE a.id_reteta = r.id) AS numar_aprecieri,
@@ -99,7 +101,8 @@ const page = async ({ params}:{params:{user:string}}) => {
     SELECT 
       r.id, 
       r.nume, 
-      u.nume AS utilizator, 
+      u.nume AS nume_utilizator,
+      u.prenume AS prenume_utilizator, 
       r.image_url, 
       (SELECT COALESCE(AVG(v.rating), 0) FROM l_reviews v WHERE v.id_reteta = r.id) AS rating,
       (SELECT COUNT(*) FROM l_retete_apreciate a WHERE a.id_reteta = r.id) AS numar_aprecieri,

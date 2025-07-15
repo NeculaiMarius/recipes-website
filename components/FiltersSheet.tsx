@@ -8,6 +8,8 @@ import { FaFilter, FaQuestion, FaTimes } from "react-icons/fa"
 import { Button } from "./ui/button"
 import { Badge } from "./ui/badge"
 import { Separator } from "./ui/separator"
+import Image from 'next/image';
+
 
 const FiltersSheet = ({
   ingredients,
@@ -87,14 +89,14 @@ const FiltersSheet = ({
         )}
       </SheetTrigger>
 
-      <SheetContent side="left" className="w-80 p-0">
+      <SheetContent side="left" className="w-96 p-0 max-md:w-80">
         <div className="flex flex-col h-full">
           <SheetHeader className="px-6 py-4 bg-gradient-to-r from-emerald-50 to-emerald-100 border-b">
             <SheetTitle className="text-xl font-semibold text-emerald-800">Filtre Rețete</SheetTitle>
             <SheetDescription className="text-emerald-600">Găsește rețetele perfecte pentru tine</SheetDescription>
           </SheetHeader>
 
-          <div className="flex-1 overflow-y-auto px-6 py-4 space-y-6">
+          <div className="flex-1 overflow-y-auto px-4 py-4 space-y-6">
             {/* Ingredients Filter */}
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -117,7 +119,7 @@ const FiltersSheet = ({
                   return (
                     <button
                       key={ingredient.id}
-                      className={`px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 border
+                      className={`flex gap-1 px-3 py-2 rounded-full text-sm font-medium transition-all duration-200 border
                         ${
                           isSelected
                             ? "bg-emerald-600 text-white border-emerald-600 shadow-md"
@@ -130,6 +132,12 @@ const FiltersSheet = ({
                         updateFilters(newIngredients, optimisticType, optimisticPrepTime)
                       }}
                     >
+                      <Image
+                        src={`/svg-icons/${ingredient.category}.svg`}
+                        height={20}
+                        width={20}
+                        alt=''
+                      />
                       {ingredient.name}
                     </button>
                   )
