@@ -113,7 +113,7 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
     LEFT JOIN l_ingrediente i ON i.id = ri.id_ingredient
     WHERE r.tip LIKE '%${type}%'
     AND lower(r.nume) LIKE lower('%${searchQuery}%')
-    AND timp_preparare <= ${prepTime}
+    AND timp_preparare <= ${prepTime?prepTime:99999}
     ${ingredients.length > 0 ? `AND i.id IN (${ingredientsQuery})` : ''}
     ${ingredients.length > 0 ? `GROUP BY r.id HAVING COUNT(DISTINCT i.id) = ${ingredients.length}` : ''}
   `;
@@ -121,9 +121,9 @@ const DiscoverRecipes = async ({ searchParams }: { searchParams: { page?: string
     const countResult=await sql.query(countQuery);
 
     totalCountCache = parseInt(countResult?.rows[0]?.count, 10);
+    
 
   const totalPages = Math.ceil(totalCountCache / limit);
-
   return (
     <>
       <div className='flex flex-col mt-[80px] w-full'>
