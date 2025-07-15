@@ -91,7 +91,9 @@ export default  async function Home() {
   FROM l_utilizatori u
   LEFT JOIN l_urmariri_utilizatori fu ON u.id = fu.id_utilizator_urmarit
   GROUP BY u.id, u.nume, u.prenume, u.email
-  ORDER BY COUNT(fu.id) desc;
+  
+  ORDER BY COUNT(fu.id) desc
+  LIMIT 16
   `;
   const accounts=accountsResults.rows;
 

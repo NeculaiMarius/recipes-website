@@ -9,6 +9,8 @@ import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 import { RecipeReportDialog } from '../Forms/RecipeReportDialog'
 import Link from 'next/link'
+import { IoStatsChart } from "react-icons/io5";
+
 
 const RecipeSettingsButton = ({ recipeId,isAuthor }: { recipeId: number,isAuthor:boolean }) => {
   const router = useRouter()
@@ -58,6 +60,18 @@ const RecipeSettingsButton = ({ recipeId,isAuthor }: { recipeId: number,isAuthor
           </div>
           {
             isAuthor &&
+            <DropdownMenuItem
+              className="flex cursor-pointer items-center gap-2 text-blue-600 hover:bg-blue-50"
+            >
+              <Link href={`/Administration/Recipe-stats/${recipeId}`} className='flex gap-2'>
+                <IoStatsChart />
+                Statistici
+              </Link>
+              
+            </DropdownMenuItem>
+          }
+          {
+            isAuthor &&
             <DropdownMenuItem className="flex cursor-pointer items-center gap-2 text-emerald-700 hover:bg-emerald-700/10">
               <Link href={`/Edit-recipe/${recipeId}`} className='flex gap-2'>
                 <Pencil className="h-4 w-4" />
@@ -76,6 +90,8 @@ const RecipeSettingsButton = ({ recipeId,isAuthor }: { recipeId: number,isAuthor
               Șterge rețeta
             </DropdownMenuItem>
           }
+
+          
           
 
           <DropdownMenuItem

@@ -54,6 +54,12 @@ export async function PUT(request:Request,{ params }: { params: { recipeId: stri
         if(!session?.user || session.user.id!=databaseRecipe.id_utilizator){
             return new Response("Unauthorized", { status: 401 });
         }
+        if (
+            !session?.user || 
+            (session.user.id !== databaseRecipe.id_utilizator && session.user.role !== "admin")
+        ) {
+            return new Response("Unauthorized", { status: 401 });
+        }
 
         await sql`
             UPDATE l_retete 
