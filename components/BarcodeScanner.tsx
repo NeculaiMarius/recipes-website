@@ -28,6 +28,7 @@ const BarcodeScanner = ({ onScan, onError, active }: BarcodeScannerProps) => {
       ],
       fps: 10,
       qrbox: {width:200, height:100}
+      
     };
 
     scannerRef.current = new Html5QrcodeScanner(elementId, config, false);

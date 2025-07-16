@@ -224,7 +224,7 @@ const page = async ({ searchParams }: PageProps) => {
       l_reviews_apreciate ra ON ra.id_review = r.id
     GROUP BY 
       r.id, u.nume, u.prenume
-    ORDER BY scor_toxicitate asc
+    ORDER BY scor_toxicitate desc
     LIMIT ${limit} OFFSET ${reviewsOffset}
   `
   const reviews:ReviewRecipePage[]=reviewsResult?.rows as ReviewRecipePage[];
